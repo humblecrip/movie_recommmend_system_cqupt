@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinemaAI - 电影列表</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:"Segoe UI","Microsoft YaHei",sans-serif;background:linear-gradient(180deg,#111a2f,#14203b 55%,#101726);color:#fff}a{text-decoration:none;color:inherit}img{display:block;max-width:100%}
+    .topbar{height:76px;padding:0 34px;display:flex;align-items:center;justify-content:space-between;background:#18233b;border-bottom:1px solid rgba(255,255,255,.08)}.brand{display:flex;align-items:center;gap:12px;font-size:22px}.brand-mark{width:34px;height:34px;border-radius:50%;border:2px solid #f0c454;color:#f0c454;display:grid;place-items:center;font-weight:700}.brand strong{color:#f0c454}.nav{display:flex;gap:42px;font-size:17px}.nav a.active{color:#f0c454}.actions{display:flex;align-items:center;gap:18px}.avatar{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.25);object-fit:cover}
+    .searchbox{width:240px;height:44px;border-radius:14px;border:1px solid rgba(173,190,231,.26);background:#203257;padding:0 16px;color:#fff}.page{padding:26px 36px 40px}.banner{display:grid;grid-template-columns:1.25fr .95fr;gap:22px;align-items:center;margin-bottom:24px}.hero{min-height:280px;border-radius:28px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 40px rgba(0,0,0,.3)}.hero img{width:100%;height:100%;object-fit:cover}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,15,24,.78),rgba(10,15,24,.18))}
+    .hero-copy{position:absolute;left:34px;top:34px;z-index:2;max-width:360px}.kicker{color:#f0c454;font-size:13px;letter-spacing:.16em;text-transform:uppercase}.hero-copy h1{margin:10px 0 10px;font-size:52px;line-height:1}.hero-copy p{margin:0 0 18px;color:#dfe5f1;line-height:1.5}.btns{display:flex;gap:14px}.gold,.ghost{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 24px;border-radius:999px}.gold{background:linear-gradient(180deg,#f2cb63,#e2aa32);color:#241c12;font-weight:600}.ghost{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.04)}
+    .panel{padding:24px;border-radius:24px;background:rgba(33,47,78,.72);border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 40px rgba(0,0,0,.22)}.panel h2{margin:0 0 10px;font-size:24px}.panel p{margin:0 0 18px;color:#cfd7e7;line-height:1.5}
+    .filters{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}.chip{padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#dfe5f1}.chip.active{background:rgba(240,196,84,.15);border-color:rgba(240,196,84,.4);color:#f3d889}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.card{background:rgba(30,40,60,.84);border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow:hidden;box-shadow:0 18px 32px rgba(0,0,0,.24)}.card img{width:100%;height:270px;object-fit:cover}.meta{padding:14px}.meta h3{margin:0 0 8px;font-size:20px}.sub{color:#aeb6c6;margin-bottom:8px}.row{display:flex;justify-content:space-between;align-items:center}.rating{color:#f0c454;font-weight:600}.link{color:#8ec5ff}
+    @media(max-width:1100px){.banner,.grid{grid-template-columns:1fr 1fr}}@media(max-width:760px){.nav{gap:18px;font-size:15px}.banner,.grid{grid-template-columns:1fr}.page{padding:18px}.hero-copy h1{font-size:38px}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="brand"><div class="brand-mark">CA</div><span>Cinema<strong>AI</strong></span></div><nav class="nav"><a href="./index.html">首页</a><a class="active" href="./movie-list.html">电影</a><a href="./index.html">榜单</a><a href="./movie-detail.html">我的片单</a></nav><div class="actions"><input class="searchbox" placeholder="搜索电影"><img class="avatar" src="../src/main/resources/static/upload/image1.jpg" alt="头像"></div></header>
+  <main class="page">
+    <section class="banner">
+      <article class="hero"><img src="../src/main/resources/static/upload/1745561626692.webp" alt="头图"><div class="hero-copy"><div class="kicker">本周热播</div><h1>沙丘：余烬</h1><p>史诗级沙海战争再度来袭，权力、信仰与宿命在荒漠中交织碰撞。</p><div class="btns"><a class="gold" href="./movie-detail.html">查看详情</a><a class="ghost" href="./admin-movie-edit.html">后台编辑</a></div></div></article>
+      <aside class="panel"><h2>电影库概览</h2><p>这里集中展示最适合答辩演示的影片卡片布局。你可以从电影列表进入详情，也可以切到后台编辑页形成完整业务闭环。</p><div class="filters"><span class="chip active">全部</span><span class="chip">科幻</span><span class="chip">剧情</span><span class="chip">悬疑</span><span class="chip">历史</span></div><div class="sub">共 24 部影片，近 7 天新增 6 部。</div></aside>
+    </section>
+    <section class="grid">
+      <article class="card"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao2.jpg" alt="奥本海默"><div class="meta"><h3>奥本海默</h3><div class="sub">历史 / 传记 / 剧情</div><div class="row"><span class="rating">★ 4.8</span><a class="link" href="./movie-detail.html">进入详情</a></div></div></article>
+      <article class="card"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao3.jpg" alt="可怜的东西"><div class="meta"><h3>可怜的东西</h3><div class="sub">奇幻 / 剧情</div><div class="row"><span class="rating">★ 4.6</span><a class="link" href="./movie-detail.html">进入详情</a></div></div></article>
+      <article class="card"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao6.jpg" alt="留校联盟"><div class="meta"><h3>留校联盟</h3><div class="sub">喜剧 / 剧情</div><div class="row"><span class="rating">★ 4.5</span><a class="link" href="./movie-detail.html">进入详情</a></div></div></article>
+      <article class="card"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao8.jpg" alt="暗色衣橱"><div class="meta"><h3>暗色衣橱</h3><div class="sub">悬疑 / 惊悚</div><div class="row"><span class="rating">★ 4.4</span><a class="link" href="./movie-detail.html">进入详情</a></div></div></article>
+      <article class="card"><img src="../src/main/resources/static/upload/1745560500351.webp" alt="星云纪元"><div class="meta"><h3>星云纪元</h3><div class="sub">科幻 / 冒险</div><div class="row"><span class="rating">★ 4.7</span><a class="link" href="./movie-detail.html">进入详情</a></div></div></article>
+      <article class="card"><img src="../src/main/resources/static/upload/1745561966876.webp" alt="迷雾营救"><div class="meta"><h3>迷雾营救</h3><div class="sub">动作 / 犯罪</div><div class="row"><span class="rating">★ 4.5</span><a class="link" href="./movie-detail.html">进入详情</a></div></div></article>
+      <article class="card"><img src="../src/main/resources/static/upload/1745565644821.webp" alt="边境列车"><div class="meta"><h3>边境列车</h3><div class="sub">剧情 / 悬疑</div><div class="row"><span class="rating">★ 4.3</span><a class="link" href="./movie-detail.html">进入详情</a></div></div></article>
+      <article class="card"><img src="../src/main/resources/static/upload/1745566072189.webp" alt="火线回响"><div class="meta"><h3>火线回响</h3><div class="sub">战争 / 剧情</div><div class="row"><span class="rating">★ 4.6</span><a class="link" href="./movie-detail.html">进入详情</a></div></div></article>
+    </section>
+  </main>
+</body>
+</html>

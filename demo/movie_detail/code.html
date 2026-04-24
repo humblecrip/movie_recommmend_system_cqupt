@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CinéCurator - Oppenheimer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Manrope:wght@400;500;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#5b4300",
+                        "primary": "#ffc639",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#424c5f",
+                        "on-surface-variant": "#d0c5af",
+                        "surface-bright": "#31394d",
+                        "primary-container": "#e1aa12",
+                        "on-secondary-fixed-variant": "#3d475a",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-container": "#594100",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "on-secondary-fixed": "#111c2d",
+                        "surface-container-high": "#222a3d",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "primary-fixed-dim": "#f7be2c",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "surface-variant": "#2d3449",
+                        "tertiary-container": "#b2b3b3",
+                        "on-secondary-container": "#b2bcd3",
+                        "on-background": "#dae2fd",
+                        "outline": "#99907c",
+                        "surface-tint": "#f7be2c",
+                        "primary-fixed": "#ffdf9e",
+                        "secondary": "#bcc7de",
+                        "on-tertiary": "#2f3131",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "surface": "#0b1326",
+                        "inverse-primary": "#795900",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-surface": "#dae2fd",
+                        "error-container": "#93000a",
+                        "on-primary-fixed": "#261a00",
+                        "surface-dim": "#0b1326",
+                        "tertiary": "#cecece",
+                        "outline-variant": "#4d4635",
+                        "surface-container-highest": "#2d3449",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-container": "#444546",
+                        "background": "#0b1326",
+                        "on-primary": "#3f2e00",
+                        "surface-container-lowest": "#060e20",
+                        "surface-container-low": "#131b2e",
+                        "inverse-on-surface": "#283044",
+                        "on-secondary": "#273143",
+                        "secondary-fixed": "#d8e3fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30 selection:text-primary">
+<!-- Top Navigation Bar -->
+<header class="bg-[#0b1326]/80 backdrop-blur-xl fixed top-0 w-full z-50">
+<nav class="flex justify-between items-center px-8 py-4 w-full max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black italic tracking-tighter text-[#ffc639]">CinéCurator</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-manrope text-[11px] uppercase tracking-widest text-[#dae2fd] hover:text-[#ffc639] transition-colors" href="#">Home</a>
+<a class="font-manrope text-[11px] uppercase tracking-widest text-[#dae2fd] hover:text-[#ffc639] transition-colors" href="#">Explore</a>
+<a class="font-manrope text-[11px] uppercase tracking-widest text-[#dae2fd] hover:text-[#ffc639] transition-colors" href="#">Top Charts</a>
+<a class="font-manrope text-[11px] uppercase tracking-widest text-[#dae2fd] hover:text-[#ffc639] transition-colors" href="#">My List</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="hover:scale-105 transition-transform duration-300 active:scale-95">
+<span class="material-symbols-outlined text-[#dae2fd]">search</span>
+</button>
+<button class="hover:scale-105 transition-transform duration-300 active:scale-95">
+<span class="material-symbols-outlined text-[#dae2fd]">account_circle</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="min-h-screen pb-24 md:pb-12">
+<!-- Hero Section -->
+<section class="relative w-full h-[870px] overflow-hidden">
+<!-- Background Image with Tonal Gradient -->
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover" data-alt="cinematic wide shot of a desert landscape at dusk with orange glowing embers and a massive dramatic explosion in the distance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwNNGuM9-8nWi-Rw8r-9OmFNvKNa8tNOo9cUDvwUCVTPPTjfsZSZYI5sSrAmQeENYxuG_pSms67NdCwFxqt32Se8mTsWXaMMlI-dSjhJaF5yCYcjh0a45w2Mz3G6z4g14dBIg8bfmrqMylnjTJkye4IORHi_COSv--wypmzIdFU18yJv76Sw3g6BQ2KZ9jI8ZCuS4PLBgChZnfeemejwRq1CZusU50DmrZ83nv8krzd73SUQpyaFbtiqpt9q-5FT1Ki0z40TpXEsE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent"></div>
+</div>
+<!-- Hero Content -->
+<div class="relative z-10 h-full max-w-screen-2xl mx-auto px-8 flex flex-col justify-end pb-16 md:pb-24">
+<div class="flex flex-col md:flex-row gap-8 items-end">
+<!-- Movie Poster (Left Side) -->
+<div class="hidden lg:block w-72 aspect-[2/3] shrink-0 rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] -mb-12 border border-outline-variant/15">
+<img class="w-full h-full object-cover" data-alt="dramatic movie poster featuring a silhouette of a man in a hat standing amidst a fiery sparks and deep blue night sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTD29EogwusPyDujFoBMeZKsDiCZVp1JQMccEFVklIHRwpi7I9W2AwBPaVD1L77GbgF9ycvImjeZDpYWcoPDhGpkRmGibhNGyr7FPe0QguZbI8jJiRsVoY7aaD6PHibuW3adaDbVH6ghgZLC8oR-jqM6TM4rl2L_GJ2qha6Vp2vvToyVf31VU_fL4EMYQaPi5h605ZNS6D0uU39I1aWCIWun8klUQht8_j4m8sBynIzHOjEcLJLjCimfuJzXqwknW0VZw-PhRLrgM"/>
+</div>
+<div class="flex-1 space-y-6">
+<!-- Metadata Tags -->
+<div class="flex flex-wrap items-center gap-4">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase">2023</span>
+<span class="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase">3h</span>
+<span class="bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase border border-outline-variant/20">R</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-manrope font-bold text-sm">4.8/5</span>
+</div>
+</div>
+<!-- Title -->
+<h1 class="font-headline text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-none text-on-background">Oppenheimer</h1>
+<!-- CTAs -->
+<div class="flex flex-wrap gap-4 pt-2">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary-fixed px-8 py-4 rounded-full font-manrope font-bold text-sm flex items-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                                Watch Trailer
+                            </button>
+<button class="border border-outline-variant text-on-surface px-8 py-4 rounded-full font-manrope font-bold text-sm flex items-center gap-2 hover:bg-on-surface/5 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+                                Add to My List
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Page Content -->
+<div class="max-w-screen-2xl mx-auto px-8 space-y-24 mt-16 lg:mt-24">
+<!-- Bento Grid Section: Overview & Stats -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Overview Column -->
+<div class="lg:col-span-8 space-y-6">
+<h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Overview</h2>
+<p class="font-body text-lg text-on-surface/80 leading-relaxed max-w-3xl">
+                        A dramatization of the life story of J. Robert Oppenheimer, the physicist who had a large hand in the development of the atomic bomb, thus helping end World War II. We see his life from university days all the way to post-WWII, where his loyalty to the United States is questioned and he is brought before a review board.
+                    </p>
+<div class="pt-4 flex flex-wrap gap-2">
+<span class="bg-surface-container-high px-4 py-2 rounded-full font-label text-[12px] font-medium tracking-wide">Biography</span>
+<span class="bg-surface-container-high px-4 py-2 rounded-full font-label text-[12px] font-medium tracking-wide">Drama</span>
+<span class="bg-surface-container-high px-4 py-2 rounded-full font-label text-[12px] font-medium tracking-wide">History</span>
+</div>
+</div>
+<!-- Small Info Cards -->
+<div class="lg:col-span-4 grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Director</span>
+<span class="font-body font-bold text-on-surface mt-2">Christopher Nolan</span>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Studio</span>
+<span class="font-body font-bold text-on-surface mt-2">Universal Pictures</span>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Language</span>
+<span class="font-body font-bold text-on-surface mt-2">English</span>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl flex flex-col justify-between">
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Box Office</span>
+<span class="font-body font-bold text-on-surface mt-2">$960.2 Million</span>
+</div>
+</div>
+</section>
+<!-- Cast & Crew -->
+<section class="space-y-8">
+<div class="flex justify-between items-end">
+<h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Cast &amp; Crew</h2>
+<button class="text-primary font-label text-[11px] uppercase tracking-widest font-bold">View All</button>
+</div>
+<div class="flex gap-8 overflow-x-auto hide-scrollbar pb-4 snap-x">
+<!-- Actor 1 -->
+<div class="flex flex-col items-center gap-4 shrink-0 snap-start">
+<div class="w-32 h-32 rounded-full overflow-hidden border-2 border-outline-variant/30 hover:border-primary transition-colors p-1">
+<img class="w-full h-full object-cover rounded-full" data-alt="portrait of a man with intense gaze, clean shaven, short hair in a formal studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoF8ORvQLPbdxDl0_M0kMk6AUjdCygIxhuWsVyTmbohg9N2efkbYbRZPO97xApL7thrXFIWiBCWsJm8ly6Y8i1GoSt9q3mxsIpmkgnepdOrNhrpMr8hk3Sk26iM80vOoNjW9_9NqG7ZMiYMzObp6_S3F-5JfnpK_VF_0wByVy44y9xCt2WfPetfeao-L5ooTh95OEkMlneH-8R4Didntd3PygMaFbbUTyRUbxYEnvixC6J758MDI0BryNFYx_mNT0fUabDE4vr9Bc"/>
+</div>
+<div class="text-center">
+<h4 class="font-body font-bold text-sm">Cillian Murphy</h4>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-wide">J. Robert Oppenheimer</p>
+</div>
+</div>
+<!-- Actor 2 -->
+<div class="flex flex-col items-center gap-4 shrink-0 snap-start">
+<div class="w-32 h-32 rounded-full overflow-hidden border-2 border-outline-variant/30 hover:border-primary transition-colors p-1">
+<img class="w-full h-full object-cover rounded-full" data-alt="portrait of a woman with elegant expression, long dark hair, professional headshot with neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0NPkrplF28MR8whs97r1phHnDy2L3uT4vUJLiKhEUNHmZ32WEoeXnl04nVt4bcsKRpFGxShcGaonufgEjLykVtZVMryXKsALlCL71RJ0POXcuh2cq0x6nXjfGtrMHu2KN7ExZ-SSz2IKA9eu2HkK3bZ5TPcdlrRpD-LB2LNUXCCjDifNM3CorW2dYmOwc15hum2Rep1YvNZGcZVnne7a7zwVTD91CbZTtBVTHQTefyJ3HZlRCZEoEwG0ftZ1lmOMjyCU7tE4_2G0"/>
+</div>
+<div class="text-center">
+<h4 class="font-body font-bold text-sm">Emily Blunt</h4>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-wide">Kitty Oppenheimer</p>
+</div>
+</div>
+<!-- Actor 3 -->
+<div class="flex flex-col items-center gap-4 shrink-0 snap-start">
+<div class="w-32 h-32 rounded-full overflow-hidden border-2 border-outline-variant/30 hover:border-primary transition-colors p-1">
+<img class="w-full h-full object-cover rounded-full" data-alt="portrait of a smiling man with short light brown hair and a clean professional look in soft daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdIQ0uLbWgh6fepUroWDRfsliuZliuSVej039VjowCh3Mx-UVCdkVir5-21-vQCzV3YUVdavrwXpIQqbdbM_UIbF1nAY6NAZkSMrKKnWPcyoPxmecTFRFoZu1VMm7qwncBGo1mbqfA-etTuuWpS8sTnZFeKfShj3f_pC23pt3ld_-Uz1VaFgmz6A7aDoUW_f4aD4HZ-ZJeig268m_z4rEMiN_xIE88fS17OhR1CjsnioPhG3HdMQ7QFlX01Wu3oTk4sksTx825_TE"/>
+</div>
+<div class="text-center">
+<h4 class="font-body font-bold text-sm">Matt Damon</h4>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-wide">Leslie Groves</p>
+</div>
+</div>
+<!-- Actor 4 -->
+<div class="flex flex-col items-center gap-4 shrink-0 snap-start">
+<div class="w-32 h-32 rounded-full overflow-hidden border-2 border-outline-variant/30 hover:border-primary transition-colors p-1">
+<img class="w-full h-full object-cover rounded-full" data-alt="portrait of a man with thoughtful expression, sharp features, classic professional cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSYO264WIeLNmoxi_WQsElB3gTOabfhbpV7BFf8rsIguIGTzs_g3vYJaZMx6ISrtuFzY_NkRxs0eZLdxoYcUlfGyDsEAS3HJg-Oeaxlfz5mSxcgAnMElrepDUOGYg8UXNJFxMuxm76BxempRQm8fbyMJDPF1MV-jL932dzjtz2zwdR9YvCpBZs56xF1AfcCHGQVPUgqfaiuw0PrUoTvhYT2JnnCTzF684M6LU7glMePlKk37LM2PFCq9aPC1PgCb8mZDONJtbDdOM"/>
+</div>
+<div class="text-center">
+<h4 class="font-body font-bold text-sm">Robert Downey Jr.</h4>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-wide">Lewis Strauss</p>
+</div>
+</div>
+<!-- Actor 5 -->
+<div class="flex flex-col items-center gap-4 shrink-0 snap-start">
+<div class="w-32 h-32 rounded-full overflow-hidden border-2 border-outline-variant/30 hover:border-primary transition-colors p-1">
+<img class="w-full h-full object-cover rounded-full" data-alt="close up headshot of a younger man with serious expression, dark wavy hair, high contrast photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOLFztf6CHL1pG-9Cx-4MDOmycYNnqYHWTth3sd9GV8J7b3LTtawd4855CCgNh9VdlFgjfynqtgdthB8tI4ny4Ogrf4d3_DFJs5kJ-sNCpTRuCIJg64m2hmAHsV3ODIT0g0eG-wHnu40DmZSOziD4swWdCb8nC7aaZpY5GgAFWdCK5QTFT4xZ1P0_twiwy5RDMeaD5FE-t56QSt9YlisKZxMVgmAzK--bzfjzk3To4RWMd9kHmkgQXIYGz0XReuJn-HFamygUAwlE"/>
+</div>
+<div class="text-center">
+<h4 class="font-body font-bold text-sm">Florence Pugh</h4>
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-wide">Jean Tatlock</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Similar Movies -->
+<section class="space-y-8">
+<div class="flex justify-between items-end">
+<h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Similar Movies</h2>
+<button class="text-primary font-label text-[11px] uppercase tracking-widest font-bold">Explore All</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+<!-- Movie Card 1 -->
+<div class="group space-y-3 cursor-pointer">
+<div class="aspect-[2/3] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-[1.02] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="cinematic movie poster of a dark space scene with a bright shining star and a small astronaut silhouette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyLvX_GBfhBc8BXNZHuinl6CZ-GKC-P2BVNHKd0ZxzHUSdOwDUGLSwxDSKUNMxCaZPz-cbJkoU6tD5vbNYrocgNDm2bIH0z0rx5sKiEEZ0DheCxxPSHPxoqPsdT30NAxdjVjYzRI4-C-G5g5il5OeoKvpyt-0v5smyeHEWnG9p3f0LCR8QhFlYHCTVq64sfAEkUC524v0Y_6UsWk5a9T_82yGIfLXZ1QmYnJTR7s8k8xQQamk-qQJJ-OB8rnoywTUen4F7UUQGhXI"/>
+</div>
+<div>
+<h4 class="font-body font-bold text-sm truncate">Interstellar</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="font-label text-[10px]">2014</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label text-[10px]">4.9/5</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 2 -->
+<div class="group space-y-3 cursor-pointer">
+<div class="aspect-[2/3] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-[1.02] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="atmospheric movie poster showing soldiers on a beach with a cold blue and grey color palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRJJtAzDAWmt8IYxGjpGBXxsBsUuA9l9CzA4HCkUvd8evDvZVR5_LakCnQhtACKO9hpAHZ35fuWlj9rWezAVdgAqzqx9XbJBoal91IpVIyQ8Oab9TaOTPfb20tckz6uaDHN9vBsctaYJKSXQ10A29ny50Jni6rIc0RZzrEgHfrB0-pbKL3r5PiBc-UB-qySn_qfD2KWSumazcHhYlb4RPxvZjsn4GCR3-brwNwRUlWwDquX8YrHGAhYFHkvlU_2Yh8lPcNpFV2WQc"/>
+</div>
+<div>
+<h4 class="font-body font-bold text-sm truncate">Dunkirk</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="font-label text-[10px]">2017</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label text-[10px]">4.6/5</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 3 -->
+<div class="group space-y-3 cursor-pointer">
+<div class="aspect-[2/3] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-[1.02] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="surreal movie poster with a spinning top on a wooden surface and a blurry city skyline reflecting in a window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiKB9_zuBIfwZaoikbs4EkrgJuSpj9-LlYItesDWAvySpNQpHJjXmUQkvJIC1iTAY2ZR3ylQHP-WCO2UdmldfchX60V26z2A9yDg-VtptY-2CzMXpswlhXZm3uxJz2t2eu4Oyo7cJv_zVHj3JU0PnKrKHsKF8O8bMlgQOIP3GYMcnFvtvpahAVmDPd4wsb5OWQ4i05on_NtJxnQJ9NU2vgzWynA1P20SzTWWdg0V6peuDcMHxZa85HND0B9Dr7RyWhNy430qaMhDE"/>
+</div>
+<div>
+<h4 class="font-body font-bold text-sm truncate">Inception</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="font-label text-[10px]">2010</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label text-[10px]">4.9/5</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 4 -->
+<div class="group space-y-3 cursor-pointer">
+<div class="aspect-[2/3] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-[1.02] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="moody historical movie poster with vintage aesthetic showing two men in heavy coats walking down a foggy street" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDysuShDfAXpFoHqxYEzH_VnJ5KrYBy3bO12dQzTrqhcSwifjZPbg3nzZSSrwYEq_Qi1qasBc2W25y4OJFb-BQo3S7mLZWlQHP7IV0e4sXtq5C_ZZGQr0xkuxJj0zA3xlnGo1YT0E4d0I7AYG5lw84MD_1kcGzUKIQ48Mle94KPL2iplClc8onYrrFd9W1S_g4aJ0BBoswg2bKMsb1zuwerXmy62z4kJcWvMSDoPxPy9vnefOIQID3lPcqxOfKDsX_rBmq2qAwg0ck"/>
+</div>
+<div>
+<h4 class="font-body font-bold text-sm truncate">The Imitation Game</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="font-label text-[10px]">2014</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label text-[10px]">4.7/5</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 5 -->
+<div class="hidden lg:block group space-y-3 cursor-pointer">
+<div class="aspect-[2/3] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-[1.02] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="abstract movie poster with bright red and orange light streaks resembling a high speed camera shutter effect" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiSiyXTUE7HLyZ3Kc9xyJPUhonEbElPgUl1TvIsSlhJ9hZw2hkwOeGr-iFIQTnOMpT4aQMb71HBimDOOWlV76nlXYzh0BLKuyNlta_TpTzWcHBGlhPBXGTBMg9RazDM1kVTd3th4GfiWa8sCJurmD6eAI6v_Kn8FVlLRjF03JdpO2MEdSGzsh4yYbDWVnsJDOw-c6NzvmSR55FjgvCVwvs6pWoRCZ5pLvE3iblKQ5ON0VM_QBJWN4bE2grR2pZu-qfR5RYCppkLHo"/>
+</div>
+<div>
+<h4 class="font-body font-bold text-sm truncate">Tenet</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="font-label text-[10px]">2020</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label text-[10px]">4.5/5</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-6 pb-6 pt-3 md:hidden bg-[#0b1326]/90 backdrop-blur-2xl rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-50">
+<a class="flex flex-col items-center justify-center text-[#dae2fd]/60 hover:text-[#ffc639] transition-all active:scale-110 duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-manrope text-[10px] font-medium tracking-tight">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#dae2fd]/60 hover:text-[#ffc639] transition-all active:scale-110 duration-200" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-manrope text-[10px] font-medium tracking-tight">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#dae2fd]/60 hover:text-[#ffc639] transition-all active:scale-110 duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-manrope text-[10px] font-medium tracking-tight">Charts</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ffc639]/10 text-[#ffc639] rounded-xl px-4 py-1 transition-all active:scale-110 duration-200" href="#">
+<span class="material-symbols-outlined">video_library</span>
+<span class="font-manrope text-[10px] font-medium tracking-tight">Library</span>
+</a>
+</nav>
+</body></html>

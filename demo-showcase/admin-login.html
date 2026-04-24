@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinemaAI - 后台登录</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:"Segoe UI","Microsoft YaHei",sans-serif;color:#fff;background:linear-gradient(180deg,rgba(10,15,24,.45),rgba(10,15,24,.82)),url('../src/main/resources/front/front/src/assets/login-bg.jpg') center/cover no-repeat fixed}a{text-decoration:none;color:inherit}
+    .wrap{min-height:100vh;display:grid;place-items:center;padding:30px}.card{width:min(440px,100%);padding:34px 30px 24px;border-radius:28px;background:rgba(31,40,57,.56);border:1px solid rgba(137,190,255,.32);backdrop-filter:blur(18px);box-shadow:0 0 0 1px rgba(72,181,255,.14),0 0 40px rgba(50,140,255,.18),0 20px 40px rgba(0,0,0,.34)}.icon{width:96px;height:96px;margin:0 auto 14px;border-radius:26px;display:grid;place-items:center;font-size:44px;background:rgba(255,255,255,.04);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 30px rgba(83,199,255,.18)}h1{margin:0 0 24px;text-align:center;font-size:42px;font-weight:500}
+    .form{display:grid;gap:16px}.label{display:grid;gap:8px;color:#c8d2e4;font-size:14px}.input{height:56px;padding:0 18px;border-radius:16px;background:rgba(21,28,38,.45);border:1px solid rgba(75,182,255,.5);color:#fff;outline:none;box-shadow:inset 0 0 18px rgba(36,126,255,.14),0 0 18px rgba(37,157,255,.1)}.submit{height:56px;border:none;border-radius:16px;font-size:22px;color:#fff;background:linear-gradient(135deg,#139dff,#2d7cff);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(19,157,255,.24)}.bar{margin-top:18px;display:flex;justify-content:space-between;align-items:center;color:#c8d2e4}.bar label{display:flex;align-items:center;gap:10px}.bar input{width:18px;height:18px}.tip{margin-top:18px;text-align:center;color:#c8d2e4;font-size:13px}.links{margin-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.link{padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}.primary{background:linear-gradient(135deg,#28a5ff,#1f7bff)}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <div class="icon">🎬</div>
+      <h1>后台管理登录</h1>
+      <div class="form">
+        <label class="label"><span>管理员账号</span><input class="input" value="admin" placeholder="请输入管理员账号"></label>
+        <label class="label"><span>登录密码</span><input class="input" type="password" value="admin123" placeholder="请输入登录密码"></label>
+        <a class="submit" href="./admin-dashboard.html">进入控制台</a>
+      </div>
+      <div class="bar"><label><input type="checkbox" checked>记住我</label><a href="./admin-dashboard.html">忘记密码</a></div>
+      <div class="tip">演示路径：登录后进入仪表盘，再切到用户管理或电影编辑页面。</div>
+      <div class="links"><a class="link" href="./index.html">返回前台首页</a><a class="link primary" href="./admin-movie-edit.html">直接查看电影编辑</a></div>
+    </section>
+  </main>
+</body>
+</html>

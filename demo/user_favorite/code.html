@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aether Cinema - My List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#4d4635",
+                    "surface-container": "#171f33",
+                    "on-tertiary-container": "#444546",
+                    "on-secondary-fixed": "#111c2d",
+                    "on-primary-container": "#594100",
+                    "on-secondary": "#273143",
+                    "inverse-primary": "#795900",
+                    "tertiary-fixed": "#e2e2e2",
+                    "on-background": "#dae2fd",
+                    "on-tertiary": "#2f3131",
+                    "on-error": "#690005",
+                    "on-surface": "#dae2fd",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#0b1326",
+                    "on-primary": "#3f2e00",
+                    "on-secondary-fixed-variant": "#3d475a",
+                    "error-container": "#93000a",
+                    "tertiary": "#cecece",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "surface-tint": "#f7be2c",
+                    "surface-container-lowest": "#060e20",
+                    "primary-container": "#e1aa12",
+                    "primary": "#ffc639",
+                    "inverse-surface": "#dae2fd",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "surface-variant": "#2d3449",
+                    "secondary": "#bcc7de",
+                    "on-surface-variant": "#d0c5af",
+                    "secondary-fixed": "#d8e3fb",
+                    "primary-fixed": "#ffdf9e",
+                    "on-error-container": "#ffdad6",
+                    "on-primary-fixed": "#261a00",
+                    "surface-container-high": "#222a3d",
+                    "surface-container-low": "#131b2e",
+                    "on-secondary-container": "#b2bcd3",
+                    "on-primary-fixed-variant": "#5b4300",
+                    "background": "#0b1326",
+                    "surface-container-highest": "#2d3449",
+                    "surface-bright": "#31394d",
+                    "surface": "#0b1326",
+                    "primary-fixed-dim": "#f7be2c",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "outline": "#99907c",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "inverse-on-surface": "#283044",
+                    "tertiary-container": "#b2b3b3",
+                    "secondary-container": "#424c5f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Epilogue"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #0b1326; color: #dae2fd; }
+        .font-headline { font-family: 'Epilogue', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-header { background: rgba(11, 19, 38, 0.8); backdrop-filter: blur(40px); }
+        .poster-shadow { box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.4); }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary/30">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-[#0b1326] flex flex-col py-8 gap-4 border-r border-outline-variant/10">
+<div class="px-8 mb-8">
+<h1 class="text-xl font-bold text-[#ffc639] font-headline tracking-tight">Aether Cinema</h1>
+</div>
+<nav class="flex flex-col gap-1">
+<!-- Home -->
+<a class="flex items-center gap-4 text-[#dae2fd] py-3 px-6 opacity-60 hover:bg-[#dae2fd]/5 hover:opacity-100 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 duration-200">home</span>
+<span class="font-medium">Home</span>
+</a>
+<!-- Discover -->
+<a class="flex items-center gap-4 text-[#dae2fd] py-3 px-6 opacity-60 hover:bg-[#dae2fd]/5 hover:opacity-100 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 duration-200">explore</span>
+<span class="font-medium">Discover</span>
+</a>
+<!-- My List (ACTIVE) -->
+<a class="flex items-center gap-4 bg-[#ffc639]/10 text-[#ffc639] border-r-4 border-[#ffc639] py-3 px-6 scale-[1.02] transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmarks</span>
+<span class="font-bold">My List</span>
+</a>
+<!-- Downloads -->
+<a class="flex items-center gap-4 text-[#dae2fd] py-3 px-6 opacity-60 hover:bg-[#dae2fd]/5 hover:opacity-100 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 duration-200">download</span>
+<span class="font-medium">Downloads</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-4 text-[#dae2fd] py-3 px-6 opacity-60 hover:bg-[#dae2fd]/5 hover:opacity-100 transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 duration-200">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6">
+<div class="bg-surface-container-low rounded-xl p-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-primary/20">
+<img alt="User profile portrait" class="w-full h-full object-cover" data-alt="User profile portrait of a middle-aged man with a refined appearance and thoughtful expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ-iX5kSifAm9pt1ga6-Lz8--mnoM5ujdyPidahF2ApU1pefZ68pJPcqcrCejGK50yK1bYQYSuI30I-2MHfDmpZb86U50RIJnOW3wVc_ISWpcYG56xVOfNtutCxOF3JaR3bXOtZlgLGMCS2m1bFxMLrqN7PLDJqXfMw_FQ7cBpOD0qhDpoY4_OMdMPkYQobsDEioqFFnjjB7JUETC-s3e52I4KnNz-d7s7wBuoF2qNumkXmJKcdXISqDwC5eDEDVpliFayr8p2rFk"/>
+</div>
+<div>
+<p class="text-sm font-headline font-bold text-on-surface">The Curator</p>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest">Premium Member</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen p-12">
+<!-- Header Section -->
+<header class="flex flex-col gap-8 mb-12">
+<div class="flex justify-between items-end">
+<div>
+<span class="text-primary text-xs font-bold tracking-[0.2em] uppercase mb-2 block">Personal Collection</span>
+<h2 class="text-5xl font-headline font-extrabold text-on-surface tracking-tight">My List</h2>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+<span class="text-sm font-label uppercase tracking-widest">Filter</span>
+</button>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">sort</span>
+<span class="text-sm font-label uppercase tracking-widest">Sort By</span>
+</button>
+</div>
+</div>
+<!-- Filter / Search Row -->
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 bg-surface-container-low/50 p-2 rounded-full border border-outline-variant/10">
+<div class="flex gap-2 p-1">
+<button class="px-8 py-2 rounded-full text-sm font-label uppercase tracking-widest transition-all bg-primary text-on-primary font-bold">All</button>
+<button class="px-8 py-2 rounded-full text-sm font-label uppercase tracking-widest transition-all text-on-surface-variant hover:text-on-surface">Movies</button>
+<button class="px-8 py-2 rounded-full text-sm font-label uppercase tracking-widest transition-all text-on-surface-variant hover:text-on-surface">Series</button>
+<button class="px-8 py-2 rounded-full text-sm font-label uppercase tracking-widest transition-all text-on-surface-variant hover:text-on-surface">Watchlist</button>
+</div>
+<div class="relative group w-full md:w-96 mr-2">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-full py-3 pl-12 pr-6 text-sm focus:ring-1 focus:ring-primary placeholder:text-on-surface-variant/50" placeholder="Search your collection..." type="text"/>
+</div>
+</div>
+</header>
+<!-- Movie Grid -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8">
+<!-- Movie Card 1 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden poster-shadow">
+<img alt="Space Odyssey" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Cinematic movie poster with a sci-fi theme, featuring a distant galaxy and a lone spaceship silhouetted against a neon nebula" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpB0IYW6wDJopMYDSLap2367KEv92Xcr-ygD0VoL44eEc_hdFSGieuU8Bm1CYB14aDCnG6RfG-hW3oBKr0mwGn1UaacFJ5GvLNv18bxpj3n698bXqtI3ZbEE7dgTSrcpWIqw8BXg8rypAWyoTdDxRWbn7VH-DhzjDOZdbT9uqrZwAscjuruTawd6o0gqhczqChsUHsmdZesuqvfpgBcsccQ53YoqGGJPmRFs88CS8vuCjdRPtNSwLmDHz750MlQB6amZ9oOE02Vn0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-container-highest/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg leading-tight group-hover:text-primary transition-colors">Project Aether</h3>
+<p class="text-sm text-on-surface-variant">2023 • Sci-Fi Thriller</p>
+</div>
+</div>
+</div>
+<!-- Movie Card 2 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden poster-shadow">
+<img alt="Midnight Rain" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Dramatic high-contrast movie poster for a film noir, showing a dark city street in the rain with a single streetlamp glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnW_PwXWZkDJvkLX3AKUUlS0Ppm19_Np2X17kcApe3NnfDUcTzcnfI2nDa00CTmBHkiUBvutIZduauMYoIq_I8ZO0isKMhUFBia88mAdYbzEUW2K7Qaeg19WV6fdIO9CopQuGjJxYmvmyDGXU8Qjuja1z-2aNcACT_eVQVIzMtGVoI25DXRaPTGVgjPUinFS7q59RSPW6NUJp6xAXJq8yEtjeXl4aDhvvPgWnNEWUlrr3CVVQUb6paki89qv5lRl2rk1XbIlqThNg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-container-highest/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg leading-tight group-hover:text-primary transition-colors">Midnight Rain</h3>
+<p class="text-sm text-on-surface-variant">2022 • Neo-Noir</p>
+</div>
+</div>
+</div>
+<!-- Movie Card 3 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden poster-shadow">
+<img alt="The Quiet Hour" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Introspective movie poster with an artistic focus on a single golden leaf falling into a still dark pool, minimalist and serene" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQdfTba12fhMME1s1ThvB8if9vwkYZVfmPoOawbtq1j_03OyV7otE6UBMEpsge2Yyvvh2heaEVwTAp-dpOYoVd4zC-8UL5pSS3BFr1KlBLZQvbEnhAtE44KPicPkqM6_dMtIPdX4SGrqT2Sar0dgpgdJdFvekuaWlPFAQ-9bD-MhCa-XuHOiOt3nyniFA3l51E5_0uIVEQyof8aRyERHN63iytPZGCJjHDJ9BXLebw3yUZDtKeT1B1cCipZi9tMtRDzi2P8XXeT4A"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-container-highest/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg leading-tight group-hover:text-primary transition-colors">The Quiet Hour</h3>
+<p class="text-sm text-on-surface-variant">2024 • Indie Drama</p>
+</div>
+</div>
+</div>
+<!-- Movie Card 4 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden poster-shadow">
+<img alt="Frost &amp; Fire" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Epic fantasy movie poster showing a majestic dragon flying over a snow-capped mountain range at dusk, deep orange and blue tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDGkHqGmpu73izEzh5hsRO3UgQEJ-AXWnn2BoJybElsOneqICrPx66WYKGC0VazJS-4_AC6TQtRhS8NTpiE4sOtc333XgGA2iZ_NE9STC8x7Bo_1Enr5m-ZwP1N6Wev6_v2FNSChylo9kSMs262jTc5_xmjhjju2QmKwoSUhFNWI3CCh_HiNou_aK_zLZmwXoGKuFRY_1jixMBbRrhWlfmnBFJloIFCGugxx9f5RbcbnBSUY8001G0a7EPpnqsUA64KZRiwcII8nU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-container-highest/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg leading-tight group-hover:text-primary transition-colors">Frost &amp; Fire</h3>
+<p class="text-sm text-on-surface-variant">2021 • Fantasy Epic</p>
+</div>
+</div>
+</div>
+<!-- Movie Card 5 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden poster-shadow">
+<img alt="Grove Spirits" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Vibrant animated movie poster featuring a group of colorful forest creatures in a sun-dappled magical grove, playful and bright" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB_cusCzYANRGC8MMmXv4sI8AA8MWDoxLjFegP_u3JIqDRe8Q7oJeI2Bxz-wB4l6ocMxgLeL8zF2-9e9x301paqLWC7dHMiRa4nvN_m9eDN7MJze0m5lAvb8ZY5moozVeCJ448HUyetf-zkqGzQRBHxSgilLMrUJK5PgPXzigaUv0oR74Mp7PTFcmu2Q35835Nxizs2w9-7epMF1fctkzqO88MNIsvRN7LEQtsIf5jS28FPQ-t5B8rOtIMcPTCa1M3EXeQiz1oBvw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-container-highest/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg leading-tight group-hover:text-primary transition-colors">Grove Spirits</h3>
+<p class="text-sm text-on-surface-variant">2023 • Animation</p>
+</div>
+</div>
+</div>
+<!-- Movie Card 6 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden poster-shadow">
+<img alt="Last Stand" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Intense action movie poster with a focused soldier silhouetted against an orange sunset explosion, high drama and grit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCVd4DJqP_J4aydW5Dz-_4b-AWOFfKPYFmOY2MXbjxT9-E7T8EhI6kfunWHJGwAa7RdxkhYmKB3-IIN8G70_G1wkGAkxG-yD80qtw1ZSF0g_wlA11MgZ7qFq3NfIFfjdY6L3ssxOER_K6x5w7ARU5IpOx0sL21iG29uW1hqqwLYwMBz7Ie6YrYa8fHDROA2LEeXd4WLUDJhESLMJgFkohsS_guzbzIN7WuQpKoa-m8jCdsTglYrbpV-jYIas--8DJxiCiJ25jo78g"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-container-highest/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg leading-tight group-hover:text-primary transition-colors">Last Stand</h3>
+<p class="text-sm text-on-surface-variant">2022 • War Drama</p>
+</div>
+</div>
+</div>
+<!-- Movie Card 7 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden poster-shadow">
+<img alt="The Golden Key" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Elegant and sophisticated mystery movie poster showing a gold key on a black velvet surface with sharp studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3kfcPW8_AfT6_l7Y6I0A1WbIUFpMw98SmvY-KCBJgACiqfMokjnheROIPu01FiZF5UduecCGIAO78p8Rpvr7J7DQmCnT4FG-bNhubHreGGfkiFC1Ei4FZsy9xiIZwcan1SMR3wIsVB7VNHLB3UMCKHunDflXOylrE59du7-Oi-jbH4Vzj6l5uos1PsJekLeD1P1SKwfVDb7wKnZpw6O9cBVfQjsnnizp0PuSDTIsiWcVyczQIM-tn3b60CyHT98Pfp1Q3CgIFrB4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-container-highest/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg leading-tight group-hover:text-primary transition-colors">The Golden Key</h3>
+<p class="text-sm text-on-surface-variant">2023 • Mystery</p>
+</div>
+</div>
+</div>
+<!-- Movie Card 8 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden poster-shadow">
+<img alt="Etheral Bond" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Conceptual movie poster with two hands reaching toward each other in a spark of light, suggesting a romantic or magical connection" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVGb54NjSRhOdghsyGkufh8x0j9U2To-Gv31R6UsHTw02gbRj4V92kSaeVxFwtxFJUmuCm1IOS0Ht2EN6jXO8orkdDGauvomqQed05YC71XaNCfepcx9UywlomoOf5tDzc--at-gNZ-juNQswfo72H1IFuyR6MJ8IrtV8r7HGPi7-pLJz1PkIWei0ST2UTrhbgkDtcYHBeQUKvmBdxGkJq1uQgdc24gF-P8a-IxG8RQxbnzrwzdk8MYUhlPSbOLqiFqhCOUssshwA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-surface-container-highest/60 backdrop-blur-md flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg leading-tight group-hover:text-primary transition-colors">Etheral Bond</h3>
+<p class="text-sm text-on-surface-variant">2024 • Romance</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Pagination Section -->
+<footer class="mt-20 flex flex-col items-center gap-6">
+<div class="h-[1px] w-full bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent"></div>
+<div class="flex items-center gap-2">
+<button class="w-12 h-12 rounded-full border border-outline-variant/20 flex items-center justify-center hover:bg-surface-container-high transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">chevron_left</span>
+</button>
+<div class="flex gap-1 px-4">
+<button class="w-12 h-12 rounded-full flex items-center justify-center font-bold text-primary bg-primary/10 border border-primary/30">1</button>
+<button class="w-12 h-12 rounded-full flex items-center justify-center font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors">2</button>
+<button class="w-12 h-12 rounded-full flex items-center justify-center font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors">3</button>
+<span class="w-12 h-12 flex items-center justify-center text-on-surface-variant">...</span>
+<button class="w-12 h-12 rounded-full flex items-center justify-center font-medium text-on-surface-variant hover:bg-surface-container-high transition-colors">12</button>
+</div>
+<button class="w-12 h-12 rounded-full border border-outline-variant/20 flex items-center justify-center hover:bg-surface-container-high transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">chevron_right</span>
+</button>
+</div>
+<p class="text-sm text-on-surface-variant/50 font-label uppercase tracking-[0.2em]">Showing 8 of 94 items</p>
+</footer>
+</main>
+<!-- Floating Quick Search (Accessibility/UX enhancement) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center scale-100 hover:scale-110 active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined">add</span>
+</button>
+</body></html>

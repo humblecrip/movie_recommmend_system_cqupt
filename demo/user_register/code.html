@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register | AETHER CINEMA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#e2e2e2",
+                      "error": "#ffb4ab",
+                      "outline-variant": "#4d4635",
+                      "primary-fixed": "#ffdf9e",
+                      "on-surface-variant": "#d0c5af",
+                      "on-secondary": "#273143",
+                      "inverse-surface": "#dae2fd",
+                      "on-surface": "#dae2fd",
+                      "on-primary": "#3f2e00",
+                      "surface-container-high": "#222a3d",
+                      "primary-fixed-dim": "#f7be2c",
+                      "tertiary": "#cecece",
+                      "on-primary-fixed": "#261a00",
+                      "primary": "#ffc639",
+                      "on-secondary-fixed-variant": "#3d475a",
+                      "secondary-fixed": "#d8e3fb",
+                      "surface-container-lowest": "#060e20",
+                      "secondary-container": "#424c5f",
+                      "surface-variant": "#2d3449",
+                      "on-primary-fixed-variant": "#5b4300",
+                      "on-primary-container": "#594100",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-low": "#131b2e",
+                      "on-secondary-container": "#b2bcd3",
+                      "tertiary-container": "#b2b3b3",
+                      "secondary-fixed-dim": "#bcc7de",
+                      "on-error": "#690005",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "surface": "#0b1326",
+                      "inverse-primary": "#795900",
+                      "on-background": "#dae2fd",
+                      "outline": "#99907c",
+                      "surface-container-highest": "#2d3449",
+                      "on-tertiary": "#2f3131",
+                      "on-secondary-fixed": "#111c2d",
+                      "inverse-on-surface": "#283044",
+                      "surface-tint": "#f7be2c",
+                      "surface-container": "#171f33",
+                      "secondary": "#bcc7de",
+                      "surface-bright": "#31394d",
+                      "surface-dim": "#0b1326",
+                      "primary-container": "#e1aa12",
+                      "tertiary-fixed-dim": "#c6c6c6",
+                      "on-tertiary-container": "#444546",
+                      "background": "#0b1326",
+                      "error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#454747"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "1.5rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Epilogue"],
+                      "body": ["Manrope"],
+                      "label": ["Manrope"]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+        }
+        input::placeholder {
+            color: rgba(218, 226, 253, 0.3)
+        }
+        .glass-card {
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary selection:text-on-primary min-h-screen">
+<!-- Background Cinematic Atmosphere -->
+<div class="fixed inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-b from-surface/40 via-surface/80 to-surface z-10"></div>
+<img class="w-full h-full object-cover filter blur-md scale-105" data-alt="Cinematic wide shot of an empty luxury theater with soft amber ambient lighting and deep shadows creating a moody atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC16AvMhBtHhevI1P4BF7JhXyIxc7o4juq1vojgldf6FlEojknzxoS13k-a_nGvQvYTytqZjyXjkovBlianWk9ZVjzuBJ1CT4IOOOsyiEk7_tlxRif2kWEm-hqZ9GNSxRgdsZPAAd2QqFjl3d8EjEt9i-qRbgWWFEq7V9eXtSb6aNuRDQph4iW_pFf23N7yzrj7og1AHyykrMR88TlJ2n0dnxXmLtVSwUkMQOqFAEv286mHrjV3TwZN4qgdlLDPKWxVgOyGR2Z0KzY"/>
+</div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-transparent">
+<div class="flex items-center justify-between px-8 py-6 w-full">
+<span class="text-2xl font-bold tracking-widest text-[#ffc639] uppercase font-headline">AETHER CINEMA</span>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#dae2fd]/70 hover:text-[#ffc639] transition-colors duration-300 font-label text-sm uppercase tracking-wider" href="#">Explore</a>
+<a class="text-[#dae2fd]/70 hover:text-[#ffc639] transition-colors duration-300 font-label text-sm uppercase tracking-wider" href="#">Collections</a>
+<a class="text-[#dae2fd]/70 hover:text-[#ffc639] transition-colors duration-300 font-label text-sm uppercase tracking-wider" href="#">Curators</a>
+<div class="h-4 w-px bg-outline-variant/30"></div>
+<a class="text-[#ffc639] font-bold font-label text-sm uppercase tracking-wider scale-105 active:scale-95 transition-transform" href="#">Register</a>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="relative z-20 min-h-screen flex flex-col items-center justify-center px-4 py-32">
+<!-- Central Registration Card -->
+<div class="w-full max-w-2xl glass-card bg-surface-variant/40 rounded-xl p-8 md:p-12 shadow-2xl border border-outline-variant/15">
+<header class="mb-10 text-center">
+<h1 class="font-headline text-4xl font-extrabold text-primary tracking-tight mb-3">Join the Curator's Circle</h1>
+<p class="font-body text-on-surface-variant text-lg">Create your account to start curating your cinematic journey.</p>
+</header>
+<form class="space-y-8">
+<!-- Avatar Upload Section -->
+<div class="flex flex-col items-center gap-4 mb-8">
+<div class="relative group">
+<div class="w-24 h-24 rounded-full border-2 border-dashed border-primary/40 flex items-center justify-center bg-surface-container-high/60 overflow-hidden cursor-pointer hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-primary text-3xl">add</span>
+</div>
+<label class="absolute bottom-0 right-0 bg-primary text-on-primary w-8 h-8 rounded-full flex items-center justify-center shadow-lg cursor-pointer scale-100 hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">photo_camera</span>
+</label>
+</div>
+<span class="font-label text-[11px] uppercase tracking-[0.05em] text-on-surface-variant">Profile Avatar</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- User Account -->
+<div class="md:col-span-2 space-y-2">
+<label class="font-label text-[11px] uppercase tracking-[0.05em] text-on-surface-variant ml-1">Username</label>
+<input class="w-full bg-surface-container-highest/60 border border-outline-variant/30 rounded-lg p-4 focus:ring-1 focus:ring-primary focus:border-primary text-on-surface outline-none transition-all" placeholder="the_curator_01" type="text"/>
+</div>
+<!-- Password Group -->
+<div class="space-y-2">
+<label class="font-label text-[11px] uppercase tracking-[0.05em] text-on-surface-variant ml-1">Password</label>
+<input class="w-full bg-surface-container-highest/60 border border-outline-variant/30 rounded-lg p-4 focus:ring-1 focus:ring-primary focus:border-primary text-on-surface outline-none transition-all" placeholder="••••••••" type="password"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-[11px] uppercase tracking-[0.05em] text-on-surface-variant ml-1">Confirm Password</label>
+<input class="w-full bg-surface-container-highest/60 border border-outline-variant/30 rounded-lg p-4 focus:ring-1 focus:ring-primary focus:border-primary text-on-surface outline-none transition-all" placeholder="••••••••" type="password"/>
+</div>
+<!-- Full Name -->
+<div class="md:col-span-2 space-y-2">
+<label class="font-label text-[11px] uppercase tracking-[0.05em] text-on-surface-variant ml-1">Full Name</label>
+<input class="w-full bg-surface-container-highest/60 border border-outline-variant/30 rounded-lg p-4 focus:ring-1 focus:ring-primary focus:border-primary text-on-surface outline-none transition-all" placeholder="Julian Aether" type="text"/>
+</div>
+<!-- Gender Select -->
+<div class="space-y-2">
+<label class="font-label text-[11px] uppercase tracking-[0.05em] text-on-surface-variant ml-1">Gender Identity</label>
+<select class="w-full bg-surface-container-highest/60 border border-outline-variant/30 rounded-lg p-4 focus:ring-1 focus:ring-primary focus:border-primary text-on-surface outline-none transition-all appearance-none cursor-pointer">
+<option disabled="" selected="" value="">Select option</option>
+<option value="curator">The Curator (Non-binary)</option>
+<option value="male">Male</option>
+<option value="female">Female</option>
+<option value="private">Prefer not to say</option>
+</select>
+</div>
+<!-- Phone Number -->
+<div class="space-y-2">
+<label class="font-label text-[11px] uppercase tracking-[0.05em] text-on-surface-variant ml-1">Phone Number</label>
+<input class="w-full bg-surface-container-highest/60 border border-outline-variant/30 rounded-lg p-4 focus:ring-1 focus:ring-primary focus:border-primary text-on-surface outline-none transition-all" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<!-- ID Card -->
+<div class="md:col-span-2 space-y-2">
+<label class="font-label text-[11px] uppercase tracking-[0.05em] text-on-surface-variant ml-1">ID Card / Passport Number</label>
+<input class="w-full bg-surface-container-highest/60 border border-outline-variant/30 rounded-lg p-4 focus:ring-1 focus:ring-primary focus:border-primary text-on-surface outline-none transition-all" placeholder="AB123456789" type="text"/>
+</div>
+</div>
+<!-- Primary CTA -->
+<div class="pt-6">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold py-4 rounded-full text-lg shadow-lg hover:shadow-primary/20 scale-100 hover:scale-[1.02] active:scale-95 transition-all duration-300" type="submit">
+                        Register
+                    </button>
+</div>
+<div class="text-center pt-4">
+<p class="font-body text-sm text-on-surface/60">
+                        Already have an account? 
+                        <a class="text-primary font-bold ml-1 hover:underline underline-offset-4 transition-all" href="#">Sign In</a>
+</p>
+</div>
+</form>
+</div>
+</main>
+<!-- Footer -->
+<footer class="relative z-20 w-full py-12 bg-transparent flex flex-col items-center gap-6 border-t border-[#dae2fd]/10">
+<div class="flex flex-wrap justify-center gap-8 md:gap-12">
+<a class="font-['Manrope'] text-[11px] uppercase tracking-[0.05em] text-[#dae2fd]/50 hover:text-[#dae2fd] transition-colors opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="font-['Manrope'] text-[11px] uppercase tracking-[0.05em] text-[#dae2fd]/50 hover:text-[#dae2fd] transition-colors opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="font-['Manrope'] text-[11px] uppercase tracking-[0.05em] text-[#dae2fd]/50 hover:text-[#dae2fd] transition-colors opacity-80 hover:opacity-100" href="#">Help Center</a>
+<a class="font-['Manrope'] text-[11px] uppercase tracking-[0.05em] text-[#dae2fd]/50 hover:text-[#dae2fd] transition-colors opacity-80 hover:opacity-100" href="#">Accessibility</a>
+</div>
+<div class="text-[#ffc639] font-bold font-headline tracking-widest text-xs">AETHER CINEMA</div>
+<p class="font-['Manrope'] text-[11px] uppercase tracking-[0.05em] text-[#dae2fd]/50">© 2024 AETHER CINEMA. THE DIRECTOR'S CUT.</p>
+</footer>
+</body></html>

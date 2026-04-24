@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinemaAI - 首页</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:"Segoe UI","Microsoft YaHei",sans-serif;background:#13203c;color:#fff}a{text-decoration:none;color:inherit}img{display:block;max-width:100%}
+    .topbar{height:76px;padding:0 34px;display:flex;align-items:center;justify-content:space-between;background:#18233b;border-bottom:1px solid rgba(255,255,255,.08)}
+    .brand{display:flex;align-items:center;gap:12px;font-size:22px}.brand-mark{width:34px;height:34px;border-radius:50%;border:2px solid #f0c454;color:#f0c454;display:grid;place-items:center;font-weight:700}.brand strong{color:#f0c454}
+    .nav{display:flex;gap:42px;font-size:17px}.nav a.active{color:#f0c454}.actions{display:flex;align-items:center;gap:18px}.avatar{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.25);object-fit:cover}
+    .search-icon{width:22px;height:22px;border:2px solid #fff;border-radius:50%;position:relative}.search-icon:after{content:"";position:absolute;width:10px;height:2px;background:#fff;right:-6px;bottom:-3px;transform:rotate(45deg)}
+    .page{padding:22px 36px 40px}.hero{display:grid;grid-template-columns:2.4fr 1fr 1.5fr 1fr;gap:12px;height:292px}.card{position:relative;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#23314d;box-shadow:0 20px 40px rgba(0,0,0,.35)}.card img{width:100%;height:100%;object-fit:cover}
+    .meta{position:absolute;left:20px;right:20px;bottom:16px;font-size:14px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.35))}.meta h2,.meta h3{margin:0 0 6px;font-size:20px}
+    .search-box{width:560px;max-width:calc(100% - 40px);margin:-22px auto 18px;position:relative;z-index:5;background:#26385f;border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:18px 22px 18px 64px;box-shadow:0 14px 30px rgba(0,0,0,.35)}
+    .search-box:before{content:"";position:absolute;left:22px;top:50%;width:24px;height:24px;margin-top:-12px;border:2px solid #b7c2db;border-radius:50%}.search-box:after{content:"";position:absolute;left:42px;top:50%;width:10px;height:2px;margin-top:8px;background:#b7c2db;transform:rotate(45deg)}
+    .search-box input{width:100%;background:transparent;border:0;outline:none;color:#fff;font-size:20px}.dots{display:flex;justify-content:center;gap:10px;margin-bottom:24px}.dots span{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,.4)}.dots .active{width:28px;background:#fff}
+    .content{display:grid;grid-template-columns:1fr 1.08fr;gap:28px}.title{font-size:22px;font-weight:600;margin:0 0 14px}.release-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.release{display:grid;grid-template-columns:90px 1fr;gap:14px;padding:14px;border-radius:20px;background:rgba(47,59,86,.78);border:1px solid rgba(255,255,255,.08);box-shadow:0 16px 30px rgba(0,0,0,.24)}
+    .release img{width:90px;height:104px;border-radius:16px;object-fit:cover}.release h3,.side h3,.feature h3{margin:0 0 8px;font-size:18px}.rating{color:#f0c454;margin-bottom:6px}.muted{color:#aeb6c6}
+    .showcase{display:grid;grid-template-columns:1.5fr .72fr;gap:16px}.feature{display:grid;grid-template-columns:190px 1fr;gap:16px;padding:16px;border-radius:20px;background:rgba(47,59,86,.78);border:1px solid rgba(255,255,255,.08);box-shadow:0 16px 30px rgba(0,0,0,.24)}.feature img{width:190px;height:238px;border-radius:18px;object-fit:cover}.feature p{margin:0 0 10px;line-height:1.45;color:#dce2ef}
+    .sidewrap{display:grid;gap:14px}.side{display:grid;grid-template-columns:90px 1fr;gap:12px;align-items:center;padding:12px;border-radius:20px;background:rgba(47,59,86,.78);border:1px solid rgba(255,255,255,.08);box-shadow:0 16px 30px rgba(0,0,0,.24)}.side img{width:90px;height:120px;border-radius:16px;object-fit:cover}
+    .btn{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 28px;border-radius:999px;background:linear-gradient(180deg,#f2cb63,#e2aa32);color:#241c12;font-weight:600;box-shadow:0 10px 20px rgba(226,169,50,.2)}
+    @media(max-width:1100px){.hero,.content,.showcase,.feature{grid-template-columns:1fr;height:auto}.release-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">CA</div><span>Cinema<strong>AI</strong></span></div>
+    <nav class="nav"><a class="active" href="./index.html">首页</a><a href="./movie-detail.html">探索</a><a href="./index.html">榜单</a><a href="./movie-detail.html">我的片单</a></nav>
+    <div class="actions"><div class="search-icon"></div><img class="avatar" src="../src/main/resources/static/upload/image1.jpg" alt="头像"></div>
+  </header>
+  <main class="page">
+    <section class="hero">
+      <article class="card"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao2.jpg" alt="奥本海默"><div class="meta"><h2>奥本海默</h2><div>21 场热映 · 25 家影院排片</div></div></article>
+      <article class="card"><img src="../src/main/resources/static/upload/1745559512182.webp" alt="芭比风格海报"></article>
+      <article class="card"><img src="../src/main/resources/static/upload/1745561626692.webp" alt="沙丘风格海报"></article>
+      <article class="card"><img src="../src/main/resources/static/upload/1745562161703.webp" alt="科幻海报"><div class="meta"><h3>沙丘：余烬</h3><div>本周推荐</div></div></article>
+    </section>
+    <div class="search-box"><input type="text" placeholder="搜索电影、演员或类型"></div>
+    <div class="dots"><span class="active"></span><span></span><span></span></div>
+    <section class="content">
+      <div>
+        <h2 class="title">最新上映</h2>
+        <div class="release-grid">
+          <article class="release"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao6.jpg" alt="留校联盟"><div><div class="rating">★ 4.5</div><h3>留校联盟</h3><div class="muted">2023</div></div></article>
+          <article class="release"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao4.jpg" alt="沙丘2"><div><div class="rating">★ 4.5</div><h3>沙丘：第二部</h3><div class="muted">2025</div></div></article>
+          <article class="release"><img src="../src/main/resources/static/upload/1577351717989.jpg" alt="过往人生"><div><div class="rating">★ 4.5</div><h3>过往人生</h3><div class="muted">2019</div></div></article>
+          <article class="release"><img src="../src/main/resources/static/upload/1744460226960.png" alt="第一场战争"><div><div class="rating">★ 4.5</div><h3>第一场战争</h3><div class="muted">2024</div></div></article>
+          <article class="release"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao8.jpg" alt="暗色衣橱"><div><div class="rating">★ 4.5</div><h3>暗色衣橱</h3><div class="muted">2023</div></div></article>
+          <article class="release"><img src="../src/main/resources/static/upload/1745561033715.webp" alt="再次相遇"><div><div class="rating">★ 4.5</div><h3>再次相遇</h3><div class="muted">2021</div></div></article>
+        </div>
+      </div>
+      <div>
+        <h2 class="title">电影信息展示</h2>
+        <div class="showcase">
+          <article class="feature"><img src="../src/main/resources/static/upload/1745558948078.webp" alt="花月杀手"><div><h3>花月杀手</h3><p>本片围绕一宗连环悬案展开，在时代洪流之中呈现家族、资本与欲望之间的复杂关系。</p><p class="muted">主演：约翰·达里昂、卡斯特、琼·汉斯等</p><p class="muted">35 万次浏览</p><a class="btn" href="./movie-detail.html">查看详情</a></div></article>
+          <div class="sidewrap">
+            <article class="side"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao3.jpg" alt="可怜的东西"><div><div class="rating">★ 4.5</div><h3>可怜的东西</h3><div class="muted">2024</div></div></article>
+            <article class="side"><img src="../src/main/resources/static/upload/yonghu_touxiang6.jpg" alt="过往人生"><div><div class="rating">★ 4.5</div><h3>过往人生</h3><div class="muted">2024</div></div></article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinemaAI - 后台电影编辑</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:"Segoe UI","Microsoft YaHei",sans-serif;background:linear-gradient(180deg,#151f31,#111927);color:#fff}a{text-decoration:none;color:inherit}img{display:block;max-width:100%}
+    .layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}.sidebar{background:linear-gradient(180deg,#161f30,#172131 70%,#141d2c);border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column}.brandbar{height:76px;padding:0 28px;display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,.08)}.brand{display:flex;align-items:center;gap:12px;font-size:22px}.brand-mark{width:34px;height:34px;border-radius:50%;border:2px solid #f0c454;color:#f0c454;display:grid;place-items:center;font-weight:700}.brand strong{color:#f0c454}
+    .sidenav{padding:26px 20px;display:grid;gap:12px}.link{height:58px;padding:0 18px;border-radius:14px;display:flex;align-items:center;gap:14px;font-size:16px}.icon{width:18px;height:18px;border:2px solid currentColor;border-radius:4px}.link.active{background:linear-gradient(180deg,rgba(240,196,84,.82),rgba(164,132,53,.82));color:#251d13}.userbox{margin-top:auto;padding:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between}.userleft{display:flex;align-items:center;gap:12px}.avatar{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.25);object-fit:cover}.muted{color:#aeb6c6}
+    .main{background:linear-gradient(180deg,#151f31,#111927)}.top{height:76px;padding:0 34px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08)}.nav{display:flex;gap:42px;font-size:17px}.nav a.active{color:#f0c454}.right{display:flex;align-items:center;gap:18px}.search-icon{width:22px;height:22px;border:2px solid #fff;border-radius:50%;position:relative}.search-icon:after{content:"";position:absolute;width:10px;height:2px;background:#fff;right:-6px;bottom:-3px;transform:rotate(45deg)}
+    .shell{padding:26px 30px 30px}.card{background:rgba(17,24,38,.44);border:1px solid rgba(255,255,255,.12);border-radius:24px;box-shadow:0 20px 40px rgba(0,0,0,.34);padding:24px;display:grid;grid-template-columns:300px 1fr;gap:28px}.poster{background:rgba(47,58,77,.54);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:14px}.frame{border-radius:24px;overflow:hidden;border:2px solid rgba(255,255,255,.22);margin-bottom:14px}.frame img{width:100%;height:470px;object-fit:cover}.posterbtn,.save,.cancel,.addactor{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;cursor:pointer}.posterbtn,.save{background:linear-gradient(180deg,#f2cb63,#e2aa32);color:#241c12;font-weight:600;box-shadow:0 10px 20px rgba(226,169,50,.2)}.cancel,.addactor{border:2px solid rgba(240,196,84,.82);color:#f4d073;background:transparent}.posterbtn{width:100%;height:52px;font-size:17px}
+    .form{display:grid;gap:18px}.row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.group{display:grid;gap:8px}.group label{font-size:16px}.input,.textarea,.chip,.genres{background:rgba(58,68,88,.48);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:14px}.input{height:42px;padding:0 14px}.textarea{min-height:138px;padding:12px 14px;resize:vertical}.genres{min-height:42px;display:flex;align-items:center;gap:8px;padding:6px 10px;flex-wrap:wrap}.tag{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:6px 10px;font-size:14px}
+    .cast{display:grid;gap:12px}.castrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.chip{min-height:44px;display:flex;align-items:center;gap:10px;padding:6px 10px}.chip img{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid rgba(240,196,84,.62)}
+    .bar{margin-top:26px;background:linear-gradient(90deg,rgba(65,73,89,.75),rgba(91,96,106,.5) 35%,rgba(50,56,69,.72));border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:14px 18px;display:flex;justify-content:flex-end;gap:16px}.cancel,.save,.addactor{min-width:170px;height:48px;font-size:16px}.save{min-width:240px}
+    @media(max-width:1100px){.layout,.card,.row,.castrow{grid-template-columns:1fr}.sidebar{display:none}}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brandbar"><div class="brand"><div class="brand-mark">CA</div><span>Cinema<strong>AI</strong></span></div></div>
+      <nav class="sidenav">
+        <a class="link" href="./admin-dashboard.html"><span class="icon"></span><span>仪表盘</span></a>
+        <a class="link active" href="./admin-movie-edit.html"><span class="icon"></span><span>电影管理</span></a>
+        <a class="link" href="./admin-users.html"><span class="icon"></span><span>用户管理</span></a>
+        <a class="link" href="./admin-login.html"><span class="icon"></span><span>系统设置</span></a>
+      </nav>
+      <div class="userbox"><div class="userleft"><img class="avatar" src="../src/main/resources/static/upload/image1.jpg" alt="管理员"><div><div>管理员</div><div class="muted">超级账号</div></div></div><div class="muted">⌄</div></div>
+    </aside>
+    <main class="main">
+      <header class="top"><nav class="nav"><a href="./admin-dashboard.html">仪表盘</a><a class="active" href="./admin-movie-edit.html">电影</a><a href="./admin-users.html">用户</a><a href="./admin-login.html">设置</a></nav><div class="right"><div class="search-icon"></div><div>admin</div><img class="avatar" src="../src/main/resources/static/upload/image1.jpg" alt="管理员"></div></header>
+      <section class="shell">
+        <div class="card">
+          <div class="poster"><div class="frame"><img src="../src/main/resources/static/upload/dianyingxinxi_haibao2.jpg" alt="海报"></div><a class="posterbtn" href="./admin-movie-edit.html">替换海报</a></div>
+          <div class="form">
+            <div class="group"><label>电影名称</label><input class="input" value="奥本海默"></div>
+            <div class="row">
+              <div class="group"><label>上映年份</label><input class="input" value="2023"></div>
+              <div class="group"><label>片长</label><input class="input" value="3小时"></div>
+              <div class="group"><label>年龄分级</label><input class="input" value="R级"></div>
+              <div class="group"><label>类型</label><div class="genres"><span class="tag">剧情 ×</span><span class="tag">历史 ×</span><span class="tag">传记 ×</span></div></div>
+            </div>
+            <div class="group"><label>影片简介</label><textarea class="textarea">《奥本海默》讲述天才物理学家在时代浪潮中走向历史中心的过程。影片以宏大的历史背景和密集的人物冲突，塑造出一段兼具理性力量与道德焦虑的史诗叙事。</textarea></div>
+            <div class="group"><label>演员与主创管理</label><div class="cast">
+              <div class="castrow"><div class="chip"><img src="../src/main/resources/static/upload/yonghu_touxiang1.jpg" alt="演员"><span>基里安·墨菲</span></div><div class="chip"><img src="../src/main/resources/static/upload/yonghu_touxiang2.jpg" alt="演员"><span>艾米莉·布朗特</span></div><div class="chip"><img src="../src/main/resources/static/upload/yonghu_touxiang3.jpg" alt="演员"><span>马特·达蒙</span></div></div>
+              <div class="castrow"><div class="chip"><img src="../src/main/resources/static/upload/yonghu_touxiang4.jpg" alt="演员"><span>卡罗因·沃尔顿</span></div><div class="chip"><img src="../src/main/resources/static/upload/yonghu_touxiang5.jpg" alt="演员"><span>简·斯图龙</span></div><a class="addactor" href="./admin-movie-edit.html">新增演员</a></div>
+            </div></div>
+          </div>
+        </div>
+        <div class="bar"><a class="cancel" href="./admin-dashboard.html">取消</a><a class="save" href="./movie-detail.html">保存修改并发布</a></div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

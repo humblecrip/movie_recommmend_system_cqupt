@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aether Cinema - Personal Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800;900&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#d0c5af",
+                      "on-secondary-fixed-variant": "#3d475a",
+                      "inverse-primary": "#795900",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-primary-fixed-variant": "#5b4300",
+                      "tertiary": "#cecece",
+                      "primary-container": "#e1aa12",
+                      "inverse-on-surface": "#283044",
+                      "error-container": "#93000a",
+                      "on-tertiary-container": "#444546",
+                      "on-secondary-fixed": "#111c2d",
+                      "tertiary-fixed-dim": "#c6c6c6",
+                      "on-primary-fixed": "#261a00",
+                      "surface-bright": "#31394d",
+                      "on-error": "#690005",
+                      "surface-tint": "#f7be2c",
+                      "primary": "#ffc639",
+                      "on-background": "#dae2fd",
+                      "surface": "#0b1326",
+                      "secondary": "#bcc7de",
+                      "surface-dim": "#0b1326",
+                      "tertiary-container": "#b2b3b3",
+                      "on-surface": "#dae2fd",
+                      "inverse-surface": "#dae2fd",
+                      "surface-container": "#171f33",
+                      "primary-fixed": "#ffdf9e",
+                      "on-secondary": "#273143",
+                      "on-primary-container": "#594100",
+                      "outline": "#99907c",
+                      "surface-container-low": "#131b2e",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-highest": "#2d3449",
+                      "surface-variant": "#2d3449",
+                      "secondary-fixed-dim": "#bcc7de",
+                      "primary-fixed-dim": "#f7be2c",
+                      "on-secondary-container": "#b2bcd3",
+                      "background": "#0b1326",
+                      "surface-container-lowest": "#060e20",
+                      "secondary-fixed": "#d8e3fb",
+                      "tertiary-fixed": "#e2e2e2",
+                      "secondary-container": "#424c5f",
+                      "outline-variant": "#4d4635",
+                      "on-tertiary": "#2f3131",
+                      "surface-container-high": "#222a3d",
+                      "error": "#ffb4ab",
+                      "on-primary": "#3f2e00"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Epilogue"],
+                      "body": ["Manrope"],
+                      "label": ["Manrope"]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #0b1326; color: #dae2fd; }
+        .font-headline { font-family: 'Epilogue', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { background: rgba(23, 31, 51, 0.4); backdrop-filter: blur(24px); }
+        input:focus, select:focus { outline: none; border-color: #ffc639 ! from-primary-container; }
+    </style>
+</head>
+<body class="bg-surface overflow-hidden">
+<!-- Predicted Component: SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col z-50 py-8 bg-slate-950/80 backdrop-blur-xl h-screen w-64 border-r-0 shadow-[0px_20px_50px_rgba(0,0,0,0.4)]">
+<div class="px-8 mb-12">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-gradient-to-tr from-primary to-primary-container rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">movie_filter</span>
+</div>
+<div>
+<h1 class="text-2xl font-bold tracking-tighter text-amber-400 font-headline">Aether Cinema</h1>
+<p class="text-[10px] tracking-widest uppercase font-semibold text-slate-400">The Director's Cut</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Home -->
+<a class="text-slate-400 flex items-center gap-4 px-6 py-4 transition-colors hover:text-amber-200 hover:bg-slate-900/50" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="tracking-widest uppercase text-xs font-semibold">Home</span>
+</a>
+<!-- Browse -->
+<a class="text-slate-400 flex items-center gap-4 px-6 py-4 transition-colors hover:text-amber-200 hover:bg-slate-900/50" href="#">
+<span class="material-symbols-outlined">movie_filter</span>
+<span class="tracking-widest uppercase text-xs font-semibold">Browse</span>
+</a>
+<!-- My Library -->
+<a class="text-slate-400 flex items-center gap-4 px-6 py-4 transition-colors hover:text-amber-200 hover:bg-slate-900/50" href="#">
+<span class="material-symbols-outlined">video_library</span>
+<span class="tracking-widest uppercase text-xs font-semibold">My Library</span>
+</a>
+<!-- Profile (ACTIVE) -->
+<a class="text-amber-400 font-bold border-r-4 border-amber-400 bg-gradient-to-l from-amber-400/10 to-transparent flex items-center gap-4 px-6 py-4 transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="tracking-widest uppercase text-xs font-semibold">Profile</span>
+</a>
+<!-- Settings -->
+<a class="text-slate-400 flex items-center gap-4 px-6 py-4 transition-colors hover:text-amber-200 hover:bg-slate-900/50" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="tracking-widest uppercase text-xs font-semibold">Settings</span>
+</a>
+</nav>
+<div class="px-6 py-4">
+<button class="w-full py-3 px-4 rounded-xl bg-surface-container-high border border-outline-variant/30 text-amber-400 text-xs font-bold tracking-widest uppercase hover:bg-surface-container-highest transition-all scale-102 transition-transform duration-300">
+                Upgrade to 4K
+            </button>
+</div>
+<div class="mt-auto border-t border-white/5 pt-4">
+<a class="text-slate-400 flex items-center gap-4 px-6 py-3 transition-colors hover:text-amber-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="tracking-widest uppercase text-xs font-semibold">Help</span>
+</a>
+<a class="text-slate-400 flex items-center gap-4 px-6 py-3 transition-colors hover:text-amber-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="tracking-widest uppercase text-xs font-semibold">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen relative overflow-y-auto">
+<!-- Hero Background (Atmospheric Tension) -->
+<div class="absolute top-0 left-0 w-full h-[400px] opacity-20 pointer-events-none">
+<img alt="Cinema Atmosphere" class="w-full h-full object-cover" data-alt="Cinematic background with soft bokeh lights and deep blue movie theater aesthetic with dramatic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWtXy0rTFXLSfRTV4ROKEk8kqa9cJYGy_BQCCEVl0ouryZI0auboD2ORSZQ10bftjfQxZ6chYfDuPBiyno7pWDs7zI0yQxnH2xnml73l0oe6RbeWqPNgYfLhjq1IRc54YgkA3Kdc9Ce1iPQBtqAdeAJ33Wap84Ecqq2Xl6V2mh0mm8izE_0qc-zIir09uoV2e9CbYAhhh6OE-I_t8o1Ks6BobeyTPtxDDncM5MDFhnjzku04QTL6UJ_fv4nkndveVOH2ajapWPxe8"/>
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-surface to-surface"></div>
+</div>
+<!-- Content Canvas -->
+<div class="relative z-10 max-w-4xl mx-auto px-12 py-16">
+<!-- Page Header -->
+<header class="mb-12">
+<h2 class="text-5xl font-black font-headline text-on-surface tracking-tight mb-2">个人中心</h2>
+<p class="text-on-surface-variant font-medium opacity-80">Edit your profile and curate your cinema experience.</p>
+</header>
+<!-- Profile Edit Section -->
+<section class="glass-panel rounded-[2rem] p-10 border border-outline-variant/10 shadow-2xl">
+<form class="space-y-10">
+<!-- Avatar Upload -->
+<div class="flex items-center gap-8 mb-12">
+<div class="relative group">
+<div class="w-32 h-32 rounded-full ring-4 ring-primary/20 p-1 overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover rounded-full" data-alt="Close-up portrait of a professional man with a slight smile and warm cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVPJuOiEZBQmi_PEFqVeERdmkOuNoOUKv4tngmt3y6qZgpnMOo-yxfX_xucGxo8ql3KDJPVaGdQ7xpszu38b-jEGCsOzWMmPsDdHegaCyJpCSwvOGDoj50EWuYECUaM3bUFUfQVKTTY0y3KNqiAfFfD5mHG3JJuHLXsXzoYaqR2Ff-rJQF8bNJBXxxTvDtIBtOjSdHkpovI2mvVvHl1GAZYhEcmgU6azr88JLXLr8SpfV51JwpzKkfD-pz0sH9fjdf1Cp_fP3huD0"/>
+</div>
+<label class="absolute bottom-1 right-1 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary cursor-pointer shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">add</span>
+<input class="hidden" type="file"/>
+</label>
+</div>
+<div>
+<h3 class="text-xl font-bold font-headline text-on-surface">Profile Identity</h3>
+<p class="text-sm text-on-surface-variant">Update your photo and digital presence.</p>
+</div>
+</div>
+<!-- Form Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+<!-- Read-only Account -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant ml-1">User Account</label>
+<div class="w-full px-5 py-4 bg-surface-container-lowest border border-outline-variant/20 rounded-2xl text-on-surface/50 font-medium cursor-not-allowed">
+                                111
+                            </div>
+</div>
+<!-- Editable Name -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant ml-1">User Name</label>
+<input class="w-full px-5 py-4 bg-surface-container-highest border border-outline-variant/30 rounded-2xl text-on-surface font-semibold focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface/20" type="text" value="胡月"/>
+</div>
+<!-- Gender Select -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant ml-1">Gender</label>
+<div class="relative">
+<select class="w-full px-5 py-4 bg-surface-container-highest border border-outline-variant/30 rounded-2xl text-on-surface font-semibold focus:ring-2 focus:ring-primary/20 transition-all appearance-none cursor-pointer">
+<option selected="" value="男">男</option>
+<option value="女">女</option>
+<option value="其他">其他</option>
+</select>
+<span class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<!-- Phone Number -->
+<div class="space-y-2">
+<label class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant ml-1">Phone Number</label>
+<input class="w-full px-5 py-4 bg-surface-container-highest border border-outline-variant/30 rounded-2xl text-on-surface font-semibold focus:ring-2 focus:ring-primary/20 transition-all" type="tel" value="13612512514"/>
+</div>
+<!-- ID Number (Wide Span) -->
+<div class="md:col-span-2 space-y-2">
+<label class="text-[10px] font-bold tracking-widest uppercase text-on-surface-variant ml-1">ID Card</label>
+<input class="w-full px-5 py-4 bg-surface-container-highest border border-outline-variant/30 rounded-2xl text-on-surface font-semibold focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-on-surface/20" placeholder="身份证" type="text"/>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center justify-end gap-6 pt-10 mt-10 border-t border-outline-variant/10">
+<button class="px-10 py-4 rounded-full border border-outline-variant/50 text-on-surface font-bold text-sm tracking-widest uppercase hover:bg-white/5 transition-colors" type="button">
+                            取消
+                        </button>
+<button class="px-12 py-4 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-black text-sm tracking-widest uppercase shadow-[0_10px_30px_rgba(255,198,57,0.3)] hover:scale-105 transition-all active:scale-95" type="submit">
+                            确定
+                        </button>
+</div>
+</form>
+</section>
+<!-- Decorative Meta (Curated Whitespace) -->
+<footer class="mt-20 flex justify-between items-center opacity-30">
+<p class="text-[10px] tracking-[0.2em] uppercase font-semibold">Security Level: Gold Tier Member</p>
+<p class="text-[10px] tracking-[0.2em] uppercase font-semibold">Last Updated: 2023-11-20</p>
+</footer>
+</div>
+</main>
+<!-- Background Decoration -->
+<div class="fixed bottom-0 right-0 w-96 h-96 bg-primary/10 blur-[120px] rounded-full -mr-48 -mb-48 pointer-events-none z-0"></div>
+</body></html>

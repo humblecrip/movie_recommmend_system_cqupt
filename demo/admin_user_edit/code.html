@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800;900&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "on-primary-fixed": "#261a00",
+                    "outline": "#99907c",
+                    "on-primary-fixed-variant": "#5b4300",
+                    "error": "#ffb4ab",
+                    "surface-container-high": "#222a3d",
+                    "tertiary-fixed": "#e2e2e2",
+                    "surface-tint": "#f7be2c",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "surface-dim": "#0b1326",
+                    "surface-container": "#171f33",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "surface-container-lowest": "#060e20",
+                    "on-primary-container": "#594100",
+                    "on-primary": "#3f2e00",
+                    "secondary": "#bcc7de",
+                    "on-surface-variant": "#d0c5af",
+                    "on-secondary": "#273143",
+                    "inverse-primary": "#795900",
+                    "surface-bright": "#31394d",
+                    "inverse-surface": "#dae2fd",
+                    "error-container": "#93000a",
+                    "outline-variant": "#4d4635",
+                    "tertiary": "#cecece",
+                    "surface-container-low": "#131b2e",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-highest": "#2d3449",
+                    "on-secondary-container": "#b2bcd3",
+                    "surface-variant": "#2d3449",
+                    "on-tertiary-container": "#444546",
+                    "surface": "#0b1326",
+                    "background": "#0b1326",
+                    "primary-fixed-dim": "#f7be2c",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "on-tertiary": "#2f3131",
+                    "on-secondary-fixed": "#111c2d",
+                    "on-surface": "#dae2fd",
+                    "inverse-on-surface": "#283044",
+                    "primary-fixed": "#ffdf9e",
+                    "on-secondary-fixed-variant": "#3d475a",
+                    "on-error": "#690005",
+                    "on-background": "#dae2fd",
+                    "primary": "#ffc639",
+                    "secondary-container": "#424c5f",
+                    "tertiary-container": "#b2b3b3",
+                    "secondary-fixed": "#d8e3fb",
+                    "primary-container": "#e1aa12"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Epilogue"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+            font-family: 'Manrope', sans-serif;
+        }
+        .glass-card {
+            background: rgba(45, 52, 73, 0.4);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="h-screen w-72 fixed left-0 top-0 overflow-y-auto bg-slate-900 shadow-[20px_0px_50px_rgba(0,0,0,0.4)] flex flex-col py-8 z-50">
+<div class="px-8 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-fixed" style="font-variation-settings: 'FILL' 1;">movie</span>
+</div>
+<div>
+<h1 class="text-yellow-500 font-['Epilogue'] font-black text-xl tracking-tighter">Aether Admin</h1>
+<p class="text-indigo-200/50 text-[10px] font-['Manrope'] uppercase tracking-widest">High-End Management</p>
+</div>
+</div>
+</div>
+<nav class="flex-grow">
+<a class="text-indigo-200/50 py-4 px-6 flex items-center gap-4 hover:bg-slate-800/50 hover:text-indigo-100 transition-all group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-['Manrope'] uppercase tracking-[0.05em] text-[0.6875rem]">Dashboard</span>
+</a>
+<a class="text-indigo-200/50 py-4 px-6 flex items-center gap-4 hover:bg-slate-800/50 hover:text-indigo-100 transition-all group" href="#">
+<span class="material-symbols-outlined">movie</span>
+<span class="font-['Manrope'] uppercase tracking-[0.05em] text-[0.6875rem]">Film Library</span>
+</a>
+<a class="text-indigo-200/50 py-4 px-6 flex items-center gap-4 hover:bg-slate-800/50 hover:text-indigo-100 transition-all group" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-['Manrope'] uppercase tracking-[0.05em] text-[0.6875rem]">Schedule</span>
+</a>
+<!-- Active State: User Management -->
+<a class="bg-slate-800 text-yellow-500 border-r-4 border-yellow-500 py-4 px-6 flex items-center gap-4 scale-[1.02] transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-['Manrope'] uppercase tracking-[0.05em] text-[0.6875rem] font-bold">User Management</span>
+</a>
+<a class="text-indigo-200/50 py-4 px-6 flex items-center gap-4 hover:bg-slate-800/50 hover:text-indigo-100 transition-all group" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-['Manrope'] uppercase tracking-[0.05em] text-[0.6875rem]">Analytics</span>
+</a>
+</nav>
+<div class="px-6 mt-auto space-y-2">
+<a class="text-indigo-200/50 py-3 px-4 flex items-center gap-4 hover:text-indigo-100 transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-['Manrope'] uppercase tracking-[0.05em] text-[0.6875rem]">Support</span>
+</a>
+<a class="text-indigo-200/50 py-3 px-4 flex items-center gap-4 hover:text-red-400 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-['Manrope'] uppercase tracking-[0.05em] text-[0.6875rem]">Log Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-grow ml-72 min-h-screen relative overflow-hidden">
+<!-- TopNavBar -->
+<header class="w-full sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl shadow-2xl shadow-slate-950/50 flex justify-between items-center px-8 h-20">
+<div class="flex items-center gap-2">
+<span class="text-indigo-200/50 text-sm font-['Manrope']">Pages /</span>
+<span class="text-yellow-500 font-bold font-['Epilogue'] tracking-tight">User Profile Editing</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-indigo-200/50">search</span>
+<input class="bg-surface-container-highest border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary w-64 text-on-surface" placeholder="Search resources..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-indigo-200/70 hover:text-yellow-400 transition-colors scale-105 active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-indigo-200/70 hover:text-yellow-400 transition-colors scale-105 active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-surface-container-high border-2 border-primary/20 overflow-hidden">
+<img alt="Administrator profile" class="w-full h-full object-cover" data-alt="Close-up professional headshot of a senior administrator in a dark studio setting with soft amber rim lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk3fTZR8wMD4_ib9RrkKq8VzAk-0dbjcA_KE1P9Q5938nan-ErNQfyfhP4tEsHzoXYCEKINPvaTbRKVuDhdmVm7Ydfq81aL4P6az7rVYwzyb39mKvIAQh0GJQJ-b4UbGFQvTgwBybFgB_tzZP7AJ3Nn4mf16BaJRHPTECoMJ7an694telASsdc0cgH2T7t9HA-zjxoOsDlMVG39a9LBZOSIOn2wiTnBc8r_iUyxpXxrjbhCeczP4ZfGpII4BLV_pNrwfCaO7Us9Js"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-12 flex justify-center items-start">
+<!-- Background Decorative Element -->
+<div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 blur-[120px] rounded-full -mr-48 -mt-48 pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/10 blur-[100px] rounded-full -ml-32 -mb-32 pointer-events-none"></div>
+<!-- Profile Edit Card -->
+<div class="glass-card w-full max-w-4xl rounded-[2rem] p-10 relative z-10 shadow-2xl border border-white/5">
+<div class="mb-10">
+<h2 class="text-3xl font-bold font-['Epilogue'] text-on-surface tracking-tight mb-2">Edit User Profile</h2>
+<p class="text-on-surface-variant text-sm">Update account information and security credentials for Aether Cinema administration.</p>
+</div>
+<form class="space-y-8">
+<!-- Avatar Upload Section -->
+<div class="flex flex-col items-center sm:flex-row gap-8 mb-12">
+<div class="relative group">
+<div class="w-32 h-32 rounded-full border-4 border-primary p-1 shadow-2xl shadow-primary/20">
+<img alt="Avatar preview" class="w-full h-full rounded-full object-cover" data-alt="Close-up professional headshot of a man with clean-cut appearance used as a profile picture preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb1p02_9veH03IeVTI-xdapEPg6vhIPNTQOXd6fccfK93W_fnqqIZG4sS3Z-h5X824BDcSo9qCUg6ALlnODIvbLfvQHR8isoB0AnsPx-w0ApcQYq97K8DvGUer45pTZhBakelxJPJlCG69wdVEGPOiG2sp3YfGAWQ8BvNfhSKZw6qH_7Lspl8LOSoXIicd3ym7iOJaAHXNO7460JNk_MJqY8b7hihhoqunBQttq2CKWKugQ7i0cM9P-4jpmoFtiIX5IspwqlKyaQw"/>
+</div>
+<label class="absolute bottom-0 right-0 bg-primary text-on-primary-fixed p-2 rounded-full cursor-pointer shadow-lg hover:scale-110 transition-transform" for="avatar-upload">
+<span class="material-symbols-outlined text-sm">photo_camera</span>
+<input class="hidden" id="avatar-upload" type="file"/>
+</label>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-yellow-500/80">头像 (Avatar)</label>
+<p class="text-xs text-on-surface-variant max-w-xs">JPG, GIF or PNG. Max size of 2MB. Recommended resolution 400x400.</p>
+<button class="mt-2 text-xs font-bold text-primary hover:text-yellow-400 transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-sm">upload</span>
+                                Click to Upload
+                            </button>
+</div>
+</div>
+<!-- Bento Form Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+<!-- User Account -->
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-on-surface-variant px-1">用户账号</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 text-lg">account_circle</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-primary rounded-xl py-3.5 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/40 transition-all outline-none ring-0 focus:ring-1 focus:ring-primary/30" type="text" value="admin_curator_01"/>
+</div>
+</div>
+<!-- Password -->
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-on-surface-variant px-1">密码</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 text-lg">lock</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-primary rounded-xl py-3.5 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/40 transition-all outline-none ring-0 focus:ring-1 focus:ring-primary/30" type="password" value="••••••••••••"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant/60 cursor-pointer hover:text-primary transition-colors">visibility</span>
+</div>
+</div>
+<!-- User Name -->
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-on-surface-variant px-1">用户姓名</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 text-lg">badge</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-primary rounded-xl py-3.5 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/40 transition-all outline-none ring-0 focus:ring-1 focus:ring-primary/30" type="text" value="张立群"/>
+</div>
+</div>
+<!-- Gender -->
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-on-surface-variant px-1">性别</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 text-lg">wc</span>
+<select class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-primary rounded-xl py-3.5 pl-12 pr-10 text-on-surface appearance-none transition-all outline-none ring-0 focus:ring-1 focus:ring-primary/30">
+<option selected="" value="male">男 (Male)</option>
+<option value="female">女 (Female)</option>
+<option value="other">其他 (Other)</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant/60">expand_more</span>
+</div>
+</div>
+<!-- Phone Number -->
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-on-surface-variant px-1">联系电话</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 text-lg">call</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-primary rounded-xl py-3.5 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/40 transition-all outline-none ring-0 focus:ring-1 focus:ring-primary/30" type="tel" value="+86 138-0013-8000"/>
+</div>
+</div>
+<!-- ID Card Number -->
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-[0.05em] text-on-surface-variant px-1">身份证</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 text-lg">credit_card</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/30 focus:border-primary rounded-xl py-3.5 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant/40 transition-all outline-none ring-0 focus:ring-1 focus:ring-primary/30" type="text" value="110101199001011234"/>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-10 flex items-center justify-end gap-4 border-t border-outline-variant/10">
+<button class="px-8 py-3.5 rounded-full text-sm font-bold font-['Manrope'] text-on-surface-variant hover:text-on-surface transition-colors border border-outline-variant/30 hover:bg-white/5" type="button">
+                            取消
+                        </button>
+<button class="px-10 py-3.5 rounded-full text-sm font-bold font-['Manrope'] bg-gradient-to-br from-primary to-primary-container text-on-primary shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all" type="submit">
+                            确定
+                        </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Subtle Footer Detail -->
+<footer class="mt-auto px-12 py-8 text-center">
+<p class="text-[0.6875rem] text-on-surface-variant/40 uppercase tracking-[0.2em] font-['Manrope']">
+                © 2024 Aether Cinema Management System • V2.4.0
+            </p>
+</footer>
+</main>
+</body></html>

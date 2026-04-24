@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Explore Our Collection | CinéCurator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#d8e3fb",
+                        "surface-container-low": "#131b2e",
+                        "background": "#0b1326",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "tertiary": "#cecece",
+                        "on-primary-container": "#594100",
+                        "surface-bright": "#31394d",
+                        "primary-container": "#e1aa12",
+                        "inverse-on-surface": "#283044",
+                        "tertiary-fixed": "#e2e2e2",
+                        "primary-fixed": "#ffdf9e",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#2d3449",
+                        "on-primary-fixed": "#261a00",
+                        "on-surface": "#dae2fd",
+                        "surface": "#0b1326",
+                        "error": "#ffb4ab",
+                        "surface-container-highest": "#2d3449",
+                        "on-secondary-fixed-variant": "#3d475a",
+                        "on-background": "#dae2fd",
+                        "surface-dim": "#0b1326",
+                        "secondary": "#bcc7de",
+                        "on-surface-variant": "#d0c5af",
+                        "primary-fixed-dim": "#f7be2c",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "on-primary": "#3f2e00",
+                        "on-error": "#690005",
+                        "primary": "#ffc639",
+                        "error-container": "#93000a",
+                        "surface-tint": "#f7be2c",
+                        "on-primary-fixed-variant": "#5b4300",
+                        "on-secondary": "#273143",
+                        "inverse-primary": "#795900",
+                        "surface-container": "#171f33",
+                        "secondary-container": "#424c5f",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "on-secondary-container": "#b2bcd3",
+                        "surface-container-high": "#222a3d",
+                        "surface-container-lowest": "#060e20",
+                        "tertiary-container": "#b2b3b3",
+                        "outline": "#99907c",
+                        "on-secondary-fixed": "#111c2d",
+                        "on-tertiary-container": "#444546",
+                        "on-tertiary": "#2f3131",
+                        "outline-variant": "#4d4635",
+                        "inverse-surface": "#dae2fd",
+                        "secondary-fixed-dim": "#bcc7de"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #0b1326;
+            color: #dae2fd;
+        }
+        h1, h2, h3, .brand-font {
+            font-family: 'Epilogue', sans-serif;
+        }
+        .cinematic-shadow {
+            box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.6);
+        }
+        .poster-card:hover {
+            box-shadow: 0 0 25px rgba(255, 198, 57, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar -->
+<header class="bg-[#0b1326]/80 backdrop-blur-xl docked full-width top-0 sticky z-40 transition-all duration-300">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-black text-xs">CC</div>
+<div class="text-2xl font-black tracking-tighter text-[#ffc639]">CinéCurator</div>
+</div>
+<nav class="hidden md:flex gap-8 items-center ml-12">
+<a class="text-[#ffc639] font-bold border-b-2 border-[#ffc639] pb-1" href="#">Discover</a>
+<a class="text-[#dae2fd] opacity-70 hover:opacity-100 transition-opacity hover:text-[#ffc639] transition-colors duration-300" href="#">Library</a>
+<a class="text-[#dae2fd] opacity-70 hover:opacity-100 transition-opacity hover:text-[#ffc639] transition-colors duration-300" href="#">Watchlist</a>
+</nav>
+<div class="flex items-center gap-6 ml-auto">
+<div class="relative hidden sm:block">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-highest border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-1 focus:ring-primary" placeholder="Search movies..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface hover:text-primary transition-colors">notifications</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a professional man with friendly expression and clean-shaven face against soft blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4zCWM7vO9FAVBX7EfmwS2HT2sKxD_KpjJ6genM5KaR0uoOyu3r7L8ZpkOiG-h3FnOcDVPyOSwUXB-R9FaEnxQB2-AiQfHyB4aDj0le1_BMVOVEjtMTzJPrLxZTKC-K_0mG7W_hssXpC1LfTz0wcdMfpL5I-N3wJw1BJxbqz3MKghK1medXAbPf5OdO5GMHrLFNsTWs2KPKVldVS7LT7CLfOWULjhRz1STjjr24IxSJ8t4mM0AXUJ9JI9frsDWEj90YcOB0u6kYXk"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="min-h-screen px-6 py-8 md:px-12 max-w-screen-2xl mx-auto">
+<!-- Header & Breadcrumbs -->
+<section class="mb-10">
+<nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-on-surface-variant mb-4">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[12px] opacity-40">chevron_right</span>
+<span class="text-primary">Explore</span>
+</nav>
+<h1 class="text-4xl md:text-6xl font-black tracking-tight text-on-surface leading-tight">Explore Our <span class="text-primary">Collection</span></h1>
+</section>
+<!-- Filtering Bar -->
+<section class="mb-12">
+<div class="flex flex-wrap gap-4 items-center bg-surface-container-low p-2 rounded-3xl md:rounded-full">
+<div class="flex-1 min-w-[140px]">
+<div class="relative">
+<select class="w-full bg-surface-container-high border-none rounded-full px-5 py-3 text-sm appearance-none focus:ring-1 focus:ring-primary cursor-pointer text-on-surface font-semibold">
+<option>Genre: All</option>
+<option>Sci-Fi</option>
+<option>Action</option>
+<option>Drama</option>
+<option>Animation</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">keyboard_arrow_down</span>
+</div>
+</div>
+<div class="flex-1 min-w-[140px]">
+<div class="relative">
+<select class="w-full bg-surface-container-high border-none rounded-full px-5 py-3 text-sm appearance-none focus:ring-1 focus:ring-primary cursor-pointer text-on-surface font-semibold">
+<option>Release: Any Year</option>
+<option>2024</option>
+<option>2023</option>
+<option>2022</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">keyboard_arrow_down</span>
+</div>
+</div>
+<div class="flex-1 min-w-[140px]">
+<div class="relative">
+<select class="w-full bg-surface-container-high border-none rounded-full px-5 py-3 text-sm appearance-none focus:ring-1 focus:ring-primary cursor-pointer text-on-surface font-semibold">
+<option>Rating: Any</option>
+<option>9.0+</option>
+<option>8.0+</option>
+<option>7.0+</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">keyboard_arrow_down</span>
+</div>
+</div>
+<div class="h-10 w-px bg-outline-variant/30 hidden md:block"></div>
+<div class="flex-1 min-w-[160px]">
+<div class="relative">
+<select class="w-full bg-surface-container-high border-none rounded-full px-5 py-3 text-sm appearance-none focus:ring-1 focus:ring-primary cursor-pointer text-on-surface font-semibold">
+<option>Sort By: Popularity</option>
+<option>Newest First</option>
+<option>Highest Rated</option>
+<option>A-Z</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">sort</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Movie Grid -->
+<section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 md:gap-8">
+<!-- Movie Card 1: Dune -->
+<div class="group poster-card flex flex-col gap-4 cursor-pointer transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden cinematic-shadow">
+<img class="w-full h-full object-cover" data-alt="dramatic cinematic shot of a vast desert with orange sand dunes under a hazy atmospheric sky at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ8FRtSYrwccYxFWRDUG3SiqwFcnhu_udtBcGVDWHrwLldMlzYT4O5AEiWZSN_7-DqqtDOIC7RhJbnR6suUvjbO52GB2SDaOQffqYQhvce1qtqFyrSpSlSFkE9UscgDwTGNjQE3U5ac_nGCCwLg3um4KYmUqT85TzmX7-WJJjfwzKg1rT0LRoojGjHiCBilflZ7cRSfvwibp3zFn3L31nZag2S4ab_dsXZSB0mS5NIiQHC7oOexboYQ-68-L1YIm9sPFeNVphRmxM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+<button class="w-full bg-primary text-on-primary font-bold py-2 rounded-full text-xs shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Quick View</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-on-surface text-lg group-hover:text-primary transition-colors truncate">Dune: Part Two</h3>
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">2024</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">8.9</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Movie Card 2: The Batman -->
+<div class="group poster-card flex flex-col gap-4 cursor-pointer transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden cinematic-shadow">
+<img class="w-full h-full object-cover" data-alt="dark moody urban alleyway at night with glowing red neon lights reflecting in puddles of rain on asphalt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrdTCNzZwWWGva5HtJaqtPq-S7U8ekvCirjrY-sMUorjf0eMeR6NKm-8w3pEpNp2BNKU-K6k0JIoN3cygOPj8us7GB_LPTIJOCkxRJ-6WXfJMGa0ZIems8jKZIJyQSzdvYyez-D8mcnse2IgT2DtaQcHbNdfstbtgyjgUgUYW6Mm9XEhapj2qcvumdAMpaQ5VGZnxuzQujKlvw7wCheR7vY_AD7PrIHcobxb09w2lx1Axri6Plbl3hA7tA_0mOQ4ZSaVEHxDsdQrE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+<button class="w-full bg-primary text-on-primary font-bold py-2 rounded-full text-xs shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Quick View</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-on-surface text-lg group-hover:text-primary transition-colors truncate">The Batman</h3>
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">2022</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">7.8</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Movie Card 3: Barbie -->
+<div class="group poster-card flex flex-col gap-4 cursor-pointer transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden cinematic-shadow">
+<img class="w-full h-full object-cover" data-alt="bright vibrant pink abstract texture with smooth curves and soft highlights reminiscent of high-fashion aesthetics" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNK4FGyy8iFi6DeSe-_JccGnE5cXx8hZyksvxclbPPJ3zt2wpWmFrd2rr_g70giW-70pRQAEaGwWk26Q37llR8e3vS1OdPWaN9j98FsSNtp_CqMLfIBMsa3Vd395OdCD58_X97LtVe1RBg5OgH7ZvDBFU9k8-X5xbysB-vAuadn6sHuDLbiEjDcw5DhOUdz4QvgwRqHxpiU3LCXQZhLPsNWTMCDlRFi0aQyIftEzaqny41KuyVqSp3AGb56hHLYM0-AWAAVFlM_z0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+<button class="w-full bg-primary text-on-primary font-bold py-2 rounded-full text-xs shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Quick View</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-on-surface text-lg group-hover:text-primary transition-colors truncate">Barbie</h3>
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">2023</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">7.0</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Movie Card 4: Avatar -->
+<div class="group poster-card flex flex-col gap-4 cursor-pointer transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden cinematic-shadow">
+<img class="w-full h-full object-cover" data-alt="glowing ethereal bioluminescent forest plants in deep blue and turquoise hues under a cosmic starry sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpSGWeqE88cqbR-CMeyGPgHmz86B022v8m0Z2DXJPtZcchFF3dpSgLt_FwwtjUOGsHJjAv-TI6eDNxwcgU4C6XQPxQ94fjPkmmphz2bKXnS3c9TbsMxvkZD1cSGBzQTdkdEsBGUaOv93JEBwWHtooLKlkthtVqFfnmitV9A5-2-83Uq1jPkGyjdq7-CIKx8Wtnif2rcCW4K-OcwYvnX8L_mBTjtzTR3VhMoWqPuGTK2kT4A5kU7cRAFWr0RTAEm5axaup9QH0gVcQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+<button class="w-full bg-primary text-on-primary font-bold py-2 rounded-full text-xs shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Quick View</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-on-surface text-lg group-hover:text-primary transition-colors truncate">Avatar: The Way of Water</h3>
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">2022</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">7.6</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Movie Card 5: Top Gun -->
+<div class="group poster-card flex flex-col gap-4 cursor-pointer transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden cinematic-shadow">
+<img class="w-full h-full object-cover" data-alt="sleek modern fighter jet flying through bright white clouds at high speed with sun flare across the wing" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT_CM97GnJjBOlII8-XLZBsCfOK1QwHn73orUfGe5UTm3u1WHC5bL23zRJCPlUIjHSU0EoD6ArGOjfB_M6-khlgxDDVla1Xb4MIpro8_cb656KG-1S_Vh_77bQiqinOp3vhIaJ_rmISadFfuyDhcJLB2K_eDm8CqMjowUZHb6BJh5a0zMS-KJw10ejyp1kj-TP1zPGtRAYsLCDvFq3wwkAD1mepVQNQixZGj8j2jhvRx4wUkDI45vOiCyHviCeSqVneUW6wjZjLS8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+<button class="w-full bg-primary text-on-primary font-bold py-2 rounded-full text-xs shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Quick View</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-on-surface text-lg group-hover:text-primary transition-colors truncate">Top Gun: Maverick</h3>
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">2022</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">8.3</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Movie Card 6: Oppenheimer -->
+<div class="group poster-card flex flex-col gap-4 cursor-pointer transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden cinematic-shadow">
+<img class="w-full h-full object-cover" data-alt="dramatic explosion of fire and sparks in deep orange and black with high contrast cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMVa0hBh_D1kSo1y1wbTNHmmBDLTrg6Q0rvWf-aLHnMyHOWIhdUkHrN88GDA7bfmmjbplTk7yQj0D9_Mj3agw0NlEoXRgzSutbYoICkgqqOAMcGs_7Bxy69SBiJS51orvD28T9pKQWSJlueVbasJ-2HYlo6wK2iDSCTXO3nZ_Kh_IjZrDtNR_CXZP36VQBQFtrkZtttTLpINtYc94ASr46xpApLpuT0PC2QQmBqcNLFyXZaEnZRdZaEgaNu5sUQ6zbCAATXLjrAQQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+<button class="w-full bg-primary text-on-primary font-bold py-2 rounded-full text-xs shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Quick View</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-on-surface text-lg group-hover:text-primary transition-colors truncate">Oppenheimer</h3>
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">2023</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">8.5</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Extra Row for Grid Demo -->
+<div class="group poster-card flex flex-col gap-4 cursor-pointer transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden cinematic-shadow">
+<img class="w-full h-full object-cover" data-alt="abstract cosmic landscape with swirling nebulas of deep purple and magenta stars in high definition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA2E-Y5EjD6dsATcT7pfDbZHTrE2RYeAenf4YEZ2aDKW3385BfzMyCBup8TqAWnCr3tBR-7fsTMoqZ2XB-Fo29zaikfGLE8ASDWVFacwse0d9JpXctKCZGIB4oqZlJRM5JYoeXmnXvtmJFgMiXk6sD1I-Jnx4lR-A6ydKEzMVekj7YKOsLG9tdrZh6o48IrpXsxV5WMz733ybkXPSyQLY7QXr_YjcI57fqmUf5WJ14CH0xm2cgmQsxHIwSmwbHLBNBCIesGAyEGP0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
+<button class="w-full bg-primary text-on-primary font-bold py-2 rounded-full text-xs shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">Quick View</button>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-bold text-on-surface text-lg group-hover:text-primary transition-colors truncate">Interstellar</h3>
+<div class="flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">2014</span>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">8.7</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pagination (Editorial Style) -->
+<section class="mt-20 mb-32 flex justify-center items-center gap-8">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-bold uppercase tracking-widest text-xs opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined">arrow_back</span>
+                Previous
+            </button>
+<div class="flex items-center gap-4">
+<span class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</span>
+<span class="w-10 h-10 rounded-full hover:bg-surface-container-high flex items-center justify-center font-bold cursor-pointer">2</span>
+<span class="w-10 h-10 rounded-full hover:bg-surface-container-high flex items-center justify-center font-bold cursor-pointer">3</span>
+<span class="material-symbols-outlined text-on-surface-variant">more_horiz</span>
+<span class="w-10 h-10 rounded-full hover:bg-surface-container-high flex items-center justify-center font-bold cursor-pointer">12</span>
+</div>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-bold uppercase tracking-widest text-xs">
+                Next
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="lg:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pt-3 pb-6 bg-[#0b1326]/90 backdrop-blur-2xl z-50 rounded-t-3xl border-t border-[#dae2fd]/10 shadow-[0_-10px_40px_rgba(0,0,0,0.6)]">
+<a class="flex flex-col items-center justify-center text-[#dae2fd] opacity-50 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] uppercase tracking-widest font-bold font-body">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#ffc639] scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="text-[10px] uppercase tracking-widest font-bold font-body">Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#dae2fd] opacity-50 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">video_library</span>
+<span class="text-[10px] uppercase tracking-widest font-bold font-body">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#dae2fd] opacity-50 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] uppercase tracking-widest font-bold font-body">Profile</span>
+</a>
+</nav>
+</body></html>

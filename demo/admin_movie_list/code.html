@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;900&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ffb4ab",
+                    "on-primary-fixed-variant": "#5b4300",
+                    "on-error": "#690005",
+                    "tertiary-fixed": "#e2e2e2",
+                    "outline": "#99907c",
+                    "inverse-surface": "#dae2fd",
+                    "error-container": "#93000a",
+                    "surface": "#0b1326",
+                    "primary": "#ffc639",
+                    "tertiary-container": "#b2b3b3",
+                    "on-secondary-fixed-variant": "#3d475a",
+                    "surface-container": "#171f33",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "primary-fixed": "#ffdf9e",
+                    "surface-bright": "#31394d",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "on-surface-variant": "#d0c5af",
+                    "outline-variant": "#4d4635",
+                    "surface-tint": "#f7be2c",
+                    "on-background": "#dae2fd",
+                    "on-secondary-fixed": "#111c2d",
+                    "surface-container-low": "#131b2e",
+                    "secondary-fixed": "#d8e3fb",
+                    "surface-dim": "#0b1326",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "surface-container-high": "#222a3d",
+                    "primary-container": "#e1aa12",
+                    "secondary-container": "#424c5f",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#795900",
+                    "on-primary-container": "#594100",
+                    "primary-fixed-dim": "#f7be2c",
+                    "on-primary": "#3f2e00",
+                    "tertiary": "#cecece",
+                    "inverse-on-surface": "#283044",
+                    "surface-variant": "#2d3449",
+                    "on-secondary-container": "#b2bcd3",
+                    "surface-container-lowest": "#060e20",
+                    "secondary": "#bcc7de",
+                    "on-surface": "#dae2fd",
+                    "surface-container-highest": "#2d3449",
+                    "on-primary-fixed": "#261a00",
+                    "background": "#0b1326",
+                    "on-tertiary-container": "#444546",
+                    "on-tertiary": "#2f3131",
+                    "on-secondary": "#273143",
+                    "on-tertiary-fixed": "#1a1c1c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Epilogue"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(45, 52, 73, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<!-- SideNavBar (Execution from JSON) -->
+<aside class="fixed left-0 top-0 h-full z-50 h-screen w-64 border-r border-white/10 bg-slate-950/80 backdrop-blur-xl flex flex-col justify-between">
+<div>
+<div class="px-6 py-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">movie_filter</span>
+</div>
+<div>
+<h2 class="text-xl font-bold font-headline text-amber-400">The Digital Curator</h2>
+<p class="text-[10px] tracking-[0.2em] font-label uppercase text-slate-400">Cinema Management</p>
+</div>
+</div>
+</div>
+<nav class="mt-4 px-3 space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope hover:bg-white/5 hover:text-white transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">dashboard</span>
+<span class="text-xs tracking-widest font-label uppercase">Dashboard</span>
+</a>
+<!-- Film Library (ACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-amber-400/10 text-amber-400 border-r-2 border-amber-400 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">movie_filter</span>
+<span class="text-xs tracking-widest font-label uppercase">Film Library</span>
+</a>
+<!-- Showtimes -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope hover:bg-white/5 hover:text-white transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">schedule</span>
+<span class="text-xs tracking-widest font-label uppercase">Showtimes</span>
+</a>
+<!-- Analytics -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope hover:bg-white/5 hover:text-white transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">analytics</span>
+<span class="text-xs tracking-widest font-label uppercase">Analytics</span>
+</a>
+<!-- Staff -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope hover:bg-white/5 hover:text-white transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">badge</span>
+<span class="text-xs tracking-widest font-label uppercase">Staff</span>
+</a>
+</nav>
+<div class="px-6 mt-10">
+<button class="w-full py-3 px-4 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full font-headline font-bold text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-primary/20">
+                    Add New Release
+                </button>
+</div>
+</div>
+<div class="p-3 border-t border-white/5 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope hover:bg-white/5 hover:text-white transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-xs tracking-widest font-label uppercase">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 font-manrope hover:bg-white/5 hover:text-white transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined">help_center</span>
+<span class="text-xs tracking-widest font-label uppercase">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pl-64 min-h-screen">
+<!-- TopNavBar (Execution from JSON) -->
+<header class="flex justify-between items-center px-8 w-full sticky top-0 z-40 bg-slate-950/60 backdrop-blur-2xl h-16">
+<div class="flex items-center gap-8">
+<div class="flex gap-6">
+<a class="text-slate-400 font-manrope text-sm font-medium hover:text-amber-300 transition-colors" href="#">Drafts</a>
+<a class="text-slate-400 font-manrope text-sm font-medium hover:text-amber-300 transition-colors" href="#">Archive</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-lg">search</span>
+<input class="bg-surface-container-highest border-none rounded-full py-2 pl-10 pr-4 text-sm text-on-surface w-64 focus:ring-1 focus:ring-primary transition-all" placeholder="Search film vault..." type="text"/>
+</div>
+<div class="flex items-center gap-4 text-slate-400">
+<button class="hover:text-amber-300 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:text-amber-300 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Portrait of a professional cinema manager in a sleek black suit with dramatic studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ-zgwOB-jK8uX4CDDGfpPTDcQRyTmFFm90_URjvT6pbutCyeGs7n5FPMjSt0Qf3UE5e_mn4NJQcdil8eQyJEgXUKamutEopOlIZhNs9sVAmWYNzrMDKhWC92Ps9ml8PDyYW9czPGD9gfWXj2G2CiGmzkWoEnDIuZMyM2PX4xArN9s-kiWbEt1hTYFSEMiMyx-s-Xz0ZjHD2G3dg9L8AjmzJyzWeuTAYDMGoLOAORgxAkQ7xZ7mun0Oly3ZNaX5juezN4xaT1nnMc"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 max-w-7xl mx-auto space-y-10">
+<!-- Hero Header Section -->
+<section class="flex flex-col md:flex-row justify-between items-end gap-6">
+<div>
+<h1 class="text-5xl font-black font-headline text-on-surface tracking-tight">Film Library</h1>
+<p class="text-on-surface-variant mt-2 font-medium">Managing 1,428 cinematic masterpieces</p>
+</div>
+<div class="flex flex-wrap gap-4">
+<div class="flex bg-surface-container-low p-1 rounded-xl">
+<select class="bg-transparent border-none text-sm font-label uppercase tracking-wider text-on-surface focus:ring-0 cursor-pointer px-4">
+<option>All Genres</option>
+<option>Sci-Fi</option>
+<option>Noir</option>
+<option>Drama</option>
+</select>
+<select class="bg-transparent border-none text-sm font-label uppercase tracking-wider text-on-surface focus:ring-0 cursor-pointer px-4 border-l border-white/10">
+<option>Status: All</option>
+<option>Published</option>
+<option>Draft</option>
+</select>
+<button class="bg-surface-container-high px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span class="text-xs font-label uppercase tracking-wider">Date Range</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Movie Cards List -->
+<section class="space-y-6">
+<!-- Movie Card 1 -->
+<div class="glass-panel rounded-3xl overflow-hidden group hover:bg-surface-container-high/50 transition-all duration-500 border border-white/5">
+<div class="flex flex-col md:flex-row p-6 gap-8">
+<!-- Poster -->
+<div class="w-full md:w-48 h-72 shrink-0 relative rounded-2xl overflow-hidden shadow-2xl">
+<img class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" data-alt="Cinematic vertical movie poster with neon blue and purple lights reflecting on a rainy city street" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVC6AgINN_GhyuDKkz8rmxScUxNoFlZ6b_YCrtmuPJSZigZcyRHsOBs8Xh8uFYcC8K4Iaq92YVkUUYq6YhFdWzcE8HmL3Zw2ep4SXDtQl5K89IJoBfdKwKXwubHWxZinY5DxEooDaoSgfz9UwOz9NJAdFl5JOAuq0-bQFbJASaO7OwTP2QgFUzukxaBvkC0pl8D8oFo_Peyf6CJmA_3ermkNXrLk0M3-H0CSvo2WdAMC5AbvFLo4AOyVqy3_IqN0TFmdej713PN90"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+</div>
+<!-- Info -->
+<div class="flex-grow flex flex-col justify-between py-2">
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-bold tracking-widest uppercase border border-primary/20">Published</span>
+<span class="text-on-surface-variant text-xs font-label">2024 • 2h 14m</span>
+</div>
+<h3 class="text-3xl font-bold font-headline text-on-surface group-hover:text-primary transition-colors">The Last Echo</h3>
+<p class="text-on-surface-variant text-sm mt-2 max-w-xl line-clamp-2">In a dystopian future where silence is survival, a rogue curator must broadcast the last known recording of a symphony across the wasteland.</p>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest hover:bg-error hover:text-on-error transition-all">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
+<div class="flex flex-col">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-1">Director</span>
+<span class="text-sm font-semibold text-on-surface">Elena Vance</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-1">Cast</span>
+<span class="text-sm font-semibold text-on-surface">C. Murphy, S. Johansson</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-1">Region</span>
+<span class="text-sm font-semibold text-on-surface">Global Release</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-1">Release Date</span>
+<span class="text-sm font-semibold text-on-surface">Oct 12, 2024</span>
+</div>
+</div>
+</div>
+<!-- Metrics Dashboard -->
+<div class="flex items-center gap-8 pt-4 border-t border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">8.9</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-tighter">Rating</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">ads_click</span>
+<span class="text-sm font-bold">12.4k</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-tighter">Clicks</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">forum</span>
+<span class="text-sm font-bold">842</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-tighter">Reviews</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">bookmark</span>
+<span class="text-sm font-bold">3.1k</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-tighter">Collections</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Movie Card 2 -->
+<div class="glass-panel rounded-3xl overflow-hidden group hover:bg-surface-container-high/50 transition-all duration-500 border border-white/5">
+<div class="flex flex-col md:flex-row p-6 gap-8">
+<!-- Poster -->
+<div class="w-full md:w-48 h-72 shrink-0 relative rounded-2xl overflow-hidden shadow-2xl">
+<img class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" data-alt="High-contrast black and white cinematic poster of a solitary figure standing in a vast desert landscape under a solar eclipse" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5l-La5TDPOFP3igUNHf-r-fV6-tfORQTVgUnFV9e8k1z-EUwFQ--xvITqACGVW07sN2L-ON-1V8CjFZXQ6Z4yc0JdZsGWv4c5HuFJt8wU1POsWwgtLPs1HvTI5uT5EcrNfdpgrCUCTE5lPT2bHp-sEO9FFF5_PY20dzgph9lFDgktJuTiNaTmLgcxcAojWjOpqyhtY5_WB68ASxNJnvvDNdrrUjeKT4F7b9QosLTRZXHEJ68AWYwsAvd3AfUxnyBSK6B87Qdtiog"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+</div>
+<!-- Info -->
+<div class="flex-grow flex flex-col justify-between py-2">
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="px-2 py-0.5 rounded bg-slate-400/10 text-slate-400 text-[10px] font-bold tracking-widest uppercase border border-white/10">In Review</span>
+<span class="text-on-surface-variant text-xs font-label">2024 • 1h 52m</span>
+</div>
+<h3 class="text-3xl font-bold font-headline text-on-surface group-hover:text-primary transition-colors">The Void Above</h3>
+<p class="text-on-surface-variant text-sm mt-2 max-w-xl line-clamp-2">An experimental journey into the subconscious of an astronaut lost in deep space, blending surrealist imagery with a haunting score.</p>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest hover:bg-error hover:text-on-error transition-all">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
+<div class="flex flex-col">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-1">Director</span>
+<span class="text-sm font-semibold text-on-surface">Marcus Thorne</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-1">Cast</span>
+<span class="text-sm font-semibold text-on-surface">D. Washington, T. Swinton</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-1">Region</span>
+<span class="text-sm font-semibold text-on-surface">Europe/Asia</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] font-label uppercase tracking-widest text-slate-500 mb-1">Release Date</span>
+<span class="text-sm font-semibold text-on-surface">Nov 30, 2024</span>
+</div>
+</div>
+</div>
+<!-- Metrics Dashboard -->
+<div class="flex items-center gap-8 pt-4 border-t border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold">7.4</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-tighter">Rating</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">ads_click</span>
+<span class="text-sm font-bold">2.1k</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-tighter">Clicks</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">forum</span>
+<span class="text-sm font-bold">128</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-tighter">Reviews</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">bookmark</span>
+<span class="text-sm font-bold">412</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-tighter">Collections</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pagination -->
+<footer class="flex justify-center items-center gap-2 py-8">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-400 hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-on-primary font-bold shadow-lg shadow-primary/20">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-400 hover:bg-surface-container-high transition-all">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-400 hover:bg-surface-container-high transition-all">3</button>
+<span class="px-2 text-slate-600">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-400 hover:bg-surface-container-high transition-all">14</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-400 hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</footer>
+</div>
+</main>
+</body></html>

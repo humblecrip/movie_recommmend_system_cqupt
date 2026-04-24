@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aether Cinema | Management Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#f7be2c",
+                        "on-primary-fixed-variant": "#5b4300",
+                        "primary-container": "#e1aa12",
+                        "surface-tint": "#f7be2c",
+                        "primary": "#ffc639",
+                        "on-background": "#dae2fd",
+                        "surface-container-high": "#222a3d",
+                        "inverse-on-surface": "#283044",
+                        "inverse-primary": "#795900",
+                        "surface-container-lowest": "#060e20",
+                        "on-tertiary-container": "#444546",
+                        "on-error": "#690005",
+                        "on-surface-variant": "#d0c5af",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "secondary-fixed": "#d8e3fb",
+                        "error-container": "#93000a",
+                        "on-primary": "#3f2e00",
+                        "error": "#ffb4ab",
+                        "tertiary": "#cecece",
+                        "on-tertiary": "#2f3131",
+                        "on-primary-container": "#594100",
+                        "primary-fixed": "#ffdf9e",
+                        "surface": "#0b1326",
+                        "surface-dim": "#0b1326",
+                        "outline-variant": "#4d4635",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#3d475a",
+                        "on-secondary": "#273143",
+                        "surface-container-highest": "#2d3449",
+                        "secondary": "#bcc7de",
+                        "on-tertiary-fixed-variant": "#454747",
+                        "surface-container-low": "#131b2e",
+                        "inverse-surface": "#dae2fd",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "secondary-container": "#424c5f",
+                        "on-tertiary-fixed": "#1a1c1c",
+                        "tertiary-container": "#b2b3b3",
+                        "on-surface": "#dae2fd",
+                        "outline": "#99907c",
+                        "on-secondary-container": "#b2bcd3",
+                        "tertiary-fixed": "#e2e2e2",
+                        "on-primary-fixed": "#261a00",
+                        "background": "#0b1326",
+                        "surface-variant": "#2d3449",
+                        "on-secondary-fixed": "#111c2d",
+                        "surface-container": "#171f33",
+                        "surface-bright": "#31394d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Epilogue"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3, .headline { font-family: 'Epilogue', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(34, 42, 61, 0.4); backdrop-filter: blur(20px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary selection:text-on-primary">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-screen w-64 bg-[#0b1326] flex flex-col py-8 z-50 shadow-[20px_0px_50px_rgba(0,0,0,0.4)]">
+<div class="px-8 mb-10">
+<h1 class="text-xl font-black text-[#ffc639] uppercase tracking-widest">Aether Cinema</h1>
+<p class="text-[10px] text-[#dae2fd]/50 uppercase tracking-[0.2em] font-bold mt-1">Management Portal</p>
+</div>
+<div class="flex-1 flex flex-col space-y-1">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center px-8 py-3 text-[#ffc639] border-r-2 border-[#ffc639] bg-[#ffc639]/5 transition-all group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="dashboard">dashboard</span>
+<span class="font-bold text-sm tracking-wide">Dashboard</span>
+</a>
+<a class="flex items-center px-8 py-3 text-[#dae2fd]/70 hover:bg-[#dae2fd]/5 hover:text-[#dae2fd] transition-all group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="movie">movie</span>
+<span class="text-sm tracking-wide">Film Library</span>
+</a>
+<a class="flex items-center px-8 py-3 text-[#dae2fd]/70 hover:bg-[#dae2fd]/5 hover:text-[#dae2fd] transition-all group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="schedule">schedule</span>
+<span class="text-sm tracking-wide">Showtimes</span>
+</a>
+<a class="flex items-center px-8 py-3 text-[#dae2fd]/70 hover:bg-[#dae2fd]/5 hover:text-[#dae2fd] transition-all group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="insert_chart">insert_chart</span>
+<span class="text-sm tracking-wide">Analytics</span>
+</a>
+<a class="flex items-center px-8 py-3 text-[#dae2fd]/70 hover:bg-[#dae2fd]/5 hover:text-[#dae2fd] transition-all group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="local_activity">local_activity</span>
+<span class="text-sm tracking-wide">Ticketing</span>
+</a>
+<a class="flex items-center px-8 py-3 text-[#dae2fd]/70 hover:bg-[#dae2fd]/5 hover:text-[#dae2fd] transition-all group" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="group">group</span>
+<span class="text-sm tracking-wide">Staff</span>
+</a>
+</div>
+<div class="px-8 mt-auto space-y-4">
+<button class="w-full bg-[#ffc639] text-[#3f2e00] font-bold py-3 rounded-full text-xs uppercase tracking-widest shadow-lg shadow-[#ffc639]/10 hover:scale-[1.02] transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-lg mr-2" data-icon="add">add</span>
+                New Screening
+            </button>
+<div class="pt-6 border-t border-[#dae2fd]/5 space-y-2">
+<a class="flex items-center text-[#dae2fd]/70 hover:text-[#ffc639] transition-colors py-2 group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="help_outline">help_outline</span>
+<span class="text-xs uppercase tracking-wider font-semibold">Help Center</span>
+</a>
+<a class="flex items-center text-[#dae2fd]/70 hover:text-[#ffc639] transition-colors py-2 group" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="logout">logout</span>
+<span class="text-xs uppercase tracking-wider font-semibold">Sign Out</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-64 h-16 flex items-center justify-between px-8 z-40 bg-[#0b1326]/80 backdrop-blur-xl">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#dae2fd]/40 text-lg">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-xl py-2 pl-10 pr-4 text-sm text-on-surface placeholder:text-[#dae2fd]/30 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="Search analytics, films, or screenings..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-6">
+<button class="relative text-[#dae2fd]/60 hover:text-[#ffc639] transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="text-[#dae2fd]/60 hover:text-[#ffc639] transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="flex items-center pl-6 border-l border-[#dae2fd]/10">
+<div class="text-right mr-3 hidden sm:block">
+<p class="text-xs font-bold text-on-surface">Alex Mercer</p>
+<p class="text-[10px] text-[#dae2fd]/40 uppercase tracking-tighter">Floor Manager</p>
+</div>
+<img alt="Manager profile" class="w-9 h-9 rounded-full object-cover ring-2 ring-[#ffc639]/20" data-alt="close-up portrait of a professional male manager in a dark blazer against a soft office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKTKjWGZpVIxr7dRHTrwLc2wtgkWUWboX9ABPoalXNVUekV8IoS7zFbc3kJQlLFSJT7W-hGFnOcLT5ajFOkiCvgQ_83DKQo7W81hygBSVm8YccwKI2ZuoWb0xPPPDmZ3oMnq8V4IQjzI0u44BHj7BT72CVtjuoQtoFAdTIgn4rAMWbs-zw8PJHWG7GfO-XEZOle4oXXZPpB7usa5bWJsBO-16-48mUAEKelXqmlF7pvJAYP083kf6Noyd9trz84iZMcjvECqEz9JU"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="p-8 max-w-[1400px] mx-auto">
+<!-- Header Section -->
+<div class="flex items-end justify-between mb-8">
+<div>
+<h2 class="text-3xl font-black text-on-surface tracking-tight mb-1">Dashboard Overview</h2>
+<p class="text-[#dae2fd]/50 text-sm">Real-time performance metrics for Aether Cinema locations.</p>
+</div>
+<div class="flex space-x-4">
+<div class="flex items-center bg-surface-container-high px-4 py-2 rounded-xl text-xs font-bold text-[#dae2fd]/70 cursor-pointer hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm mr-2" data-icon="calendar_today">calendar_today</span>
+                        LAST 30 DAYS
+                    </div>
+</div>
+</div>
+<!-- Stats Row: Bento Style -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<!-- Total Films -->
+<div class="surface-container-low bg-surface-container-low p-6 rounded-xl relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg" data-icon="movie">movie</span>
+<span class="text-emerald-400 text-xs font-bold flex items-center">+12% <span class="material-symbols-outlined text-xs ml-1" data-icon="trending_up">trending_up</span></span>
+</div>
+<h3 class="text-3xl font-black text-on-surface">4</h3>
+<p class="text-xs uppercase tracking-widest font-bold text-[#dae2fd]/40 mt-1">Total Films</p>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+</div>
+<!-- Active Users -->
+<div class="surface-container-low bg-surface-container-low p-6 rounded-xl relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg" data-icon="person">person</span>
+<span class="text-emerald-400 text-xs font-bold flex items-center">+5.4% <span class="material-symbols-outlined text-xs ml-1" data-icon="trending_up">trending_up</span></span>
+</div>
+<h3 class="text-3xl font-black text-on-surface">1,280</h3>
+<p class="text-xs uppercase tracking-widest font-bold text-[#dae2fd]/40 mt-1">Active Users</p>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+</div>
+<!-- Total Collections -->
+<div class="surface-container-low bg-surface-container-low p-6 rounded-xl relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg" data-icon="collections_bookmark">collections_bookmark</span>
+<span class="text-amber-400 text-xs font-bold flex items-center">Stable <span class="material-symbols-outlined text-xs ml-1" data-icon="remove">remove</span></span>
+</div>
+<h3 class="text-3xl font-black text-on-surface">450</h3>
+<p class="text-xs uppercase tracking-widest font-bold text-[#dae2fd]/40 mt-1">Total Collections</p>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+</div>
+<!-- Daily Clicks -->
+<div class="surface-container-low bg-surface-container-low p-6 rounded-xl relative overflow-hidden group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg" data-icon="ads_click">ads_click</span>
+<span class="text-emerald-400 text-xs font-bold flex items-center">+24% <span class="material-symbols-outlined text-xs ml-1" data-icon="trending_up">trending_up</span></span>
+</div>
+<h3 class="text-3xl font-black text-on-surface">8,920</h3>
+<p class="text-xs uppercase tracking-widest font-bold text-[#dae2fd]/40 mt-1">Daily Clicks</p>
+<div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
+</div>
+</div>
+<!-- Charts Row 1 -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+<!-- Rating Distribution (Visualized as stylized cards/lines) -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<div class="flex items-center justify-between mb-8">
+<h4 class="font-bold tracking-tight text-lg">Rating Distribution</h4>
+<div class="flex space-x-2">
+<span class="w-3 h-3 rounded-full bg-primary inline-block"></span>
+<span class="text-[10px] font-bold text-[#dae2fd]/50">Interstellar</span>
+<span class="w-3 h-3 rounded-full bg-[#dae2fd]/30 inline-block ml-4"></span>
+<span class="text-[10px] font-bold text-[#dae2fd]/50">Oppenheimer</span>
+</div>
+</div>
+<div class="h-64 flex items-end justify-between space-x-2 px-4 relative">
+<!-- Simulated Line Chart with SVG -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 400 150">
+<path d="M0,100 C50,80 100,120 150,40 C200,60 250,20 300,50 C350,70 400,30" fill="none" stroke="#ffc639" stroke-width="3"></path>
+<path d="M0,130 C50,110 100,100 150,90 C200,80 250,100 300,70 C350,60 400,80" fill="none" stroke="#dae2fd" stroke-dasharray="4 4" stroke-opacity="0.3" stroke-width="2"></path>
+</svg>
+<div class="flex-1 border-b border-[#dae2fd]/5 h-full relative z-10 flex flex-col justify-between items-center group">
+<div class="opacity-0 group-hover:opacity-100 absolute -top-8 bg-primary text-on-primary px-2 py-1 rounded text-[10px] font-bold transition-opacity">9.2</div>
+</div>
+<div class="flex-1 border-b border-[#dae2fd]/5 h-full"></div>
+<div class="flex-1 border-b border-[#dae2fd]/5 h-full"></div>
+<div class="flex-1 border-b border-[#dae2fd]/5 h-full"></div>
+<div class="flex-1 border-b border-[#dae2fd]/5 h-full"></div>
+</div>
+<div class="flex justify-between mt-4 px-4 text-[10px] font-bold text-[#dae2fd]/30 uppercase tracking-widest">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+<!-- Collection Trends -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<div class="flex items-center justify-between mb-8">
+<h4 class="font-bold tracking-tight text-lg">Collection Trends</h4>
+<select class="bg-transparent border-none text-[10px] font-bold text-primary uppercase tracking-widest focus:ring-0">
+<option>Saving Behavior</option>
+<option>Sharing Behavior</option>
+</select>
+</div>
+<div class="h-64 flex items-end justify-between space-x-3 px-2">
+<div class="w-full bg-primary/20 rounded-t-lg h-[40%] hover:bg-primary transition-colors cursor-pointer relative group">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 text-[10px] font-bold text-primary">124</div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-lg h-[65%] hover:bg-primary transition-colors cursor-pointer relative group">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 text-[10px] font-bold text-primary">198</div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-lg h-[45%] hover:bg-primary transition-colors cursor-pointer relative group"></div>
+<div class="w-full bg-primary rounded-t-lg h-[90%] hover:bg-primary transition-colors cursor-pointer relative group">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-100 text-[10px] font-bold text-primary">450</div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-lg h-[55%] hover:bg-primary transition-colors cursor-pointer relative group"></div>
+<div class="w-full bg-primary/20 rounded-t-lg h-[70%] hover:bg-primary transition-colors cursor-pointer relative group"></div>
+<div class="w-full bg-primary/20 rounded-t-lg h-[30%] hover:bg-primary transition-colors cursor-pointer relative group"></div>
+</div>
+<div class="flex justify-between mt-4 px-2 text-[10px] font-bold text-[#dae2fd]/30 uppercase tracking-widest">
+<span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+</div>
+</div>
+</div>
+<!-- Charts Row 2 -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+<!-- Click Analytics -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<h4 class="font-bold tracking-tight text-lg mb-8">Click Analytics <span class="text-xs font-normal text-[#dae2fd]/40 ml-2">Top Performing Titles</span></h4>
+<div class="space-y-6">
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-wider">
+<span>The Dark Knight</span>
+<span class="text-primary">4.2k</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[85%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-wider">
+<span>Inception</span>
+<span class="text-primary">3.8k</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[72%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-bold uppercase tracking-wider">
+<span>The Godfather</span>
+<span class="text-primary">2.1k</span>
+</div>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[45%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Popularity Score -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<h4 class="font-bold tracking-tight text-lg mb-8">Popularity Score</h4>
+<div class="flex h-64 items-end space-x-6 justify-center">
+<!-- Stacked Bar 1 -->
+<div class="w-16 flex flex-col h-full justify-end">
+<div class="h-[20%] w-full bg-primary-container rounded-t-sm mb-1"></div>
+<div class="h-[40%] w-full bg-primary/60 mb-1"></div>
+<div class="h-[30%] w-full bg-primary mb-1"></div>
+<p class="text-[10px] text-center font-bold text-[#dae2fd]/40 mt-2 uppercase tracking-tighter">Week 1</p>
+</div>
+<!-- Stacked Bar 2 -->
+<div class="w-16 flex flex-col h-full justify-end">
+<div class="h-[35%] w-full bg-primary-container rounded-t-sm mb-1"></div>
+<div class="h-[25%] w-full bg-primary/60 mb-1"></div>
+<div class="h-[35%] w-full bg-primary mb-1"></div>
+<p class="text-[10px] text-center font-bold text-[#dae2fd]/40 mt-2 uppercase tracking-tighter">Week 2</p>
+</div>
+<!-- Stacked Bar 3 -->
+<div class="w-16 flex flex-col h-full justify-end">
+<div class="h-[15%] w-full bg-primary-container rounded-t-sm mb-1"></div>
+<div class="h-[55%] w-full bg-primary/60 mb-1"></div>
+<div class="h-[25%] w-full bg-primary mb-1"></div>
+<p class="text-[10px] text-center font-bold text-[#dae2fd]/40 mt-2 uppercase tracking-tighter">Week 3</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Row: User Engagement -->
+<div class="glass-card p-10 rounded-xl flex flex-col md:flex-row items-center justify-between border border-outline-variant/10">
+<div class="mb-10 md:mb-0 md:mr-10">
+<h4 class="text-2xl font-black mb-2">User Engagement</h4>
+<p class="text-[#dae2fd]/50 text-sm max-w-sm mb-8">Consolidated data representing interaction depth across all film libraries and collections.</p>
+<div class="space-y-4">
+<div class="flex items-center">
+<div class="w-3 h-3 rounded-full bg-primary mr-3"></div>
+<span class="text-xs font-bold text-[#dae2fd]/80 uppercase tracking-wider">Active Watchers (64%)</span>
+</div>
+<div class="flex items-center">
+<div class="w-3 h-3 rounded-full bg-[#dae2fd]/30 mr-3"></div>
+<span class="text-xs font-bold text-[#dae2fd]/80 uppercase tracking-wider">Passive Browsers (28%)</span>
+</div>
+<div class="flex items-center">
+<div class="w-3 h-3 rounded-full bg-primary-container mr-3"></div>
+<span class="text-xs font-bold text-[#dae2fd]/80 uppercase tracking-wider">New Sign-ups (8%)</span>
+</div>
+</div>
+</div>
+<div class="relative w-64 h-64 flex items-center justify-center">
+<!-- Donut Chart Simulated with SVG -->
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<!-- Background Circle -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#222a3d" stroke-width="12"></circle>
+<!-- Passive Browsers -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#dae2fd" stroke-dasharray="251.2" stroke-dashoffset="180.8" stroke-opacity="0.3" stroke-width="12"></circle>
+<!-- New Sign ups -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#e1aa12" stroke-dasharray="251.2" stroke-dashoffset="231" stroke-width="12"></circle>
+<!-- Active Watchers (Foreground) -->
+<circle cx="50" cy="50" fill="transparent" r="40" stroke="#ffc639" stroke-dasharray="251.2" stroke-dashoffset="90" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-black text-on-surface">1,280</span>
+<span class="text-[10px] font-bold text-[#dae2fd]/40 uppercase tracking-widest">Total Users</span>
+</div>
+</div>
+</div>
+<footer class="mt-12 py-8 border-t border-[#dae2fd]/5 text-center">
+<p class="text-[10px] font-bold text-[#dae2fd]/20 uppercase tracking-[0.5em]">Aether Cinema Management Console © 2024</p>
+</footer>
+</div>
+</main>
+</body></html>

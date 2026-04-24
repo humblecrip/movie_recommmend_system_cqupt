@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aether Cinema Portal - Admin Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;900&amp;family=Manrope:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#d0c5af",
+                    "on-secondary-container": "#b2bcd3",
+                    "on-primary-fixed-variant": "#5b4300",
+                    "on-background": "#dae2fd",
+                    "secondary": "#bcc7de",
+                    "on-primary-container": "#594100",
+                    "on-secondary-fixed": "#111c2d",
+                    "inverse-primary": "#795900",
+                    "surface-container-low": "#131b2e",
+                    "surface-container": "#171f33",
+                    "on-tertiary": "#2f3131",
+                    "on-secondary": "#273143",
+                    "on-primary-fixed": "#261a00",
+                    "surface-dim": "#0b1326",
+                    "surface-bright": "#31394d",
+                    "surface": "#0b1326",
+                    "primary": "#ffc639",
+                    "on-primary": "#3f2e00",
+                    "primary-fixed": "#ffdf9e",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-highest": "#2d3449",
+                    "primary-container": "#e1aa12",
+                    "on-error": "#690005",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "on-tertiary-container": "#444546",
+                    "tertiary-container": "#b2b3b3",
+                    "surface-container-lowest": "#060e20",
+                    "outline": "#99907c",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "tertiary-fixed": "#e2e2e2",
+                    "secondary-container": "#424c5f",
+                    "background": "#0b1326",
+                    "inverse-surface": "#dae2fd",
+                    "primary-fixed-dim": "#f7be2c",
+                    "on-surface": "#dae2fd",
+                    "outline-variant": "#4d4635",
+                    "surface-variant": "#2d3449",
+                    "surface-tint": "#f7be2c",
+                    "surface-container-high": "#222a3d",
+                    "on-secondary-fixed-variant": "#3d475a",
+                    "tertiary": "#cecece",
+                    "on-tertiary-fixed-variant": "#454747",
+                    "error": "#ffb4ab",
+                    "secondary-fixed": "#d8e3fb",
+                    "inverse-on-surface": "#283044"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Epilogue"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            },
+            "animation": {
+                    "pulse-slow": "pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                    "glow-breathe": "glow-breathe 3s ease-in-out infinite"
+            },
+            "keyframes": {
+                    "glow-breathe": {
+                        "0%, 100%": { "box-shadow": "0 0 20px -5px rgba(255, 198, 57, 0.4)" },
+                        "50%": { "box-shadow": "0 0 40px 5px rgba(255, 198, 57, 0.7)" }
+                    }
+            }
+          },
+        }
+      }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr
+    }
+.glass-panel {
+    background: rgba(11, 19, 38, 0.45);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 198, 57, 0.15)
+    }
+.bg-cinema {
+    background-image: radial-gradient(circle at 20% 30%, rgba(255, 198, 57, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(66, 76, 95, 0.1) 0%, transparent 40%), linear-gradient(to bottom, rgba(11, 19, 38, 0.4), rgba(11, 19, 38, 0.9)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuCRJa8cf5gRDepQzEzUet0cPvPV8eJJHnq0pbdWeV64ONn3amnQ7lH4bv2b-i5OG080JDZUYblJkQOnLcLNKeF4yHMX-QzPPU-fhAR49dFkqOG_dE2g4BXMh4ovO9b4Wd5fsUAjpzF672rV1CLjuDqyHKXrY6YduuPoMX2xayDtPekT3eVn7dyQIcQs2tsLPaOQrrhlMBQd60RMCvh_hAN6f43ifemK-MfCsfFYLfnkzOJwuOM2AoeyTrpU_F2YS6eG3LC8e9-ThVk);
+    background-size: cover;
+    background-position: center
+    }
+.multi-layered-shadow {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 0 20px 0 rgba(255, 255, 255, 0.02)
+    }
+@keyframes light-leak {
+    0%, 100% {
+        opacity: 0.3;
+        transform: translate(-10%, -10%) scale(1);
+        } 50% {
+        opacity: 0.6;
+        transform: translate(10%, 10%) scale(1.1);
+        }
+    }
+.light-leak-effect {
+    animation: light-leak 15s ease-in-out infinite
+    }</style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col selection:bg-primary/30">
+<header class="flex justify-center items-center w-full py-8 px-6 fixed top-0 z-50">
+<div class="text-2xl font-black tracking-tighter text-primary font-headline drop-shadow-lg">
+            CineAdmin
+        </div>
+</header>
+<main class="flex-grow flex items-center justify-center relative bg-cinema px-4 overflow-hidden">
+<!-- High-end Atmospheric Overlays -->
+<div class="absolute inset-0 bg-black/20 pointer-events-none"></div>
+<div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none"></div>
+<!-- Animated Light Leak -->
+<div class="absolute -top-1/2 -left-1/4 w-[150%] h-[150%] bg-[radial-gradient(circle_at_50%_50%,_rgba(255,198,57,0.08)_0%,_transparent_50%)] light-leak-effect pointer-events-none blur-3xl"></div>
+<!-- Background Glow Orbs -->
+<div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/15 rounded-full blur-[140px] pointer-events-none"></div>
+<div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-secondary/10 rounded-full blur-[140px] pointer-events-none"></div>
+<!-- Central Login Card -->
+<div class="glass-panel w-full max-w-md rounded-[2.5rem] p-10 multi-layered-shadow relative z-10 scale-100 transition-all duration-500">
+<div class="text-center mb-10">
+<div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-transparent border border-primary/20 text-primary mb-6 shadow-lg">
+<span class="material-symbols-outlined text-4xl" data-icon="theater_comedy">theater_comedy</span>
+</div>
+<h1 class="font-headline text-3xl font-bold tracking-tight text-white mb-2 drop-shadow-md">Aether Cinema</h1>
+<p class="font-body text-on-surface-variant/90 text-sm tracking-wide font-medium">Enter your credentials to access the portal</p>
+</div>
+<form class="space-y-6">
+<!-- Username Field -->
+<div class="space-y-2">
+<label class="block font-label text-[0.6875rem] font-bold uppercase tracking-[0.15em] text-on-surface-variant ml-1" for="username">
+                        账号 (Username)
+                    </label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant/60 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="account_circle">account_circle</span>
+</div>
+<input class="w-full bg-surface-container-highest/30 border border-outline-variant/30 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all font-body text-sm backdrop-blur-sm" id="username" name="username" placeholder="Enter your admin ID" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="block font-label text-[0.6875rem] font-bold uppercase tracking-[0.15em] text-on-surface-variant ml-1" for="password">
+                        密码 (Password)
+                    </label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant/60 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="lock">lock</span>
+</div>
+<input class="w-full bg-surface-container-highest/30 border border-outline-variant/30 rounded-2xl py-4 pl-12 pr-12 text-white placeholder:text-on-surface-variant/40 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all font-body text-sm backdrop-blur-sm" id="password" name="password" placeholder="••••••••" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-on-surface-variant/50 hover:text-white transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2">
+<label class="flex items-center space-x-3 cursor-pointer group">
+<div class="relative flex items-center">
+<input class="peer h-5 w-5 appearance-none rounded-md bg-surface-container-highest/50 border border-outline-variant/30 checked:bg-primary checked:border-primary transition-all cursor-pointer" type="checkbox"/>
+<span class="material-symbols-outlined absolute text-on-primary text-base opacity-0 peer-checked:opacity-100 left-[2px] pointer-events-none" data-icon="check">check</span>
+</div>
+<span class="text-xs font-semibold text-on-surface-variant group-hover:text-white transition-colors">Remember device</span>
+</label>
+<a class="text-xs font-bold text-primary/90 hover:text-primary transition-colors tracking-tight" href="#">Forgot password?</a>
+</div>
+<!-- Action Button with Breathing Glow Effect -->
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-black py-4 rounded-full animate-glow-breathe hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 font-body text-base flex items-center justify-center gap-2 group mt-4" type="submit">
+<span>登录 (Login)</span>
+<span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Support Link -->
+<div class="mt-8 text-center">
+<p class="text-xs text-on-surface-variant/70 font-medium">
+                    Need technical assistance? 
+                    <a class="text-white font-bold hover:text-primary transition-colors underline underline-offset-4 decoration-primary/30" href="#">Contact Protocol</a>
+</p>
+</div>
+</div>
+</main>
+<footer class="fixed bottom-0 w-full flex flex-col md:flex-row justify-between items-center px-12 py-6 gap-4 z-50 pointer-events-none">
+<div class="font-manrope text-[10px] font-bold tracking-widest uppercase text-white/30 pointer-events-auto">
+            © 2024 Digital Curator Cinema Systems. All rights reserved.
+        </div>
+<div class="flex items-center gap-6 pointer-events-auto">
+<a class="font-manrope text-[10px] font-bold tracking-widest uppercase text-white/30 hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-manrope text-[10px] font-bold tracking-widest uppercase text-white/30 hover:text-primary transition-colors" href="#">Terms of Service</a>
+<div class="flex items-center gap-2 font-manrope text-[10px] font-bold tracking-widest uppercase text-primary/60">
+<span class="material-symbols-outlined text-xs" data-icon="security">security</span>
+                Security Protocol
+            </div>
+</div>
+</footer>
+</body></html>

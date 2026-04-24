@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>电影类型管理 - Aether Cinema Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@300;400;500;700;800;900&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed": "#261a00",
+                      "on-secondary": "#273143",
+                      "on-primary-container": "#594100",
+                      "error": "#ffb4ab",
+                      "on-primary-fixed-variant": "#5b4300",
+                      "on-tertiary": "#2f3131",
+                      "secondary-fixed-dim": "#bcc7de",
+                      "surface-container-high": "#222a3d",
+                      "inverse-on-surface": "#283044",
+                      "primary-fixed-dim": "#f7be2c",
+                      "on-background": "#dae2fd",
+                      "tertiary": "#cecece",
+                      "surface-container-low": "#131b2e",
+                      "surface-variant": "#2d3449",
+                      "surface": "#0b1326",
+                      "error-container": "#93000a",
+                      "inverse-primary": "#795900",
+                      "secondary-container": "#424c5f",
+                      "surface-dim": "#0b1326",
+                      "surface-bright": "#31394d",
+                      "on-secondary-fixed": "#111c2d",
+                      "on-tertiary-container": "#444546",
+                      "tertiary-fixed": "#e2e2e2",
+                      "outline-variant": "#4d4635",
+                      "inverse-surface": "#dae2fd",
+                      "surface-container-lowest": "#060e20",
+                      "surface-tint": "#f7be2c",
+                      "secondary": "#bcc7de",
+                      "outline": "#99907c",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-secondary-fixed-variant": "#3d475a",
+                      "primary-fixed": "#ffdf9e",
+                      "on-error": "#690005",
+                      "on-error-container": "#ffdad6",
+                      "tertiary-container": "#b2b3b3",
+                      "tertiary-fixed-dim": "#c6c6c6",
+                      "secondary-fixed": "#d8e3fb",
+                      "surface-container": "#171f33",
+                      "primary-container": "#e1aa12",
+                      "primary": "#ffc639",
+                      "surface-container-highest": "#2d3449",
+                      "background": "#0b1326",
+                      "on-primary": "#3f2e00",
+                      "on-surface": "#dae2fd",
+                      "on-secondary-container": "#b2bcd3",
+                      "on-surface-variant": "#d0c5af"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Epilogue"],
+                      "body": ["Manrope"],
+                      "label": ["Manrope"]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #0b1326; color: #dae2fd; }
+        .headline-font { font-family: 'Epilogue', sans-serif; }
+        .glass-panel {
+            background: rgba(19, 27, 46, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#0b1326] flex flex-col py-8 shadow-[20px_0_50px_rgba(0,0,0,0.4)] z-50">
+<div class="px-8 mb-10 flex flex-col items-center gap-4">
+<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-primary ring-4 ring-primary/20 shadow-xl shadow-black/40">
+<img class="w-full h-full object-cover" data-alt="high-end minimalist film studio logo with geometric gold patterns on a deep blue circular emblem" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBteRCTLwB7bN6bIR66haGVRaXBXtM-lqliuxx8EMySRIMb-FUeLNizGO3kW6PFzYhJ6k8q6P3Mn8CNaxVZeLJy9HbuFZcARw3IBYjyENCVL0npO7P8CdCEMk8oBAsxHDNV-nvifJYp2GRGNU3M0aMlJlqnzgOHGRdVQofeVPYOcNzDFcQ2zTRiu6ufImJptppRB6_xY9C5VowhrotB0xgiMoMo-Pu4MFBy1WFf8SzQcmhtX-oDJzFcuKE6BMpBq3t-792tsBFPvhs"/>
+</div>
+<div class="text-center">
+<h1 class="text-xl font-black text-[#dae2fd] headline-font tracking-tight">Global Studio</h1>
+<p class="font-['Manrope'] font-medium uppercase tracking-widest text-[11px] text-primary">Premium Tier</p>
+</div>
+</div>
+<nav class="flex-grow space-y-1">
+<a class="flex items-center gap-3 text-[#dae2fd]/60 py-3 px-6 hover:bg-white/5 hover:text-[#ffc639] transition-all font-['Manrope'] font-medium uppercase tracking-widest text-[11px]" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 bg-[#ffc639]/10 text-[#ffc639] border-r-2 border-[#ffc639] py-3 px-6 font-['Manrope'] font-medium uppercase tracking-widest text-[11px]" href="#">
+<span class="material-symbols-outlined" data-icon="movie">movie</span>
+<span>Film Library</span>
+</a>
+<a class="flex items-center gap-3 text-[#dae2fd]/60 py-3 px-6 hover:bg-white/5 hover:text-[#ffc639] transition-all font-['Manrope'] font-medium uppercase tracking-widest text-[11px]" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span>Cast Directory</span>
+</a>
+<a class="flex items-center gap-3 text-[#dae2fd]/60 py-3 px-6 hover:bg-white/5 hover:text-[#ffc639] transition-all font-['Manrope'] font-medium uppercase tracking-widest text-[11px]" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 text-[#dae2fd]/60 py-3 px-6 hover:bg-white/5 hover:text-[#ffc639] transition-all font-['Manrope'] font-medium uppercase tracking-widest text-[11px]" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span>Production Logs</span>
+</a>
+</nav>
+<div class="px-6 mt-8">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary-fixed py-3 rounded-full font-bold text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform">
+                Create New Project
+            </button>
+</div>
+<div class="mt-auto border-t border-white/5 pt-6">
+<a class="flex items-center gap-3 text-[#dae2fd]/60 py-3 px-6 hover:bg-white/5 hover:text-[#ffc639] transition-all font-['Manrope'] font-medium uppercase tracking-widest text-[11px]" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 text-[#dae2fd]/60 py-3 px-6 hover:bg-white/5 hover:text-error transition-all font-['Manrope'] font-medium uppercase tracking-widest text-[11px]" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-grow flex flex-col">
+<!-- TopAppBar Component -->
+<header class="w-full sticky top-0 z-40 bg-[#0b1326]/80 backdrop-blur-3xl shadow-2xl shadow-black/40 flex justify-between items-center px-8 py-4">
+<div class="flex items-center gap-2">
+<span class="text-2xl font-bold italic text-[#ffc639] headline-font tracking-tight">CINE-MANAGEMENT</span>
+<span class="mx-4 h-6 w-[1px] bg-white/10"></span>
+<nav class="hidden md:flex gap-8">
+<a class="text-[#ffc639] font-bold headline-font text-sm uppercase tracking-wider" href="#">Genre Portal</a>
+<a class="text-[#dae2fd]/70 hover:text-[#ffc639] transition-colors duration-300 font-['Epilogue'] tracking-tight text-sm uppercase tracking-wider" href="#">Tags</a>
+<a class="text-[#dae2fd]/70 hover:text-[#ffc639] transition-colors duration-300 font-['Epilogue'] tracking-tight text-sm uppercase tracking-wider" href="#">Metadata</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<input class="bg-surface-container-highest border-none rounded-full py-2 px-10 text-sm focus:ring-1 focus:ring-primary w-64 text-on-surface transition-all" placeholder="Search genre..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+</div>
+<div class="flex items-center gap-4 text-[#dae2fd]/70">
+<button class="hover:text-[#ffc639] transition-colors duration-300"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="hover:text-[#ffc639] transition-colors duration-300"><span class="material-symbols-outlined" data-icon="settings">settings</span></button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/10 cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="professional administrator portrait in sharp suit with warm lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpvsH_aI4Ifrqo1lyrTH6-QenDk4uWcjwsQKjTu9y8uzTAjsU_xuaYCc2AIpm45yC_Zcwoz_5fyhlz1W7O1QKuefR1z2qjrsFYUryEh8B0G_eTTITMWuO-XWpUa4CvkCmdCalDKyb7Spi65Gw8HuvchcoZjTOVL8ffpIh75dl1GKKdQIgaPQi5SYp0Xtb3Alpwu6N4YP6UOYrTDLzPhcUr6pfelQoV2TvaqMt_LgRblJU7t7IKHsv9d_aCW5t3_lL2tSuSJw2_Czw"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<section class="p-10 flex-grow">
+<!-- Breadcrumbs and Header -->
+<div class="flex justify-between items-end mb-10">
+<div>
+<nav class="flex items-center gap-2 text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant mb-3">
+<a class="hover:text-primary" href="#">Management</a>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-primary/70">Movie Genres</span>
+</nav>
+<h2 class="text-5xl font-black headline-font tracking-tighter text-on-surface">电影类型管理</h2>
+</div>
+<button class="flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary font-bold px-8 py-4 rounded-full shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-['Manrope'] text-sm tracking-widest uppercase">Add New Genre</span>
+</button>
+</div>
+<!-- Bento Statistics (Mini) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+<div class="surface-container-low p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 text-primary opacity-5 group-hover:scale-125 transition-transform duration-500">
+<span class="material-symbols-outlined text-8xl" data-icon="category">category</span>
+</div>
+<p class="label-sm font-label uppercase tracking-widest text-on-surface-variant mb-1">Total Genres</p>
+<p class="text-4xl font-black headline-font text-on-surface">24</p>
+</div>
+<div class="surface-container-low p-6 rounded-xl relative overflow-hidden group border-b-2 border-primary/20">
+<div class="absolute -right-4 -bottom-4 text-primary opacity-5 group-hover:scale-125 transition-transform duration-500">
+<span class="material-symbols-outlined text-8xl" data-icon="trending_up">trending_up</span>
+</div>
+<p class="label-sm font-label uppercase tracking-widest text-on-surface-variant mb-1">Active Now</p>
+<p class="text-4xl font-black headline-font text-primary">18</p>
+</div>
+<div class="surface-container-low p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 text-primary opacity-5 group-hover:scale-125 transition-transform duration-500">
+<span class="material-symbols-outlined text-8xl" data-icon="query_stats">query_stats</span>
+</div>
+<p class="label-sm font-label uppercase tracking-widest text-on-surface-variant mb-1">Top Genre</p>
+<p class="text-4xl font-black headline-font text-on-surface">Action</p>
+</div>
+<div class="surface-container-low p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 text-primary opacity-5 group-hover:scale-125 transition-transform duration-500">
+<span class="material-symbols-outlined text-8xl" data-icon="history_edu">history_edu</span>
+</div>
+<p class="label-sm font-label uppercase tracking-widest text-on-surface-variant mb-1">New This Month</p>
+<p class="text-4xl font-black headline-font text-on-surface">02</p>
+</div>
+</div>
+<!-- Management Table Container -->
+<div class="surface-container-low rounded-2xl overflow-hidden shadow-2xl shadow-black/60 border border-white/5">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 text-on-surface-variant border-b border-white/5">
+<th class="px-8 py-6 font-label text-[11px] uppercase tracking-[0.2em]">Index (序号)</th>
+<th class="px-8 py-6 font-label text-[11px] uppercase tracking-[0.2em]">Genre Name (电影类型)</th>
+<th class="px-8 py-6 font-label text-[11px] uppercase tracking-[0.2em] text-right">Actions (操作)</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Table Row 1 -->
+<tr class="hover:bg-white/5 transition-colors duration-200 group">
+<td class="px-8 py-6 font-mono text-sm text-primary/60">001</td>
+<td class="px-8 py-6">
+<div class="flex items-center">
+<div>
+<p class="text-lg font-bold headline-font text-on-surface">动作 (Action)</p>
+<p class="text-xs text-on-surface-variant tracking-wider uppercase">Active In 142 Projects</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<div class="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-3 rounded-full hover:bg-white/10 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-3 rounded-full hover:bg-error/10 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Table Row 2 -->
+<tr class="hover:bg-white/5 transition-colors duration-200 group">
+<td class="px-8 py-6 font-mono text-sm text-primary/60">002</td>
+<td class="px-8 py-6">
+<div class="flex items-center">
+<div>
+<p class="text-lg font-bold headline-font text-on-surface">科幻 (Sci-Fi)</p>
+<p class="text-xs text-on-surface-variant tracking-wider uppercase">Active In 89 Projects</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<div class="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-3 rounded-full hover:bg-white/10 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-3 rounded-full hover:bg-error/10 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Table Row 3 -->
+<tr class="hover:bg-white/5 transition-colors duration-200 group">
+<td class="px-8 py-6 font-mono text-sm text-primary/60">003</td>
+<td class="px-8 py-6">
+<div class="flex items-center">
+<div>
+<p class="text-lg font-bold headline-font text-on-surface">恐怖 (Horror)</p>
+<p class="text-xs text-on-surface-variant tracking-wider uppercase">Active In 45 Projects</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<div class="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-3 rounded-full hover:bg-white/10 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-3 rounded-full hover:bg-error/10 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Table Row 4 -->
+<tr class="hover:bg-white/5 transition-colors duration-200 group">
+<td class="px-8 py-6 font-mono text-sm text-primary/60">004</td>
+<td class="px-8 py-6">
+<div class="flex items-center">
+<div>
+<p class="text-lg font-bold headline-font text-on-surface">纪录片 (Docu)</p>
+<p class="text-xs text-on-surface-variant tracking-wider uppercase">Active In 32 Projects</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<div class="flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-3 rounded-full hover:bg-white/10 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-3 rounded-full hover:bg-error/10 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Component -->
+<footer class="px-8 py-6 bg-surface-container-high/30 flex items-center justify-between">
+<p class="text-sm text-on-surface-variant tracking-wide">Showing 1 to 4 of 24 results</p>
+<div class="flex items-center gap-1">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 text-on-surface-variant disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary-fixed font-bold shadow-lg shadow-primary/20">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 text-on-surface hover:text-primary transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 text-on-surface hover:text-primary transition-colors">3</button>
+<span class="px-2 text-on-surface-variant">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 text-on-surface hover:text-primary transition-colors">6</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/5 text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</footer>
+</div>
+</section>
+</main>
+</body></html>
