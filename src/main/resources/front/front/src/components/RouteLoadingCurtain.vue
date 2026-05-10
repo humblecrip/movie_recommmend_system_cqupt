@@ -12,8 +12,8 @@
 
       <div class="curtain-center">
         <div class="curtain-brand">
-          <span class="curtain-brand-main">CINEMA</span>
-          <span class="curtain-brand-accent">AI</span>
+          <span class="curtain-brand-main">电影推荐</span>
+          <span class="curtain-brand-accent">系统</span>
         </div>
         <div class="curtain-title">{{ message }}</div>
         <div class="curtain-subtitle">下一幕正在入场，请稍候片刻</div>
@@ -37,7 +37,7 @@ export default {
     },
     message: {
       type: String,
-      default: '正在切换影院场景',
+      default: '正在切换电影页面',
     },
   },
 }

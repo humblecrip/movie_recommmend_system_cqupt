@@ -1,7 +1,7 @@
 <template>
   <div class="prototype-detail-page">
     <div class="detail-shell">
-      <div class="back_box prototype-back-box" v-if="centerType || storeupType">
+      <div class="back_box prototype-back-box">
         <el-button class="backBtn" size="mini" @click="backClick">
           <span class="icon iconfont icon-jiantou33"></span>
           <span class="text">返回</span>
@@ -686,16 +686,31 @@ export default {
       this.pageSize = size
       this.getDiscussList(1)
     },
+    hasHistoryBack() {
+      return window.history && window.history.length > 1
+    },
+    getDefaultBackRoute() {
+      return {
+        path: '/index/home',
+        query: {
+          view: 'movies',
+        },
+      }
+    },
     backClick() {
       if (this.storeupType) {
         history.back()
-      } else {
-        const params = {}
-        if (this.centerType) {
-          params.centerType = 1
-        }
-        this.$router.push({ path: '/index/dianyingxinxi', query: params })
+        return
       }
+      if (this.centerType) {
+        this.$router.push({ path: '/index/dianyingxinxi', query: { centerType: 1 } })
+        return
+      }
+      if (this.hasHistoryBack()) {
+        history.back()
+        return
+      }
+      this.$router.push(this.getDefaultBackRoute())
     },
     download(file) {
       if (!file) {
@@ -888,17 +903,69 @@ export default {
   width: 100%;
 }
 
-.prototype-back-box {
+.back_box.prototype-back-box {
   position: fixed;
   top: 20px;
   left: 20px;
   z-index: 60;
+  width: auto;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: transparent;
+  border-radius: 999px;
+  box-shadow: none;
 }
 
-.prototype-back-box .backBtn {
-  border: 1px solid rgba(153, 144, 124, 0.2);
-  background: rgba(11, 19, 38, 0.85);
-  color: #dae2fd;
+.prototype-back-box .backBtn.el-button {
+  min-width: 0;
+  height: 40px;
+  padding: 0 16px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(232, 198, 120, 0.28);
+  border-radius: 999px;
+  background: rgba(11, 19, 38, 0.72);
+  color: #e9efff;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.prototype-back-box .backBtn.el-button .icon,
+.prototype-back-box .backBtn.el-button .text {
+  color: #e9efff;
+}
+
+.prototype-back-box .backBtn.el-button .icon {
+  margin: 0;
+  font-size: 14px;
+}
+
+.prototype-back-box .backBtn.el-button .text {
+  line-height: 1;
+}
+
+.prototype-back-box .backBtn.el-button:hover,
+.prototype-back-box .backBtn.el-button:focus {
+  border-color: rgba(232, 198, 120, 0.48);
+  background: rgba(24, 35, 62, 0.82);
+  color: #ffffff;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(232, 198, 120, 0.08);
+  transform: translateY(-1px);
+}
+
+.prototype-back-box .backBtn.el-button:hover .icon,
+.prototype-back-box .backBtn.el-button:hover .text,
+.prototype-back-box .backBtn.el-button:focus .icon,
+.prototype-back-box .backBtn.el-button:focus .text {
+  color: #ffffff;
 }
 
 .detail-main {
@@ -1739,6 +1806,16 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .back_box.prototype-back-box {
+    top: 12px;
+    left: 12px;
+  }
+
+  .prototype-back-box .backBtn.el-button {
+    height: 36px;
+    padding: 0 12px;
+  }
+
   .hero-section {
     min-height: 680px;
   }

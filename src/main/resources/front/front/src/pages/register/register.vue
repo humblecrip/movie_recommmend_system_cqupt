@@ -104,8 +104,8 @@
         <a href="javascript:void(0);">帮助中心</a>
         <a href="javascript:void(0);">无障碍说明</a>
       </div>
-      <router-link class="footer-brand footer-home-link" to="/index/home">以太影院</router-link>
-      <p class="footer-copy">© 2024 以太影院 · 导演剪辑版</p>
+      <router-link class="footer-brand footer-home-link" to="/index/home">电影推荐系统</router-link>
+      <p class="footer-copy">© 2024 电影推荐系统 · 保留所有权利</p>
     </footer>
   </div>
 </template>

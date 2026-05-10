@@ -1,10 +1,10 @@
 <template>
 	<aside class="admin-sidebar">
 		<div class="brand-panel" @click="menuHandler('')">
-			<div class="brand-mark">AC</div>
+			<div class="brand-mark">影荐</div>
 			<div class="brand-copy">
 				<h1>{{ $project.projectName }}</h1>
-				<p>Management Portal</p>
+				<p>管理后台</p>
 			</div>
 		</div>
 
@@ -26,7 +26,7 @@
 					@click="menuHandler('')"
 				>
 					<i class="el-icon-s-home"></i>
-					<span>Dashboard</span>
+					<span>数据总览</span>
 				</button>
 			</div>
 

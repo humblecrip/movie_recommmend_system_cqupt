@@ -1,7 +1,7 @@
 <template>
 	<div class="admin-login-page">
 		<header class="login-header">
-			<div class="brand-mark">CineAdmin</div>
+			<div class="brand-mark">电影推荐管理后台</div>
 		</header>
 
 		<main class="login-main">
@@ -15,13 +15,13 @@
 					<div class="brand-badge">
 						<i class="el-icon-film"></i>
 					</div>
-					<h1>Aether Cinema</h1>
+					<h1>电影推荐管理后台</h1>
 					<p>输入管理员账号与密码，进入电影管理后台。</p>
 				</div>
 
 				<form class="admin-login-form" @submit.prevent="login">
 					<div class="field-block">
-						<label for="admin-username">账号 (Username)</label>
+						<label for="admin-username">账号</label>
 						<div class="field-shell">
 							<i class="field-icon el-icon-user"></i>
 							<el-input
@@ -35,7 +35,7 @@
 					</div>
 
 					<div class="field-block">
-						<label for="admin-password">密码 (Password)</label>
+						<label for="admin-password">密码</label>
 						<div class="field-shell">
 							<i class="field-icon el-icon-lock"></i>
 							<el-input
@@ -69,7 +69,7 @@
 						:loading="submitting"
 						:disabled="submitting"
 					>
-						<span>登录 (Login)</span>
+						<span>登录</span>
 						<i class="el-icon-right"></i>
 					</el-button>
 				</form>
@@ -81,10 +81,10 @@
 		</main>
 
 		<footer class="login-footer">
-			<div>© 2024 Digital Curator Cinema Systems. All rights reserved.</div>
+			<div>© 2024 电影推荐管理后台 · 保留所有权利</div>
 			<div class="footer-status">
 				<i class="el-icon-lock"></i>
-				<span>Security Protocol</span>
+				<span>安全登录通道</span>
 			</div>
 		</footer>
 

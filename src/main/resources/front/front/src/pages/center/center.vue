@@ -7,10 +7,10 @@
         </div>
         <div>
           <div class="brand-title">
-            <span class="brand-main">CINEMA</span>
-            <span class="brand-accent">AI</span>
+            <span class="brand-main">电影推荐</span>
+            <span class="brand-accent">系统</span>
           </div>
-          <div class="brand-subtitle">MOVIE INTELLIGENCE</div>
+          <div class="brand-subtitle">个性化电影推荐</div>
         </div>
       </button>
 

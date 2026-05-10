@@ -36,7 +36,8 @@ runTest('App 根组件应挂载全局幕布组件', () => {
 
 runTest('幕布组件应包含品牌文案与全屏遮罩结构', () => {
   assert.ok(curtainSource.includes('class="route-loading-curtain"'))
-  assert.ok(curtainSource.includes('CINEMA'))
-  assert.ok(curtainSource.includes('正在切换影院场景'))
+  assert.ok(curtainSource.includes('电影推荐'))
+  assert.ok(curtainSource.includes('系统'))
+  assert.ok(curtainSource.includes('正在切换电影页面'))
   assert.ok(curtainSource.includes('curtain-panel'))
 })

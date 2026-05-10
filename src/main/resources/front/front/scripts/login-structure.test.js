@@ -12,7 +12,7 @@ function expectStructure(condition, message) {
 function run() {
   expectStructure(source.includes('class="cinema-login"'), '应存在新的影院登录页根容器')
   expectStructure(source.includes('class="login-atmosphere"'), '应存在背景氛围层')
-  expectStructure(source.includes('以太影院'), '应存在中文品牌标题')
+  expectStructure(source.includes('电影推荐系统'), '应存在中文品牌标题')
   expectStructure(source.includes('class="brand-text brand-link"'), '品牌标题应升级为可点击首页入口')
   expectStructure(source.includes('to="/index/home"'), '品牌标题点击后应跳转至首页')
   expectStructure(source.includes('银幕已就绪'), '应存在中文主标题')
@@ -21,7 +21,8 @@ function run() {
   expectStructure(source.includes('v-model="loginForm.password"'), '应保留密码输入绑定')
   expectStructure(source.includes("submitForm('loginForm')"), '应保留原登录提交逻辑入口')
   expectStructure(source.includes("v-if=\"roles.length > 1\""), '多角色时应保留角色选择区域')
-  expectStructure(source.includes('v-for="(item, index) in roles"'), '应保留基于角色列表的注册入口渲染')
+  expectStructure(source.includes('v-for="(item, index) in filteredRegisterRoles"'), '应保留基于可注册角色列表的注册入口渲染')
+  expectStructure(source.includes("item.hasFrontRegister == '是'"), '注册链接应只渲染允许前台注册的角色')
   expectStructure(source.includes("showPassword ? 'text' : 'password'"), '应保留密码显隐逻辑')
   expectStructure(source.includes('立即登录'), '登录按钮应中文化')
   expectStructure(source.includes('服务条款'), '登录页脚文案应中文化')

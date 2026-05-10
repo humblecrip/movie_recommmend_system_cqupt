@@ -6,8 +6,8 @@
 
     <header class="topbar fade-slide-down">
       <button class="brand" type="button" @click="goHome">
-        <span class="brand-main">CINEMA</span>
-        <span class="brand-accent">AI</span>
+        <span class="brand-main">电影推荐</span>
+        <span class="brand-accent">系统</span>
       </button>
 
       <nav class="nav-links">

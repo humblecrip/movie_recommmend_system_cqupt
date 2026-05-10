@@ -2,7 +2,7 @@ const VueModule = require('vue')
 
 const SHOW_DELAY_MS = 90
 const MIN_VISIBLE_MS = 280
-const DEFAULT_MESSAGE = '正在切换影院场景'
+const DEFAULT_MESSAGE = '正在切换电影页面'
 
 function resolveVueRuntime(vueModule) {
   if (vueModule && typeof vueModule.observable === 'function') {

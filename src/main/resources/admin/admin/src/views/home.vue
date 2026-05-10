@@ -2,8 +2,8 @@
 	<div class="dashboard-home">
 		<section class="hero-panel">
 			<div class="hero-copy">
-				<p class="hero-kicker">Dashboard Overview</p>
-				<h2>影院业务总览</h2>
+				<p class="hero-kicker">数据总览</p>
+				<h2>电影业务总览</h2>
 				<span>读取 app_movie 与真实互动表聚合接口，集中展示后台关键指标。</span>
 			</div>
 

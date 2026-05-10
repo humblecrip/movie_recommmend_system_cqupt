@@ -6,7 +6,7 @@
     </div>
 
     <header class="login-nav">
-      <router-link class="brand-text brand-link" to="/index/home">以太影院</router-link>
+      <router-link class="brand-text brand-link" to="/index/home">电影推荐系统</router-link>
       <button class="help-button" type="button" aria-label="帮助">
         <i class="el-icon-question"></i>
       </button>
@@ -76,9 +76,8 @@
           </p>
           <div class="register-links">
             <router-link
-              v-for="(item, index) in roles"
+              v-for="(item, index) in filteredRegisterRoles"
               :key="index"
-              v-if="item.hasFrontRegister == '是'"
               class="register-link"
               :to="{path: '/register', query: {role: item.tableName, pageFlag: 'register'}}"
             >
@@ -90,7 +89,7 @@
     </main>
 
     <footer class="login-footer">
-      <div class="footer-copy">© 2024 以太影院 · 保留所有权利</div>
+      <div class="footer-copy">© 2024 电影推荐系统 · 保留所有权利</div>
       <div class="footer-links">
         <a href="javascript:void(0);">服务条款</a>
         <a href="javascript:void(0);">隐私政策</a>
@@ -137,6 +136,11 @@ export default {
         this.roles.push(this.roleMenus[item])
       }
     }
+  },
+  computed: {
+    filteredRegisterRoles() {
+      return this.roles.filter(item => item.hasFrontRegister == '是')
+    },
   },
   methods: {
     encryptPasswordValue(value) {
