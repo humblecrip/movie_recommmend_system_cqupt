@@ -77,7 +77,7 @@ public class ConfigController{
      */
     @RequestMapping("/info")
     public R infoByName(@RequestParam String name){
-        ConfigEntity config = configService.selectOne(new EntityWrapper<ConfigEntity>().eq("name", "faceFile"));
+        ConfigEntity config = configService.selectOne(new EntityWrapper<ConfigEntity>().eq("name", name));
         return R.ok().put("data", config);
     }
     
@@ -87,6 +87,9 @@ public class ConfigController{
     @PostMapping("/save")
     public R save(@RequestBody ConfigEntity config){
 //    	ValidatorUtils.validateEntity(config);
+        if(config.getId() == null) {
+            config.setId(System.currentTimeMillis() + (long)Math.floor(Math.random() * 1000));
+        }
     	configService.insert(config);
         return R.ok();
     }

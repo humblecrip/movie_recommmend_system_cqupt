@@ -26,10 +26,6 @@
 					<i class="el-icon-search"></i>
 					查询
 				</el-button>
-				<el-button class="list-add-btn" v-if="btnAuth('discussdianyingxinxi','新增')" type="primary" @click="add('/index/discussdianyingxinxiAdd')">
-					<i class="el-icon-circle-plus-outline"></i>
-					添加
-				</el-button>
 			</el-form>
 			<div class="select2">
 				<div class="select2-list" v-for="(item,index) in selectOptionsList" :key="index">
@@ -149,16 +145,9 @@
 				}
 				this.getList()
 			},
-			add(path) {
-				let query = {}
-				if(this.centerType){
-					query.centerType = 1
-				}
-				this.$router.push({path: path,query:query});
-			},
 			async getFenlei() {
 			},
-			getList(page, fenlei, ref = '') {
+			getList(page) {
 				let params = {
 					page,
 					limit: this.pageSize,
@@ -166,7 +155,6 @@
 				let searchWhere = {};
 				if (this.formSearch.nickname != '') searchWhere.nickname = '%' + this.formSearch.nickname + '%';
 				if (this.formSearch.content != '') searchWhere.content = '%' + this.formSearch.content + '%';
-				let user = JSON.parse(localStorage.getItem('sessionForm'))
 				if (this.sortType) searchWhere.sort = this.sortType
 				if (this.sortOrder) searchWhere.order = this.sortOrder
 				this.$http.get(`discussdianyingxinxi/${this.centerType?'page':'list'}`, {params: Object.assign(params, searchWhere)}).then(res => {

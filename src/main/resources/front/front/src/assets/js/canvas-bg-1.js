@@ -55,7 +55,7 @@ export default function canvasBg(){
 
 		for (var i = 0; i < arr.length; i++) {
 
-			splot = arr[i];;
+			splot = arr[i];
 			$.fillStyle = rndCol();
 			$.beginPath();
 			$.arc(splot.x, splot.y, splot.r, 0, Math.PI * 2, true);

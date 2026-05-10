@@ -54,8 +54,8 @@ function run() {
     formatHeroMeta(sampleMovie),
     {
       year: '2025',
-      runtime: '2h 16m',
-      maturityRating: 'PG-13',
+      runtime: '2小时16分钟',
+      maturityRating: '建议13岁以上观看',
       overview: '测试简介',
       scoreText: '8.5',
       releaseDateText: '2025-01-01',

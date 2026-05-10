@@ -28,7 +28,7 @@ import com.baomidou.mybatisplus.enums.IdType;
  * @email 
  * @date 2025-04-12 20:00:43
  */
-@TableName("dianyingleixing")
+@TableName("app_movie_type")
 public class DianyingleixingEntity<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -49,17 +49,18 @@ public class DianyingleixingEntity<T> implements Serializable {
 	/**
 	 * 主键id
 	 */
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "legacy_dianyingleixing_id", type = IdType.INPUT)
 	private Long id;
 	/**
 	 * 电影类型
 	 */
-					
+	@TableField("type_name")
 	private String dianyingleixing;
 	
 	
 	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat
+	@TableField("created_at")
 	private Date addtime;
 
 	public Date getAddtime() {

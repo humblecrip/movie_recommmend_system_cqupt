@@ -1,6 +1,6 @@
 import CryptoJS from './cryptojs.js'
 let KEY = '1234567890123456'
-let IV = ''
+let IV = 'abcdefghijklmnop'
 // DES加密
 export const encryptDes = (message) => {
 	const keyHex = CryptoJS.enc.Utf8.parse(KEY);

@@ -28,7 +28,7 @@ import com.baomidou.mybatisplus.enums.IdType;
  * @email 
  * @date 2025-04-12 20:00:43
  */
-@TableName("yonghu")
+@TableName("app_user")
 public class YonghuEntity<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -49,71 +49,72 @@ public class YonghuEntity<T> implements Serializable {
 	/**
 	 * 主键id
 	 */
-    @TableId
+    @TableId(value = "legacy_yonghu_id", type = IdType.INPUT)
 	private Long id;
 	/**
 	 * 旧版用户名
 	 */
-					
+	@TableField(exist = false)
 	private String yonghuming;
 
 	/**
 	 * 用户账号
 	 */
-					
+	@TableField("login_name")
 	private String yonghuzhanghao;
 	
 	/**
 	 * 密码
 	 */
-					
+	@TableField("password_value")
 	private String mima;
 	
 	/**
 	 * 旧版姓名
 	 */
-					
+	@TableField(exist = false)
 	private String xingming;
 
 	/**
 	 * 用户姓名
 	 */
-					
+	@TableField("display_name")
 	private String yonghuxingming;
 	
 	/**
 	 * 头像
 	 */
-					
+	@TableField("avatar_url")
 	private String touxiang;
 	
 	/**
 	 * 性别
 	 */
-					
+	@TableField("gender")
 	private String xingbie;
 	
 	/**
 	 * 旧版手机号
 	 */
-					
+	@TableField(exist = false)
 	private String shoujihao;
 
 	/**
 	 * 联系电话
 	 */
-					
+	@TableField("phone_number")
 	private String lianxidianhua;
 	
 	/**
 	 * 身份证
 	 */
-					
+	@TableField("national_id_number")
 	private String shenfenzheng;
 	
 	
 	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat
+	@TableField("created_at")
 	private Date addtime;
 
 	public Date getAddtime() {

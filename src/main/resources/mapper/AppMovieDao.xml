@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.AppMovieDao">
+
+    <sql id="movieTypeNameExpr">
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(tt.type_name ORDER BY rel.is_primary DESC, rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_type_rel rel
+                INNER JOIN app_movie_type tt ON tt.id = rel.type_id
+                WHERE rel.movie_id = m.id
+            ), ''),
+            t.type_name,
+            m.legacy_type_name
+        )
+    </sql>
+
+    <sql id="moviePosterUrlsExpr">
+        COALESCE((
+            SELECT GROUP_CONCAT(mm.media_url ORDER BY mm.sort_order SEPARATOR ',')
+            FROM app_movie_media mm
+            WHERE mm.movie_id = m.id
+              AND mm.media_role = 'poster'
+        ), m.poster_urls_csv)
+    </sql>
+
+    <sql id="movieRegionNameExpr">
+        COALESCE(r.region_name, m.region_name)
+    </sql>
+
+    <sql id="movieDirectorExpr">
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(p.person_name ORDER BY rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_person_rel rel
+                INNER JOIN app_movie_person p ON p.id = rel.person_id
+                WHERE rel.movie_id = m.id
+                  AND rel.relation_type = 'director'
+            ), ''),
+            m.director_name
+        )
+    </sql>
+
+    <sql id="movieCastExpr">
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(p.person_name ORDER BY rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_person_rel rel
+                INNER JOIN app_movie_person p ON p.id = rel.person_id
+                WHERE rel.movie_id = m.id
+                  AND rel.relation_type = 'cast'
+            ), ''),
+            m.cast_names
+        )
+    </sql>
+
+    <sql id="moviePrimaryTypeIdExpr">
+        COALESCE(
+            m.movie_type_id,
+            (
+                SELECT rel.type_id
+                FROM app_movie_type_rel rel
+                WHERE rel.movie_id = m.id
+                ORDER BY rel.is_primary DESC, rel.sort_order ASC, rel.id ASC
+                LIMIT 1
+            )
+        )
+    </sql>
+
+    <sql id="movieBaseJoins">
+        LEFT JOIN app_movie_type t ON t.id = m.movie_type_id
+        LEFT JOIN app_movie_region r ON r.id = m.region_id
+    </sql>
+
+    <sql id="movieCardColumns">
+        m.id AS id,
+        m.title AS title,
+        <include refid="movieTypeNameExpr"/> AS typeName,
+        <include refid="moviePosterUrlsExpr"/> AS posterUrlsCsv,
+        <include refid="movieRegionNameExpr"/> AS regionName,
+        m.release_date AS releaseDate,
+        <include refid="movieDirectorExpr"/> AS directorName,
+        <include refid="movieCastExpr"/> AS castNames,
+        m.synopsis AS synopsis,
+        m.like_count AS likeCount,
+        m.dislike_count AS dislikeCount,
+        m.click_count AS clickCount,
+        m.comment_count AS commentCount,
+        m.favorite_count AS favoriteCount,
+        m.total_score AS totalScore
+    </sql>
+
+    <sql id="movieFilter">
+        <where>
+            <if test="params.title != null and params.title != ''">
+                AND m.title LIKE CONCAT('%', #{params.title}, '%')
+            </if>
+            <if test="params.typeName != null and params.typeName != ''">
+                AND (
+                    EXISTS (
+                        SELECT 1
+                        FROM app_movie_type_rel filterRel
+                        INNER JOIN app_movie_type filterType ON filterType.id = filterRel.type_id
+                        WHERE filterRel.movie_id = m.id
+                          AND filterType.type_name LIKE CONCAT('%', #{params.typeName}, '%')
+                    )
+                    OR t.type_name LIKE CONCAT('%', #{params.typeName}, '%')
+                    OR m.legacy_type_name LIKE CONCAT('%', #{params.typeName}, '%')
+                )
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectTypes" resultType="com.entity.vo.AppMovieTypeVO">
+        SELECT id AS id, type_name AS typeName
+        FROM app_movie_type
+        ORDER BY type_name ASC
+    </select>
+
+    <select id="countMovies" resultType="int">
+        SELECT COUNT(1)
+        FROM app_movie m
+        <include refid="movieBaseJoins"/>
+        <include refid="movieFilter"/>
+    </select>
+
+    <select id="selectFrontList" resultType="com.entity.vo.AppMovieListVO">
+        SELECT
+        <include refid="movieCardColumns"/>
+        FROM app_movie m
+        <include refid="movieBaseJoins"/>
+        <include refid="movieFilter"/>
+        ORDER BY ${params.sortColumn} ${params.orderKeyword}
+        LIMIT #{params.offset}, #{params.limit}
+    </select>
+
+    <select id="selectPositiveRecommendationActions" resultType="com.entity.vo.AppMovieRecommendationActionVO">
+        SELECT
+        a.legacy_userid AS legacyUserId,
+        a.movie_id AS movieId,
+        MAX(
+            CASE
+                WHEN a.action_type = 'favorite' THEN 1.0
+                WHEN a.action_type = 'like' THEN 0.8
+                ELSE 0
+            END
+        ) AS preferenceScore
+        FROM app_user_movie_action a
+        WHERE a.legacy_userid IS NOT NULL
+          AND a.movie_id IS NOT NULL
+          AND a.action_type IN ('favorite', 'like')
+        GROUP BY a.legacy_userid, a.movie_id
+    </select>
+
+    <select id="selectMoviesByIds" resultType="com.entity.vo.AppMovieListVO">
+        SELECT
+        <include refid="movieCardColumns"/>
+        FROM app_movie m
+        <include refid="movieBaseJoins"/>
+        WHERE m.id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectAdminPage" resultType="com.entity.vo.AppMovieAdminVO">
+        SELECT
+        <include refid="movieCardColumns"/>,
+        m.legacy_dianyingxinxi_id AS legacyDianyingxinxiId,
+        m.created_at AS createdAt,
+        m.updated_at AS updatedAt
+        FROM app_movie m
+        <include refid="movieBaseJoins"/>
+        <include refid="movieFilter"/>
+        ORDER BY ${params.sortColumn} ${params.orderKeyword}
+        LIMIT #{params.offset}, #{params.limit}
+    </select>
+
+    <select id="selectDetail" resultType="com.entity.vo.AppMovieDetailVO">
+        SELECT
+        m.id AS id,
+        m.legacy_dianyingxinxi_id AS legacyDianyingxinxiId,
+        <include refid="moviePrimaryTypeIdExpr"/> AS typeId,
+        m.title AS title,
+        <include refid="movieTypeNameExpr"/> AS typeName,
+        <include refid="moviePosterUrlsExpr"/> AS posterUrlsCsv,
+        <include refid="movieRegionNameExpr"/> AS regionName,
+        m.release_date AS releaseDate,
+        <include refid="movieDirectorExpr"/> AS directorName,
+        <include refid="movieCastExpr"/> AS castNames,
+        m.synopsis AS synopsis,
+        m.detail_html AS detailHtml,
+        m.like_count AS likeCount,
+        m.dislike_count AS dislikeCount,
+        m.click_count AS clickCount,
+        m.comment_count AS commentCount,
+        m.favorite_count AS favoriteCount,
+        m.total_score AS totalScore
+        FROM app_movie m
+        <include refid="movieBaseJoins"/>
+        WHERE m.id = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="selectSimilarMovies" resultType="com.entity.vo.AppMovieListVO">
+        SELECT
+        <include refid="movieCardColumns"/>
+        FROM app_movie m
+        <include refid="movieBaseJoins"/>
+        WHERE m.id != #{id}
+        <if test="typeId != null">
+            AND (
+                m.movie_type_id = #{typeId}
+                OR EXISTS (
+                    SELECT 1
+                    FROM app_movie_type_rel rel
+                    WHERE rel.movie_id = m.id
+                      AND rel.type_id = #{typeId}
+                )
+            )
+        </if>
+        ORDER BY m.click_count DESC, m.total_score DESC, m.id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectDashboardOverview" resultType="com.entity.vo.AppMovieDashboardOverviewVO">
+        SELECT
+        (SELECT COUNT(1) FROM app_movie) AS movieTotal,
+        (SELECT COALESCE(SUM(click_count), 0) FROM app_movie) AS totalClickCount,
+        (SELECT COUNT(1) FROM app_user_movie_action WHERE action_type = 'like') AS totalLikeCount,
+        (SELECT COUNT(1) FROM app_user_movie_action WHERE action_type = 'dislike') AS totalDislikeCount,
+        (SELECT COUNT(1) FROM app_user_movie_action WHERE action_type = 'favorite') AS totalFavoriteCount,
+        (SELECT COUNT(1) FROM app_movie_comment) AS totalCommentCount,
+        (SELECT COALESCE(ROUND(SUM(total_score), 1), 0) FROM app_movie) AS totalScore
+    </select>
+
+    <select id="selectTopClickedMovies" resultType="com.entity.vo.AppMovieListVO">
+        SELECT
+        <include refid="movieCardColumns"/>
+        FROM app_movie m
+        <include refid="movieBaseJoins"/>
+        ORDER BY m.click_count DESC, m.id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectTopLikedMovies" resultType="com.entity.vo.AppMovieListVO">
+        SELECT
+        <include refid="movieCardColumns"/>
+        FROM app_movie m
+        <include refid="movieBaseJoins"/>
+        ORDER BY m.like_count DESC, m.id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectTopFavoritedMovies" resultType="com.entity.vo.AppMovieListVO">
+        SELECT
+        <include refid="movieCardColumns"/>
+        FROM app_movie m
+        <include refid="movieBaseJoins"/>
+        ORDER BY m.favorite_count DESC, m.id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectTypeDistribution" resultType="com.entity.vo.AppMovieMetricVO">
+        SELECT
+        typed.label AS label,
+        COUNT(1) AS value,
+        COALESCE(SUM(typed.clickCount), 0) AS extraValue
+        FROM (
+            SELECT
+            rel.movie_id AS movieId,
+            tt.type_name AS label,
+            m.click_count AS clickCount
+            FROM app_movie_type_rel rel
+            INNER JOIN app_movie_type tt ON tt.id = rel.type_id
+            INNER JOIN app_movie m ON m.id = rel.movie_id
+            UNION ALL
+            SELECT
+            m.id AS movieId,
+            COALESCE(t.type_name, m.legacy_type_name, '未分类') AS label,
+            m.click_count AS clickCount
+            FROM app_movie m
+            LEFT JOIN app_movie_type t ON t.id = m.movie_type_id
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM app_movie_type_rel rel
+                WHERE rel.movie_id = m.id
+            )
+        ) typed
+        GROUP BY typed.label
+        ORDER BY value DESC, label ASC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectReleaseYearDistribution" resultType="com.entity.vo.AppMovieMetricVO">
+        SELECT
+        COALESCE(DATE_FORMAT(m.release_date, '%Y'), '未知') AS label,
+        COUNT(1) AS value,
+        COALESCE(SUM(m.click_count), 0) AS extraValue
+        FROM app_movie m
+        GROUP BY COALESCE(DATE_FORMAT(m.release_date, '%Y'), '未知')
+        ORDER BY label DESC
+        LIMIT #{limit}
+    </select>
+</mapper>

@@ -17,6 +17,9 @@ import com.entity.SensitivewordsEntity;
 import com.service.SensitivewordsService;
 import com.entity.vo.SensitivewordsVO;
 import com.entity.view.SensitivewordsView;
+import com.utils.SensitiveWordUtils;
+
+import java.util.ArrayList;
 
 @Service("sensitivewordsService")
 public class SensitivewordsServiceImpl extends ServiceImpl<SensitivewordsDao, SensitivewordsEntity> implements SensitivewordsService {
@@ -58,6 +61,18 @@ public class SensitivewordsServiceImpl extends ServiceImpl<SensitivewordsDao, Se
 	@Override
 	public SensitivewordsView selectView(Wrapper<SensitivewordsEntity> wrapper) {
 		return baseMapper.selectView(wrapper);
+	}
+
+	@Override
+	public List<String> listNormalizedKeywords() {
+		List<SensitivewordsEntity> records = this.selectList(new EntityWrapper<SensitivewordsEntity>().orderBy("created_at", false));
+		List<String> rawTexts = new ArrayList<String>();
+		for (SensitivewordsEntity record : records) {
+			if (record != null) {
+				rawTexts.add(record.getContent());
+			}
+		}
+		return SensitiveWordUtils.normalizeKeywords(rawTexts);
 	}
 
 

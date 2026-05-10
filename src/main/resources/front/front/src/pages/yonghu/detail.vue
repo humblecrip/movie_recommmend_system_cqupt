@@ -163,15 +163,13 @@
 							this.detailBanner = this.detail.touxiang.split(",w").length>1?[this.detail.touxiang]:this.detail.touxiang.split(',');
 						}
 						this.$forceUpdate();
-						if(localStorage.getItem('frontToken')){
-						}
 
 					}
 				});
 			},
 			getSensitiveWords(){
-				this.$http.get('sensitivewords/detail/1').then(rs=>{
-					this.sensitiveWordsArr = rs.data.data.content.split(',')
+				this.$http.get('keywords/list').then(rs=>{
+					this.sensitiveWordsArr = rs.data && rs.data.code === 0 && Array.isArray(rs.data.data) ? rs.data.data : []
 				})
 			},
 			curChange(page) {
@@ -234,7 +232,7 @@
 						view: window
 					}))
 					window.URL.revokeObjectURL(data)
-				},err=>{
+				},()=>{
 					axios.get((location.href.split(this.$config.name).length>1 ? location.href.split(this.$config.name)[0] :'') + this.$config.name + '/file/download?fileName=' + arr, {
 						headers: {
 							token: localStorage.getItem("frontToken")
@@ -278,7 +276,7 @@
 			},
 			// 删除
 			async delClick(){
-				await this.$confirm('是否删除此用户？') .then(_ => {
+				await this.$confirm('是否删除此用户？') .then(() => {
 					this.$http.post('yonghu/delete', [this.detail.id]).then(async res => {
 						if (res.data.code == 0) {
 							this.$message({
@@ -291,7 +289,7 @@
 							});
 						}
 					});
-				}).catch(_ => {});
+				}).catch(() => {});
 			},
 		},
 		components: {

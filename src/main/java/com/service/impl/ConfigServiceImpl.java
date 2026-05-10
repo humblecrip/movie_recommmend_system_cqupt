@@ -24,10 +24,8 @@ import com.utils.Query;
 public class ConfigServiceImpl extends ServiceImpl<ConfigDao, ConfigEntity> implements ConfigService {
 	@Override
 	public PageUtils queryPage(Map<String, Object> params, Wrapper<ConfigEntity> wrapper) {
-		Page<ConfigEntity> page = this.selectPage(
-                new Query<ConfigEntity>(params).getPage(),
-                wrapper
-        );
-        return new PageUtils(page);
+		Page<ConfigEntity> page = new Query<ConfigEntity>(params).getPage();
+		page.setRecords(baseMapper.selectListView(page, wrapper));
+		return new PageUtils(page);
 	}
 }

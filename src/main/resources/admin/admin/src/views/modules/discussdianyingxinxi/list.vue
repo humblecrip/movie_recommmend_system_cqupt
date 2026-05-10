@@ -392,41 +392,14 @@ export default {
 					data: ids
 				}).then(async ({ data }) => {
 					if (data && data.code === 0) {
-						if (refid) {
-							this.$http({
-								url: 'dianyingxinxi/info/' + refid,
-								method: 'get'
-							}).then(res => {
-								if (res.data && res.data.code === 0) {
-									res.data.data.discussnum = res.data.data.discussnum - Number(ids.length)
-									this.$http({
-										url: 'dianyingxinxi/update',
-										method: 'post',
-										data: res.data.data
-									}).then(res1 => {
-										if (res1.data && res1.data.code === 0) {
-											this.$message({
-												message: '操作成功',
-												type: 'success',
-												duration: 1500,
-												onClose: () => {
-													this.search()
-												}
-											})
-										}
-									})
-								}
-							})
-						} else {
-							this.$message({
-								message: '操作成功',
-								type: 'success',
-								duration: 1500,
-								onClose: () => {
-									this.search()
-								}
-							})
-						}
+						this.$message({
+							message: '操作成功',
+							type: 'success',
+							duration: 1500,
+							onClose: () => {
+								this.search()
+							}
+						})
 					} else {
 						this.$message.error(data.msg)
 					}

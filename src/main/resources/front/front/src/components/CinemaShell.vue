@@ -11,9 +11,13 @@
       </button>
 
       <nav class="nav-links">
-        <button class="nav-link" :class="{ active: activeNav === 'home' }" type="button" @click="goHome">Home</button>
-        <button class="nav-link" :class="{ active: activeNav === 'movies' }" type="button" @click="openMovies">Movies</button>
-        <button class="nav-link" type="button" @click="openMyList">My List</button>
+        <button class="nav-link" :class="{ active: activeNav === 'home' }" type="button" @click="goHome">首页</button>
+        <button class="nav-link" :class="{ active: activeNav === 'movies' }" type="button" @click="openMovies">电影</button>
+        <button class="nav-link" :class="{ active: activeNav === 'my-list' }" type="button" @click="openMyList">我的收藏</button>
+        <button class="nav-link discover-link" :class="{ active: activeNav === 'discover' }" type="button" @click="goDiscover">
+          <span class="material-symbols-outlined nav-icon">explore</span>
+          智能推荐
+        </button>
       </nav>
 
       <div class="topbar-actions">
@@ -65,7 +69,7 @@ export default {
     },
     searchPlaceholder: {
       type: String,
-      default: 'Search titles, directors, or actors',
+      default: '搜索电影、导演或演员',
     },
     showSearch: {
       type: Boolean,
@@ -153,6 +157,9 @@ export default {
       } else {
         this.$router.push('/login')
       }
+    },
+    goDiscover() {
+      this.$router.push('/index/ai-recommend')
     },
   },
 }
@@ -254,6 +261,16 @@ export default {
   background: linear-gradient(90deg, rgba(47, 200, 255, 0.2), var(--blue), rgba(47, 200, 255, 0.2));
   transform: translateX(-50%);
   box-shadow: 0 0 18px rgba(47, 200, 255, 0.6);
+}
+
+.discover-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.discover-link .nav-icon {
+  font-size: 16px;
 }
 
 .topbar-actions { display: flex; align-items: center; gap: 14px; }

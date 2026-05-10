@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.AppMovieCompatibilityDao">
+
+    <sql id="movieTypeNameExpr">
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(tt.type_name ORDER BY rel.is_primary DESC, rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_type_rel rel
+                INNER JOIN app_movie_type tt ON tt.id = rel.type_id
+                WHERE rel.movie_id = m.id
+            ), ''),
+            t.type_name,
+            m.legacy_type_name
+        )
+    </sql>
+
+    <sql id="moviePosterExpr">
+        COALESCE((
+            SELECT GROUP_CONCAT(mm.media_url ORDER BY mm.sort_order SEPARATOR ',')
+            FROM app_movie_media mm
+            WHERE mm.movie_id = m.id
+              AND mm.media_role = 'poster'
+        ), m.poster_urls_csv)
+    </sql>
+
+    <sql id="movieRegionExpr">
+        COALESCE(r.region_name, m.region_name)
+    </sql>
+
+    <sql id="movieDirectorExpr">
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(p.person_name ORDER BY rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_person_rel rel
+                INNER JOIN app_movie_person p ON p.id = rel.person_id
+                WHERE rel.movie_id = m.id
+                  AND rel.relation_type = 'director'
+            ), ''),
+            m.director_name
+        )
+    </sql>
+
+    <sql id="movieCastExpr">
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(p.person_name ORDER BY rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_person_rel rel
+                INNER JOIN app_movie_person p ON p.id = rel.person_id
+                WHERE rel.movie_id = m.id
+                  AND rel.relation_type = 'cast'
+            ), ''),
+            m.cast_names
+        )
+    </sql>
+
+    <sql id="legacyMovieBaseJoins">
+        LEFT JOIN app_movie_type t ON t.id = m.movie_type_id
+        LEFT JOIN app_movie_region r ON r.id = m.region_id
+    </sql>
+
+    <sql id="legacyMovieColumns">
+        COALESCE(m.legacy_dianyingxinxi_id, m.id) AS id,
+        m.title AS dianyingmingcheng,
+        <include refid="moviePosterExpr"/> AS haibao,
+        <include refid="movieTypeNameExpr"/> AS dianyingleixing,
+        <include refid="movieRegionExpr"/> AS quyu,
+        m.release_date AS shangyingshijian,
+        <include refid="movieDirectorExpr"/> AS daoyan,
+        <include refid="movieCastExpr"/> AS zhuyan,
+        m.synopsis AS juqingjianjie,
+        m.detail_html AS dianyingxiangqing,
+        m.like_count AS thumbsupnum,
+        m.dislike_count AS crazilynum,
+        m.last_clicked_at AS clicktime,
+        m.click_count AS clicknum,
+        m.comment_count AS discussnum,
+        m.total_score AS totalscore,
+        m.favorite_count AS storeupnum,
+        m.created_at AS addtime
+    </sql>
+
+    <sql id="legacyMovieFilter">
+        <where>
+            <if test="titleKeyword != null and titleKeyword != ''">
+                AND m.title LIKE CONCAT('%', #{titleKeyword}, '%')
+            </if>
+            <if test="typeKeyword != null and typeKeyword != ''">
+                AND (
+                    EXISTS (
+                        SELECT 1
+                        FROM app_movie_type_rel filterRel
+                        INNER JOIN app_movie_type filterType ON filterType.id = filterRel.type_id
+                        WHERE filterRel.movie_id = m.id
+                          AND filterType.type_name LIKE CONCAT('%', #{typeKeyword}, '%')
+                    )
+                    OR t.type_name LIKE CONCAT('%', #{typeKeyword}, '%')
+                    OR m.legacy_type_name LIKE CONCAT('%', #{typeKeyword}, '%')
+                )
+            </if>
+            <if test="regionKeyword != null and regionKeyword != ''">
+                AND <include refid="movieRegionExpr"/> LIKE CONCAT('%', #{regionKeyword}, '%')
+            </if>
+            <if test="directorKeyword != null and directorKeyword != ''">
+                AND (
+                    EXISTS (
+                        SELECT 1
+                        FROM app_movie_person_rel rel
+                        INNER JOIN app_movie_person p ON p.id = rel.person_id
+                        WHERE rel.movie_id = m.id
+                          AND rel.relation_type = 'director'
+                          AND p.person_name LIKE CONCAT('%', #{directorKeyword}, '%')
+                    )
+                    OR m.director_name LIKE CONCAT('%', #{directorKeyword}, '%')
+                )
+            </if>
+            <if test="castKeyword != null and castKeyword != ''">
+                AND (
+                    EXISTS (
+                        SELECT 1
+                        FROM app_movie_person_rel rel
+                        INNER JOIN app_movie_person p ON p.id = rel.person_id
+                        WHERE rel.movie_id = m.id
+                          AND rel.relation_type = 'cast'
+                          AND p.person_name LIKE CONCAT('%', #{castKeyword}, '%')
+                    )
+                    OR m.cast_names LIKE CONCAT('%', #{castKeyword}, '%')
+                )
+            </if>
+        </where>
+    </sql>
+
+    <sql id="legacyMovieTypeColumns">
+        COALESCE(t.legacy_dianyingleixing_id, t.id) AS id,
+        t.type_name AS dianyingleixing,
+        t.created_at AS addtime
+    </sql>
+
+    <sql id="legacyMovieTypeFilter">
+        <where>
+            <if test="typeKeyword != null and typeKeyword != ''">
+                AND t.type_name LIKE CONCAT('%', #{typeKeyword}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="countLegacyMovies" resultType="int">
+        SELECT COUNT(1)
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        <include refid="legacyMovieFilter"/>
+    </select>
+
+    <select id="selectLegacyMoviesPage" resultType="com.entity.DianyingxinxiEntity">
+        SELECT
+        <include refid="legacyMovieColumns"/>
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        <include refid="legacyMovieFilter"/>
+        ORDER BY ${sortColumn} ${orderKeyword}, m.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="selectLegacyMovies" resultType="com.entity.DianyingxinxiEntity">
+        SELECT
+        <include refid="legacyMovieColumns"/>
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        <include refid="legacyMovieFilter"/>
+        ORDER BY ${sortColumn} ${orderKeyword}, m.id DESC
+    </select>
+
+    <select id="selectActualMovieIdByLegacyId" resultType="long">
+        SELECT m.id
+        FROM app_movie m
+        WHERE m.legacy_dianyingxinxi_id = #{legacyId}
+        LIMIT 1
+    </select>
+
+    <select id="selectBridgeMovieIdByActualId" resultType="long">
+        SELECT m.id
+        FROM app_movie m
+        WHERE m.id = #{actualId}
+        LIMIT 1
+    </select>
+
+    <select id="selectLegacyMovieByActualId" resultType="com.entity.DianyingxinxiEntity">
+        SELECT
+        <include refid="legacyMovieColumns"/>
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        WHERE m.id = #{actualId}
+        LIMIT 1
+    </select>
+
+    <insert id="insertMovie">
+        INSERT INTO app_movie (
+            movie_type_id,
+            legacy_type_name,
+            title,
+            poster_urls_csv,
+            region_name,
+            release_date,
+            director_name,
+            cast_names,
+            synopsis,
+            detail_html,
+            like_count,
+            dislike_count,
+            click_count,
+            comment_count,
+            favorite_count,
+            total_score,
+            last_clicked_at
+        ) VALUES (
+            #{typeId},
+            #{legacyTypeName},
+            #{title},
+            #{posterUrlsCsv},
+            #{regionName},
+            #{releaseDate},
+            #{directorName},
+            #{castNames},
+            #{synopsis},
+            #{detailHtml},
+            COALESCE(#{likeCount}, 0),
+            COALESCE(#{dislikeCount}, 0),
+            COALESCE(#{clickCount}, 0),
+            COALESCE(#{commentCount}, 0),
+            COALESCE(#{favoriteCount}, 0),
+            COALESCE(#{totalScore}, 0),
+            #{lastClickedAt}
+        )
+    </insert>
+
+    <select id="selectLastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <update id="updateMovieByActualId">
+        UPDATE app_movie
+        SET movie_type_id = #{typeId},
+            legacy_type_name = #{legacyTypeName},
+            title = #{title},
+            poster_urls_csv = #{posterUrlsCsv},
+            region_name = #{regionName},
+            release_date = #{releaseDate},
+            director_name = #{directorName},
+            cast_names = #{castNames},
+            synopsis = #{synopsis},
+            detail_html = #{detailHtml},
+            like_count = COALESCE(#{likeCount}, 0),
+            dislike_count = COALESCE(#{dislikeCount}, 0),
+            click_count = COALESCE(#{clickCount}, 0),
+            comment_count = COALESCE(#{commentCount}, 0),
+            favorite_count = COALESCE(#{favoriteCount}, 0),
+            total_score = COALESCE(#{totalScore}, 0),
+            last_clicked_at = #{lastClickedAt},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{actualId}
+    </update>
+
+    <update id="incrementMovieClick">
+        UPDATE app_movie
+        SET click_count = COALESCE(click_count, 0) + 1,
+            last_clicked_at = CURRENT_TIMESTAMP,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{actualId}
+    </update>
+
+    <update id="incrementMovieVote">
+        UPDATE app_movie
+        SET like_count = COALESCE(like_count, 0) + #{likeDelta},
+            dislike_count = COALESCE(dislike_count, 0) + #{dislikeDelta},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{actualId}
+    </update>
+
+    <delete id="deleteMovieMediaByMovieId">
+        DELETE FROM app_movie_media
+        WHERE movie_id = #{movieId}
+    </delete>
+
+    <insert id="insertMovieMedia">
+        INSERT INTO app_movie_media (
+            movie_id,
+            legacy_dianyingxinxi_id,
+            sort_order,
+            media_role,
+            media_url
+        ) VALUES (
+            #{movieId},
+            #{legacyMovieId},
+            #{sortOrder},
+            #{mediaRole},
+            #{mediaUrl}
+        )
+    </insert>
+
+    <delete id="deleteMovieTypeRelationsByMovieId">
+        DELETE FROM app_movie_type_rel
+        WHERE movie_id = #{movieId}
+    </delete>
+
+    <insert id="insertMovieTypeRelation">
+        INSERT INTO app_movie_type_rel (
+            movie_id,
+            type_id,
+            is_primary,
+            sort_order,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{movieId},
+            #{typeId},
+            #{isPrimary},
+            #{sortOrder},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="selectMovieRegionIdByName" resultType="long">
+        SELECT id
+        FROM app_movie_region
+        WHERE normalized_name = LOWER(TRIM(#{regionName}))
+        LIMIT 1
+    </select>
+
+    <insert id="insertMovieRegion">
+        INSERT INTO app_movie_region (
+            region_name,
+            normalized_name,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{regionName},
+            #{normalizedName},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateMovieRegionReference">
+        UPDATE app_movie
+        SET region_id = #{regionId},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{movieId}
+    </update>
+
+    <delete id="deleteMoviePersonRelationsByMovieId">
+        DELETE FROM app_movie_person_rel
+        WHERE movie_id = #{movieId}
+    </delete>
+
+    <delete id="deleteMoviePersonRelationsByMovieIdAndType">
+        DELETE FROM app_movie_person_rel
+        WHERE movie_id = #{movieId}
+          AND relation_type = #{relationType}
+    </delete>
+
+    <select id="selectMoviePersonIdByName" resultType="long">
+        SELECT id
+        FROM app_movie_person
+        WHERE normalized_name = LOWER(TRIM(#{personName}))
+        LIMIT 1
+    </select>
+
+    <insert id="insertMoviePerson">
+        INSERT INTO app_movie_person (
+            person_name,
+            normalized_name,
+            source_note,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{personName},
+            #{normalizedName},
+            #{sourceNote},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <insert id="insertMoviePersonRelation">
+        INSERT INTO app_movie_person_rel (
+            movie_id,
+            person_id,
+            relation_type,
+            sort_order,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{movieId},
+            #{personId},
+            #{relationType},
+            #{sortOrder},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <delete id="deleteMovieCommentVotesByMovieId">
+        DELETE v
+        FROM app_movie_comment_vote v
+        INNER JOIN app_movie_comment c ON c.id = v.comment_id
+        WHERE c.movie_id = #{movieId}
+    </delete>
+
+    <delete id="deleteMovieCommentsByMovieId">
+        DELETE FROM app_movie_comment
+        WHERE movie_id = #{movieId}
+    </delete>
+
+    <delete id="deleteMovieActionsByMovieId">
+        DELETE FROM app_user_movie_action
+        WHERE movie_id = #{movieId}
+    </delete>
+
+    <delete id="deleteMovieLibrariesByMovieId">
+        DELETE FROM app_user_movie_library
+        WHERE movie_id = #{movieId}
+    </delete>
+
+    <delete id="deleteMovieOrdersByMovieId">
+        DELETE FROM app_movie_order
+        WHERE movie_id = #{movieId}
+    </delete>
+
+    <delete id="deleteMovieByActualId">
+        DELETE FROM app_movie
+        WHERE id = #{movieId}
+    </delete>
+
+    <select id="selectLegacyMoviesByLegacyIds" resultType="com.entity.DianyingxinxiEntity">
+        SELECT
+        <include refid="legacyMovieColumns"/>
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        WHERE COALESCE(m.legacy_dianyingxinxi_id, m.id) IN
+        <foreach collection="legacyIds" item="legacyId" open="(" separator="," close=")">
+            #{legacyId}
+        </foreach>
+    </select>
+
+    <select id="selectLegacyFavoriteActionsForRecommendation" resultType="com.entity.view.StoreupView">
+        SELECT
+            a.id AS id,
+            a.legacy_userid AS userid,
+            COALESCE(m.legacy_dianyingxinxi_id, m.id) AS refid,
+            'dianyingxinxi' AS tablename,
+            COALESCE(m.title, a.target_name_snapshot) AS name,
+            COALESCE((
+                SELECT mm.media_url
+                FROM app_movie_media mm
+                WHERE mm.movie_id = m.id
+                  AND mm.media_role = 'poster'
+                ORDER BY mm.sort_order
+                LIMIT 1
+            ), a.target_picture_snapshot) AS picture,
+            '1' AS type,
+            a.recommend_type AS inteltype,
+            a.remark AS remark,
+            a.created_at AS addtime
+        FROM app_user_movie_action a
+        INNER JOIN app_movie m ON m.id = a.movie_id
+        WHERE a.action_type = 'favorite'
+    </select>
+
+    <select id="countLegacyMovieTypes" resultType="int">
+        SELECT COUNT(1)
+        FROM app_movie_type t
+        <include refid="legacyMovieTypeFilter"/>
+    </select>
+
+    <select id="selectLegacyMovieTypesPage" resultType="com.entity.DianyingleixingEntity">
+        SELECT
+        <include refid="legacyMovieTypeColumns"/>
+        FROM app_movie_type t
+        <include refid="legacyMovieTypeFilter"/>
+        ORDER BY ${sortColumn} ${orderKeyword}, t.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="selectLegacyMovieTypes" resultType="com.entity.DianyingleixingEntity">
+        SELECT
+        <include refid="legacyMovieTypeColumns"/>
+        FROM app_movie_type t
+        <include refid="legacyMovieTypeFilter"/>
+        ORDER BY ${sortColumn} ${orderKeyword}, t.id DESC
+    </select>
+
+    <select id="selectActualMovieTypeIdByLegacyId" resultType="long">
+        SELECT t.id
+        FROM app_movie_type t
+        WHERE t.legacy_dianyingleixing_id = #{legacyId}
+        LIMIT 1
+    </select>
+
+    <select id="selectBridgeMovieTypeIdByActualId" resultType="long">
+        SELECT t.id
+        FROM app_movie_type t
+        WHERE t.id = #{actualId}
+        LIMIT 1
+    </select>
+
+    <select id="selectLegacyMovieTypeByActualId" resultType="com.entity.DianyingleixingEntity">
+        SELECT
+        <include refid="legacyMovieTypeColumns"/>
+        FROM app_movie_type t
+        WHERE t.id = #{actualId}
+        LIMIT 1
+    </select>
+
+    <select id="selectMovieTypeIdByName" resultType="long">
+        SELECT t.id
+        FROM app_movie_type t
+        WHERE t.type_name = #{typeName}
+        LIMIT 1
+    </select>
+
+    <insert id="insertMovieType">
+        INSERT INTO app_movie_type (
+            type_name,
+            source_note
+        ) VALUES (
+            #{typeName},
+            #{sourceNote}
+        )
+    </insert>
+
+    <update id="updateMovieTypeByActualId">
+        UPDATE app_movie_type
+        SET type_name = #{typeName},
+            source_note = #{sourceNote},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{actualId}
+    </update>
+
+    <update id="detachMovieTypeReferences">
+        UPDATE app_movie
+        SET legacy_type_name = CASE
+                WHEN legacy_type_name IS NULL OR legacy_type_name = '' THEN #{fallbackTypeName}
+                ELSE legacy_type_name
+            END,
+            movie_type_id = NULL,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE movie_type_id = #{typeId}
+    </update>
+
+    <select id="selectMovieIdsByTypeId" resultType="long">
+        SELECT DISTINCT movie_id
+        FROM app_movie_type_rel
+        WHERE type_id = #{typeId}
+        ORDER BY movie_id ASC
+    </select>
+
+    <delete id="deleteMovieTypeRelationsByTypeId">
+        DELETE FROM app_movie_type_rel
+        WHERE type_id = #{typeId}
+    </delete>
+
+    <select id="selectFallbackMovieTypeIdByMovieId" resultType="long">
+        SELECT rel.type_id
+        FROM app_movie_type_rel rel
+        WHERE rel.movie_id = #{movieId}
+        ORDER BY rel.is_primary DESC, rel.sort_order ASC, rel.id ASC
+        LIMIT 1
+    </select>
+
+    <update id="updateMoviePrimaryTypeByMovieId">
+        UPDATE app_movie
+        SET movie_type_id = #{typeId},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{movieId}
+    </update>
+
+    <delete id="deleteMovieTypeByActualId">
+        DELETE FROM app_movie_type
+        WHERE id = #{typeId}
+    </delete>
+</mapper>

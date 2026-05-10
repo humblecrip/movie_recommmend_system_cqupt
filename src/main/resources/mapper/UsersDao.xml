@@ -5,8 +5,14 @@
 
     <select id="selectListView"
 		resultType="com.entity.UsersEntity" >
-
-		SELECT  u.* FROM users  u 	        
+		SELECT
+			u.legacy_users_id AS id,
+			u.username,
+			u.password,
+			u.image,
+			u.role,
+			u.created_at AS addtime
+		FROM app_admin_user u
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	

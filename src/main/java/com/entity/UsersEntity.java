@@ -4,17 +4,18 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 /** 
  * 用户
  */
-@TableName("users")
+@TableName("app_admin_user")
 public class UsersEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@TableId(type = IdType.AUTO)
+	@TableId(value = "legacy_users_id", type = IdType.INPUT)
 	private Long id;
 	
 	/**
@@ -37,6 +38,7 @@ public class UsersEntity implements Serializable {
 	 */
 	private String role;
 	
+    @TableField("created_at")
 	private Date addtime;
 
 	public String getUsername() {

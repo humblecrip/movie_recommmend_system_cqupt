@@ -54,7 +54,6 @@
 						<div class="text "  >{{detail.cuserids}}</div>
 					</div>
 					<div class="btn_box">
-						<el-button class="editBtn" v-if="btnAuth('discussdianyingxinxi','修改')" @click="editClick">修改</el-button>
 						<el-button class="delBtn" v-if="btnAuth('discussdianyingxinxi','删除')" @click="delClick">删除</el-button>
 					</div>
 				</div>
@@ -254,16 +253,25 @@
 						this.getSensitiveWords()
 						this.$forceUpdate();
 						this.getDiscussList(1);
-						if(localStorage.getItem('frontToken')){
-						}
-
 					}
 				});
 			},
 			getSensitiveWords(){
-				this.$http.get('sensitivewords/detail/1').then(rs=>{
-					this.sensitiveWordsArr = rs.data.data.content.split(',')
+				this.$http.get('keywords/list').then(rs=>{
+					this.sensitiveWordsArr = rs.data && rs.data.code === 0 && Array.isArray(rs.data.data) ? rs.data.data : []
 				})
+			},
+			maskSensitiveWords(content) {
+				let maskedContent = content || ''
+				for (let i = 0; i < this.sensitiveWordsArr.length; i++) {
+					const keyword = this.sensitiveWordsArr[i]
+					if (!keyword || maskedContent.indexOf(keyword) === -1) {
+						continue
+					}
+					const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+					maskedContent = maskedContent.replace(new RegExp(escapedKeyword, 'g'), '**')
+				}
+				return maskedContent
 			},
 			curChange(page) {
 				this.getDiscussList(page);
@@ -325,7 +333,7 @@
 						view: window
 					}))
 					window.URL.revokeObjectURL(data)
-				},err=>{
+				},()=>{
 					axios.get((location.href.split(this.$config.name).length>1 ? location.href.split(this.$config.name)[0] :'') + this.$config.name + '/file/download?fileName=' + arr, {
 						headers: {
 							token: localStorage.getItem("frontToken")
@@ -354,7 +362,7 @@
 				})
 			},
 			getDiscussList(page) {
-				this.$http.get('discussdiscussdianyingxinxi/list', {params: {page, limit: this.pageSize, refid: this.detail.id,sort: 'istop',order: 'desc'}}).then(res => {
+				this.$http.get('discussdianyingxinxi/list', {params: {page, limit: this.pageSize, refid: this.detail.refid,sort: 'istop',order: 'desc'}}).then(res => {
 					if (res.data.code == 0) {
 						this.infoList = res.data.data.list;
 						this.total = res.data.data.total;
@@ -385,7 +393,7 @@
 					}else {
 						row.tuserids = String(this.userid)
 					}
-					this.$http.post('discussdiscussdianyingxinxi/update',row).then(rs=>{
+					this.$http.post('discussdianyingxinxi/update',row).then(()=>{
 						this.$message.success('点赞成功')
 					})
 				}else {
@@ -397,7 +405,7 @@
 						}
 					}
 					row.tuserids = arr.join(',')
-					this.$http.post('discussdiscussdianyingxinxi/update',row).then(rs=>{
+					this.$http.post('discussdianyingxinxi/update',row).then(()=>{
 						this.$message.success('取消成功')
 					})
 				}
@@ -424,7 +432,7 @@
 					}else {
 						row.cuserids = String(this.userid)
 					}
-					this.$http.post('discussdiscussdianyingxinxi/update',row).then(rs=>{
+					this.$http.post('discussdianyingxinxi/update',row).then(()=>{
 						this.$message.success('点踩成功')
 					})
 				}else {
@@ -436,7 +444,7 @@
 						}
 					}
 					row.cuserids = arr.join(',')
-					this.$http.post('discussdiscussdianyingxinxi/update',row).then(rs=>{
+					this.$http.post('discussdianyingxinxi/update',row).then(()=>{
 						this.$message.success('取消成功')
 					})
 				}
@@ -448,8 +456,8 @@
 				this.showIndex = -1
 			},
 			discussDel(id){
-				this.$confirm('是否删除此评论？').then(_ => {
-					this.$http.post('discussdiscussdianyingxinxi/delete',[id]).then(res=>{
+				this.$confirm('是否删除此评论？').then(() => {
+					this.$http.post('discussdianyingxinxi/delete',[id]).then(res=>{
 						if(res.data&&res.data.code==0){
 							this.addDiscussNum(1)
 							this.$message({
@@ -462,23 +470,15 @@
 							});
 						}
 					})
-				}).catch(_ => {});
+				}).catch(() => {});
 			},
 			submitForm(formName) {
-				for(var i=0; i<this.sensitiveWordsArr.length; i++){
-					//全局替换
-					var reg = new RegExp(this.sensitiveWordsArr[i],"g");
-					//判断内容中是否包括敏感词
-					if (this.form.content.indexOf(this.sensitiveWordsArr[i]) > -1) {
-						// 将敏感词替换为 **
-						this.form.content = this.form.content.replace(reg,"**");
-					}
-				}
+				this.form.content = this.maskSensitiveWords(this.form.content)
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
-						this.form.refid = this.detail.id;
+						this.form.refid = this.detail.refid;
 						this.form.avatarurl = localStorage.getItem('frontHeadportrait')?localStorage.getItem('frontHeadportrait'):'';
-						this.$http.post('discussdiscussdianyingxinxi/add', this.form).then(rs2 => {
+						this.$http.post('discussdianyingxinxi/add', this.form).then(rs2 => {
 							if (rs2.data.code == 0) {
 								this.form.content = '';
 								this.addDiscussNum(2)
@@ -508,7 +508,7 @@
 						this.detail.discussnum = 0
 					}
 				}
-				this.$http.post('discussdianyingxinxi/update',this.detail).then(res=>{})
+				this.$http.post('discussdianyingxinxi/update',this.detail).then(() => {})
 			},
 
 
@@ -520,13 +520,9 @@
 					return this.isAuth(tableName,key)
 				}
 			},
-			// 修改
-			editClick(){
-				this.$router.push(`/index/discussdianyingxinxiAdd?type=edit&&id=${this.detail.id}`);
-			},
 			// 删除
 			async delClick(){
-				await this.$confirm('是否删除此电影信息评论表？') .then(_ => {
+				await this.$confirm('是否删除此电影信息评论表？') .then(() => {
 					this.$http.post('discussdianyingxinxi/delete', [this.detail.id]).then(async res => {
 						if (res.data.code == 0) {
 							this.$message({
@@ -539,7 +535,7 @@
 							});
 						}
 					});
-				}).catch(_ => {});
+				}).catch(() => {});
 			},
 		},
 		components: {

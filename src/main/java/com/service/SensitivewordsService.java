@@ -32,7 +32,8 @@ public interface SensitivewordsService extends IService<SensitivewordsEntity> {
    	
    	PageUtils queryPage(Map<String, Object> params,Wrapper<SensitivewordsEntity> wrapper);
 
+    List<String> listNormalizedKeywords();
+
    	
 
 }
-

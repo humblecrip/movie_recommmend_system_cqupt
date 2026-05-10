@@ -28,7 +28,7 @@ import com.baomidou.mybatisplus.enums.IdType;
  * @email 
  * @date 2025-04-12 20:00:43
  */
-@TableName("dianyingxinxi")
+@TableName("app_movie")
 public class DianyingxinxiEntity<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 

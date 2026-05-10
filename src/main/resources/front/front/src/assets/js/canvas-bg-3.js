@@ -101,7 +101,7 @@ export default function canvasBg() {
 
     function randInt(min, max) {
         return Math.floor(min + Math.random() * (max - min + 1));
-    };
+    }
 
     function init() {
         canvas = document.getElementById('canvas');

@@ -5,11 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,6 +36,8 @@ import com.baidu.aip.face.MatchRequest;
 import com.baidu.aip.util.Base64Util;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.entity.ConfigEntity;
+import com.entity.DianyingleixingEntity;
+import com.service.AppMovieCompatibilityService;
 import com.service.CommonService;
 import com.service.ConfigService;
 import com.utils.BaiduUtil;
@@ -43,8 +50,39 @@ import com.utils.CommonUtil;
  */
 @RestController
 public class CommonController{
+	private static final Set<String> LEGACY_DYNAMIC_TABLES = new HashSet<String>(Arrays.asList(
+		"dianyingxinxi",
+		"dianyingleixing",
+		"dianyingdingdan",
+		"dianyingfenlei",
+		"discussfufeidianying",
+		"storeup",
+		"discussdianyingxinxi",
+		"discussmianfeidianying",
+		"forum",
+		"fufeidianying",
+		"mianfeidianying",
+		"news",
+		"wodedianying",
+		"yonghu",
+		"users",
+		"config",
+		"schema_refactor_migration_log",
+		"sensitivewords",
+		"token"
+	));
+	private static final Set<String> ALLOWED_TIME_STAT_TYPES = new HashSet<String>(Arrays.asList(
+		"日",
+		"月",
+		"年"
+	));
+	private static final Pattern STRICT_DYNAMIC_IDENTIFIER = Pattern.compile("^[a-z][a-z0-9_]*$");
+
 	@Autowired
 	private CommonService commonService;
+
+	@Autowired
+	private AppMovieCompatibilityService appMovieCompatibilityService;
 
     private static AipFace client = null;
     
@@ -61,9 +99,21 @@ public class CommonController{
 	@IgnoreAuth
 	@RequestMapping("/option/{tableName}/{columnName}")
 	public R getOption(@PathVariable("tableName") String tableName, @PathVariable("columnName") String columnName,@RequestParam(required = false) String conditionColumn,@RequestParam(required = false) String conditionValue,String level,String parent) {
+		if(isLegacyMovieTypeOption(tableName, columnName)) {
+			return R.ok().put("data", appMovieCompatibilityService.listLegacyTypeNames());
+		}
+		R blocked = rejectLegacyOrUnsafeDynamicTable(tableName);
+		if(blocked != null) {
+			return blocked;
+		}
+		String validatedTableName = resolveRuntimeTableName(tableName);
+		String validatedColumnName = requireSafeDynamicIdentifier("columnName", columnName);
+		if(validatedColumnName == null) {
+			return rejectUnsafeDynamicIdentifier("columnName", columnName);
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("table", tableName);
-		params.put("column", columnName);
+		params.put("validatedTableName", validatedTableName);
+		params.put("validatedColumnName", validatedColumnName);
 		if(StringUtils.isNotBlank(level)) {
 			params.put("level", level);
 		}
@@ -71,7 +121,11 @@ public class CommonController{
 			params.put("parent", parent);
 		}
         if(StringUtils.isNotBlank(conditionColumn)) {
-            params.put("conditionColumn", conditionColumn);
+			String validatedConditionColumnName = requireSafeDynamicIdentifier("conditionColumn", conditionColumn);
+			if(validatedConditionColumnName == null) {
+				return rejectUnsafeDynamicIdentifier("conditionColumn", conditionColumn);
+			}
+            params.put("validatedConditionColumnName", validatedConditionColumnName);
         }
         if(StringUtils.isNotBlank(conditionValue)) {
             params.put("conditionValue", conditionValue);
@@ -89,14 +143,28 @@ public class CommonController{
 	@IgnoreAuth
 	@RequestMapping("/follow/{tableName}/{columnName}")
 	public R getFollowByOption(@PathVariable("tableName") String tableName, @PathVariable("columnName") String columnName, @RequestParam String columnValue) {
+		if(isLegacyMovieTypeOption(tableName, columnName)) {
+			DianyingleixingEntity<Object> filter = new DianyingleixingEntity<Object>();
+			filter.setDianyingleixing(columnValue);
+			return R.ok().put("data", appMovieCompatibilityService.selectLegacyMovieType(filter));
+		}
+		R blocked = rejectLegacyOrUnsafeDynamicTable(tableName);
+		if(blocked != null) {
+			return blocked;
+		}
+		String validatedTableName = resolveRuntimeTableName(tableName);
+		String validatedColumnName = requireSafeDynamicIdentifier("columnName", columnName);
+		if(validatedColumnName == null) {
+			return rejectUnsafeDynamicIdentifier("columnName", columnName);
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("table", tableName);
-		params.put("column", columnName);
+		params.put("validatedTableName", validatedTableName);
+		params.put("validatedColumnName", validatedColumnName);
 		params.put("columnValue", columnValue);
 		Map<String, Object> result = commonService.getFollowByOption(params);
         Object o = null;
         try {
-            Class<?> c1 = Class.forName("com.entity."+tableName.substring(0, 1).toUpperCase()+tableName.substring(1)+"Entity");
+            Class<?> c1 = Class.forName("com.entity."+validatedTableName.substring(0, 1).toUpperCase()+validatedTableName.substring(1)+"Entity");
             o = MapUtils.mapToObject(result, c1);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -107,6 +175,56 @@ public class CommonController{
         }
         return R.ok().put("data", o);
 	}
+
+	private boolean isLegacyMovieTypeOption(String tableName, String columnName) {
+		return "dianyingleixing".equals(tableName)
+			&& "dianyingleixing".equals(columnName);
+	}
+
+	private String resolveRuntimeTableName(String tableName) {
+		return normalizeDynamicIdentifier(tableName);
+	}
+
+	private R rejectLegacyOrUnsafeDynamicTable(String tableName) {
+		String normalizedTableName = normalizeDynamicIdentifier(tableName);
+		if(!LEGACY_DYNAMIC_TABLES.contains(normalizedTableName)) {
+			if(isStrictDynamicIdentifier(tableName)) {
+				return null;
+			}
+			return rejectUnsafeDynamicIdentifier("tableName", tableName);
+		}
+		return R.error("旧表动态入口已封禁: " + normalizedTableName + "，请改用兼容控制器或新接口");
+	}
+
+	private String normalizeDynamicIdentifier(String identifier) {
+		return StringUtils.trimToEmpty(identifier).toLowerCase(Locale.ROOT);
+	}
+
+	private boolean isStrictDynamicIdentifier(String identifier) {
+		if(StringUtils.isBlank(identifier)) {
+			return false;
+		}
+		String trimmedIdentifier = StringUtils.trim(identifier);
+		if(!trimmedIdentifier.equals(identifier)) {
+			return false;
+		}
+		if(!trimmedIdentifier.equals(trimmedIdentifier.toLowerCase(Locale.ROOT))) {
+			return false;
+		}
+		return STRICT_DYNAMIC_IDENTIFIER.matcher(trimmedIdentifier).matches();
+	}
+
+	private String requireSafeDynamicIdentifier(String identifierLabel, String identifier) {
+		if(!isStrictDynamicIdentifier(identifier)) {
+			return null;
+		}
+		return identifier;
+	}
+
+	private R rejectUnsafeDynamicIdentifier(String identifierLabel, String identifier) {
+		return R.error("动态入口仅允许非 legacy 且符合小写下划线格式的标识: "
+			+ identifierLabel + "=" + StringUtils.trimToEmpty(identifier));
+	}
 	
 	/**
 	 * 修改table表的sfsh状态
@@ -116,7 +234,11 @@ public class CommonController{
 	 */
 	@RequestMapping("/sh/{tableName}")
 	public R sh(@PathVariable("tableName") String tableName, @RequestBody Map<String, Object> map) {
-		map.put("table", tableName);
+		R blocked = rejectLegacyOrUnsafeDynamicTable(tableName);
+		if(blocked != null) {
+			return blocked;
+		}
+		map.put("validatedTableName", resolveRuntimeTableName(tableName));
 		commonService.sh(map);
 		return R.ok();
 	}
@@ -133,8 +255,16 @@ public class CommonController{
 	@RequestMapping("/remind/{tableName}/{columnName}/{type}")
 	public R remindCount(@PathVariable("tableName") String tableName, @PathVariable("columnName") String columnName, 
 						 @PathVariable("type") String type,@RequestParam Map<String, Object> map) {
-		map.put("table", tableName);
-		map.put("column", columnName);
+		R blocked = rejectLegacyOrUnsafeDynamicTable(tableName);
+		if(blocked != null) {
+			return blocked;
+		}
+		String validatedColumnName = requireSafeDynamicIdentifier("columnName", columnName);
+		if(validatedColumnName == null) {
+			return rejectUnsafeDynamicIdentifier("columnName", columnName);
+		}
+		map.put("validatedTableName", resolveRuntimeTableName(tableName));
+		map.put("validatedColumnName", validatedColumnName);
 		map.put("type", type);
 		
 		if(type.equals("2")) {
@@ -168,9 +298,17 @@ public class CommonController{
 	@IgnoreAuth
 	@RequestMapping("/cal/{tableName}/{columnName}")
 	public R cal(@PathVariable("tableName") String tableName, @PathVariable("columnName") String columnName) {
+		R blocked = rejectLegacyOrUnsafeDynamicTable(tableName);
+		if(blocked != null) {
+			return blocked;
+		}
+		String validatedColumnName = requireSafeDynamicIdentifier("columnName", columnName);
+		if(validatedColumnName == null) {
+			return rejectUnsafeDynamicIdentifier("columnName", columnName);
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("table", tableName);
-		params.put("column", columnName);
+		params.put("validatedTableName", resolveRuntimeTableName(tableName));
+		params.put("validatedColumnName", validatedColumnName);
 		Map<String, Object> result = commonService.selectCal(params);
 		return R.ok().put("data", result);
 	}
@@ -181,9 +319,17 @@ public class CommonController{
 	@IgnoreAuth
 	@RequestMapping("/group/{tableName}/{columnName}")
 	public R group(@PathVariable("tableName") String tableName, @PathVariable("columnName") String columnName) {
+		R blocked = rejectLegacyOrUnsafeDynamicTable(tableName);
+		if(blocked != null) {
+			return blocked;
+		}
+		String validatedColumnName = requireSafeDynamicIdentifier("columnName", columnName);
+		if(validatedColumnName == null) {
+			return rejectUnsafeDynamicIdentifier("columnName", columnName);
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("table", tableName);
-		params.put("column", columnName);
+		params.put("validatedTableName", resolveRuntimeTableName(tableName));
+		params.put("validatedColumnName", validatedColumnName);
 		List<Map<String, Object>> result = commonService.selectGroup(params);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for(Map<String, Object> m : result) {
@@ -202,10 +348,22 @@ public class CommonController{
 	@IgnoreAuth
 	@RequestMapping("/value/{tableName}/{xColumnName}/{yColumnName}")
 	public R value(@PathVariable("tableName") String tableName, @PathVariable("yColumnName") String yColumnName, @PathVariable("xColumnName") String xColumnName) {
+		R blocked = rejectLegacyOrUnsafeDynamicTable(tableName);
+		if(blocked != null) {
+			return blocked;
+		}
+		String validatedXColumnName = requireSafeDynamicIdentifier("xColumnName", xColumnName);
+		if(validatedXColumnName == null) {
+			return rejectUnsafeDynamicIdentifier("xColumnName", xColumnName);
+		}
+		String validatedYColumnName = requireSafeDynamicIdentifier("yColumnName", yColumnName);
+		if(validatedYColumnName == null) {
+			return rejectUnsafeDynamicIdentifier("yColumnName", yColumnName);
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("table", tableName);
-		params.put("xColumn", xColumnName);
-		params.put("yColumn", yColumnName);
+		params.put("validatedTableName", resolveRuntimeTableName(tableName));
+		params.put("validatedXColumnName", validatedXColumnName);
+		params.put("validatedYColumnName", validatedYColumnName);
 		List<Map<String, Object>> result = commonService.selectValue(params);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for(Map<String, Object> m : result) {
@@ -224,10 +382,25 @@ public class CommonController{
 	@IgnoreAuth
 	@RequestMapping("/value/{tableName}/{xColumnName}/{yColumnName}/{timeStatType}")
 	public R valueDay(@PathVariable("tableName") String tableName, @PathVariable("yColumnName") String yColumnName, @PathVariable("xColumnName") String xColumnName, @PathVariable("timeStatType") String timeStatType) {
+		R blocked = rejectLegacyOrUnsafeDynamicTable(tableName);
+		if(blocked != null) {
+			return blocked;
+		}
+		String validatedXColumnName = requireSafeDynamicIdentifier("xColumnName", xColumnName);
+		if(validatedXColumnName == null) {
+			return rejectUnsafeDynamicIdentifier("xColumnName", xColumnName);
+		}
+		String validatedYColumnName = requireSafeDynamicIdentifier("yColumnName", yColumnName);
+		if(validatedYColumnName == null) {
+			return rejectUnsafeDynamicIdentifier("yColumnName", yColumnName);
+		}
+		if(!ALLOWED_TIME_STAT_TYPES.contains(timeStatType)) {
+			return R.error("动态时间统计类型不在允许范围: " + StringUtils.trimToEmpty(timeStatType));
+		}
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("table", tableName);
-		params.put("xColumn", xColumnName);
-		params.put("yColumn", yColumnName);
+		params.put("validatedTableName", resolveRuntimeTableName(tableName));
+		params.put("validatedXColumnName", validatedXColumnName);
+		params.put("validatedYColumnName", validatedYColumnName);
 		params.put("timeStatType", timeStatType);
 		List<Map<String, Object>> result = commonService.selectTimeStatValue(params);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

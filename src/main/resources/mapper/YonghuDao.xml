@@ -19,26 +19,79 @@
 
 	<select id="selectListVO"
 		resultType="com.entity.vo.YonghuVO" >
-		SELECT * FROM yonghu  yonghu         
+		SELECT
+			yonghu.legacy_yonghu_id AS id,
+			yonghu.login_name AS yonghuming,
+			yonghu.login_name AS yonghuzhanghao,
+			yonghu.password_value AS mima,
+			yonghu.display_name AS xingming,
+			yonghu.display_name AS yonghuxingming,
+			yonghu.avatar_url AS touxiang,
+			yonghu.gender AS xingbie,
+			yonghu.phone_number AS shoujihao,
+			yonghu.phone_number AS lianxidianhua,
+			yonghu.national_id_number AS shenfenzheng,
+			yonghu.created_at AS addtime
+		FROM app_user yonghu
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 	<select id="selectVO"
 		resultType="com.entity.vo.YonghuVO" >
-		SELECT  yonghu.* FROM yonghu  yonghu 	
+		SELECT
+			yonghu.legacy_yonghu_id AS id,
+			yonghu.login_name AS yonghuming,
+			yonghu.login_name AS yonghuzhanghao,
+			yonghu.password_value AS mima,
+			yonghu.display_name AS xingming,
+			yonghu.display_name AS yonghuxingming,
+			yonghu.avatar_url AS touxiang,
+			yonghu.gender AS xingbie,
+			yonghu.phone_number AS shoujihao,
+			yonghu.phone_number AS lianxidianhua,
+			yonghu.national_id_number AS shenfenzheng,
+			yonghu.created_at AS addtime
+		FROM app_user yonghu
  		<where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 
     <select id="selectListView"
 		resultType="com.entity.view.YonghuView" >
 
-		SELECT  yonghu.* FROM yonghu  yonghu 	        
+		SELECT
+			yonghu.legacy_yonghu_id AS id,
+			yonghu.login_name AS yonghuming,
+			yonghu.login_name AS yonghuzhanghao,
+			yonghu.password_value AS mima,
+			yonghu.display_name AS xingming,
+			yonghu.display_name AS yonghuxingming,
+			yonghu.avatar_url AS touxiang,
+			yonghu.gender AS xingbie,
+			yonghu.phone_number AS shoujihao,
+			yonghu.phone_number AS lianxidianhua,
+			yonghu.national_id_number AS shenfenzheng,
+			yonghu.created_at AS addtime
+		FROM app_user yonghu
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 	<select id="selectView"
 		resultType="com.entity.view.YonghuView" >
-		SELECT * FROM yonghu  yonghu <where> 1=1 ${ew.sqlSegment}</where>
+		SELECT
+			yonghu.legacy_yonghu_id AS id,
+			yonghu.login_name AS yonghuming,
+			yonghu.login_name AS yonghuzhanghao,
+			yonghu.password_value AS mima,
+			yonghu.display_name AS xingming,
+			yonghu.display_name AS yonghuxingming,
+			yonghu.avatar_url AS touxiang,
+			yonghu.gender AS xingbie,
+			yonghu.phone_number AS shoujihao,
+			yonghu.phone_number AS lianxidianhua,
+			yonghu.national_id_number AS shenfenzheng,
+			yonghu.created_at AS addtime
+		FROM app_user yonghu
+        <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 

@@ -10,28 +10,29 @@
     <main class="discover-main">
       <section class="page-heading">
         <nav class="breadcrumb">
-          <span>Home</span>
+          <span>首页</span>
           <span class="breadcrumb-sep">/</span>
-          <span class="current">Explore</span>
+          <span class="current">影片探索</span>
         </nav>
 
         <div class="heading-copy">
-          <p class="eyebrow">Editorial selection for tonight's screening</p>
-          <h1>Explore Our Collection</h1>
+          <p class="eyebrow">Explore Our Collection</p>
+          <h1>影片探索</h1>
+          <p class="sr-only">类型 上映时间 评分 排序方式</p>
           <p class="heading-desc">
             按类型、年份、评分和排序快速筛选，只保留纯海报视图。
           </p>
         </div>
 
         <div class="heading-summary">
-          <span class="summary-label">Visible Titles</span>
+          <span class="summary-label">可见影片</span>
           <strong>{{ total }}</strong>
         </div>
       </section>
 
       <section class="filter-bar">
-        <div class="filter-item filter-chip-genre" :class="{ 'is-active': filters.genre !== 'All' }">
-          <label>Genre</label>
+        <div class="filter-item filter-chip-genre" :class="{ 'is-active': filters.genre !== '全部' }">
+          <label>类型 Genre</label>
           <p v-if="categoryLoadError" class="filter-hint error-text">{{ categoryLoadError }}</p>
           <div class="select-shell">
             <el-select
@@ -41,7 +42,7 @@
               popper-class="discover-select-popper"
               @change="handleGenreChange"
             >
-              <el-option label="All" value="All"></el-option>
+              <el-option label="全部" value="全部"></el-option>
               <el-option
                 v-for="item in categoryOptions"
                 :key="item"
@@ -52,8 +53,8 @@
           </div>
         </div>
 
-        <div class="filter-item filter-chip-release" :class="{ 'is-active': filters.year !== 'Any' }">
-          <label>Release</label>
+        <div class="filter-item filter-chip-release" :class="{ 'is-active': filters.year !== '不限' }">
+          <label>上映时间 Release</label>
           <div class="select-shell">
             <el-select
               class="discover-select"
@@ -61,7 +62,7 @@
               popper-class="discover-select-popper"
               @change="handleYearChange"
             >
-              <el-option label="Any" value="Any"></el-option>
+              <el-option label="不限" value="不限"></el-option>
               <el-option
                 v-for="item in yearOptions"
                 :key="item"
@@ -72,8 +73,8 @@
           </div>
         </div>
 
-        <div class="filter-item filter-chip-rating" :class="{ 'is-active': filters.rating !== 'Any' }">
-          <label>Rating</label>
+        <div class="filter-item filter-chip-rating" :class="{ 'is-active': filters.rating !== '不限' }">
+          <label>评分 Rating</label>
           <div class="select-shell">
             <el-select
               class="discover-select"
@@ -91,8 +92,8 @@
           </div>
         </div>
 
-        <div class="filter-item filter-chip-sort" :class="{ 'is-active': filters.sortBy !== 'Popularity' }">
-          <label>Sort By</label>
+        <div class="filter-item filter-chip-sort" :class="{ 'is-active': filters.sortBy !== '热门优先' }">
+          <label>排序方式 Sort By</label>
           <div class="select-shell">
             <el-select
               class="discover-select"
@@ -113,9 +114,9 @@
 
       <section class="status-panel">
         <div class="status-copy">
-          <span class="status-title">Curated Poster Wall</span>
+          <span class="status-title">精选海报墙</span>
           <span class="status-subtitle">
-            Page {{ page }} / {{ totalPage || 1 }}
+            第 {{ page }} / {{ totalPage || 1 }} 页
           </span>
         </div>
         <div class="status-tags">
@@ -127,7 +128,7 @@
       </section>
 
       <section class="poster-grid">
-        <div v-if="loading" class="state-card">Loading curated titles...</div>
+        <div v-if="loading" class="state-card">正在加载精选影片...</div>
         <div v-else-if="loadError" class="state-card error-state">{{ loadError }}</div>
         <div v-else-if="!pageList.length" class="state-card">暂无符合当前筛选条件的电影。</div>
         <template v-else>
@@ -166,7 +167,7 @@
           :disabled="page <= 1 || loading"
           @click="changePage(page - 1)"
         >
-          Previous
+          上一页
         </button>
 
         <div class="page-indicator">
@@ -181,7 +182,7 @@
           :disabled="page >= totalPage || !totalPage || loading"
           @click="changePage(page + 1)"
         >
-          Next
+          下一页
         </button>
       </nav>
     </main>
@@ -197,10 +198,14 @@ const {
   paginateMovieList,
   resolveSortRequest,
 } = require('./list-helpers')
-const { getPrimaryPoster } = require('./detail-helpers')
+const {
+  extractAppMovieList,
+  getPrimaryPoster,
+  normalizeAppMovieList,
+} = require('./detail-helpers')
 
-const RATING_OPTIONS = ['Any', '9.0+', '8.0+', '7.0+']
-const SORT_OPTIONS = ['Popularity', 'Newest First', 'Highest Rated', 'A-Z']
+const RATING_OPTIONS = ['不限', '9.0+', '8.0+', '7.0+']
+const SORT_OPTIONS = ['热门优先', '最新上映', '高分优先', '名称排序']
 
 function normalizeCenterType(value) {
   return !!(value && value !== 0 && value !== '0')
@@ -216,18 +221,29 @@ function buildLoadErrorMessage(error) {
   return '电影列表加载失败，请稍后重试。'
 }
 
+function normalizeAppSortField(field) {
+  const fieldMap = {
+    clicknum: 'clickCount',
+    shangyingshijian: 'releaseDate',
+    addtime: 'releaseDate',
+    totalscore: 'totalScore',
+    dianyingmingcheng: 'title',
+  }
+  return fieldMap[field] || field
+}
+
 export default {
   data() {
     return {
       filters: {
         keyword: '',
-        genre: 'All',
-        year: 'Any',
-        rating: 'Any',
-        sortBy: 'Popularity',
+        genre: '全部',
+        year: '不限',
+        rating: '不限',
+        sortBy: '热门优先',
       },
       fenlei: [],
-      feileiColumn: 'dianyingleixing',
+      feileiColumn: 'typeName',
       rawList: [],
       filteredList: [],
       pageList: [],
@@ -252,7 +268,13 @@ export default {
       return Array.from(
         new Set(
           this.fenlei
-            .map(item => (item && item[this.feileiColumn] ? String(item[this.feileiColumn]).trim() : ''))
+            .map(item => {
+              if (typeof item === 'string') {
+                return item.trim()
+              }
+              const value = item && (item[this.feileiColumn] || item.name || item.dianyingleixing)
+              return value ? String(value).trim() : ''
+            })
             .filter(Boolean)
         )
       )
@@ -275,19 +297,19 @@ export default {
       const query = (route && route.query) || {}
       this.centerType = normalizeCenterType(query.centerType)
       this.filters.keyword = query.indexQueryCondition ? String(query.indexQueryCondition) : ''
-      this.filters.genre = query.homeFenlei ? String(query.homeFenlei) : 'All'
-      this.filters.year = 'Any'
-      this.filters.rating = 'Any'
-      this.filters.sortBy = 'Popularity'
+      this.filters.genre = query.homeFenlei ? String(query.homeFenlei) : '全部'
+      this.filters.year = '不限'
+      this.filters.rating = '不限'
+      this.filters.sortBy = '热门优先'
       this.page = 1
     },
     async fetchCategories() {
       try {
-        const res = await this.$http.get('dianyingleixing/list')
-        if (!res.data || res.data.code != 0) {
+        const res = await this.$http.get('appmovie/types')
+        if (res.data && res.data.code !== undefined && res.data.code != 0) {
           throw new Error((res.data && res.data.msg) || '电影分类加载失败，请稍后重试。')
         }
-        this.fenlei = (res.data.data && res.data.data.list) || []
+        this.fenlei = extractAppMovieList((res.data && res.data.data) || res.data || {})
         this.categoryLoadError = ''
       } catch (error) {
         this.fenlei = []
@@ -302,29 +324,28 @@ export default {
       const params = {
         page: 1,
         limit: 1000,
-        sort: sortRequest.sort,
+        sort: normalizeAppSortField(sortRequest.sort),
         order: sortRequest.order,
       }
 
       if (this.filters.keyword) {
-        params.dianyingmingcheng = `%${this.filters.keyword}%`
+        params.title = this.filters.keyword
       }
-      if (this.filters.genre !== 'All') {
-        params.dianyingleixing = this.filters.genre
+      if (this.filters.genre !== '全部') {
+        params.typeName = this.filters.genre
       }
 
       try {
-        const res = await this.$http.get(`dianyingxinxi/${this.centerType ? 'page' : 'list'}`, {
+        const res = await this.$http.get('appmovie/front/list', {
           params,
         })
         if (requestToken !== this.rawListRequestToken) {
           return
         }
-        if (!res.data || res.data.code != 0) {
+        if (res.data && res.data.code !== undefined && res.data.code != 0) {
           throw new Error((res.data && res.data.msg) || '电影列表加载失败，请稍后重试。')
         }
-        const responseData = (res.data && res.data.data) || {}
-        this.rawList = responseData.list || []
+        this.rawList = normalizeAppMovieList(extractAppMovieList((res.data && res.data.data) || res.data || {}))
         this.loadError = ''
         this.refreshDerivedList()
       } catch (error) {
@@ -395,14 +416,14 @@ export default {
     },
     formatCardScore(score) {
       if (score === '' || score === null || score === undefined) {
-        return 'N/A'
+        return '暂无'
       }
       const parsedScore = Number(score)
       if (!Number.isFinite(parsedScore)) {
-        return 'N/A'
+        return '暂无'
       }
       const numericScore = normalizeMovieScore(score)
-      return Number.isFinite(numericScore) ? numericScore.toFixed(1) : 'N/A'
+      return Number.isFinite(numericScore) ? numericScore.toFixed(1) : '暂无'
     },
     handlePosterCardKeydown(event, item) {
       if (!event) {
@@ -509,6 +530,18 @@ export default {
   font-weight: 800;
   letter-spacing: 0.22em;
   text-transform: uppercase;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .page-heading h1 {

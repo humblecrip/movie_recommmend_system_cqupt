@@ -9,7 +9,7 @@ server:
 spring:
     datasource:
         driverClassName: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3308/ssmf7s0a?useSSL=false&useUnicode=true&characterEncoding=utf-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&useSSL=false
+        url: jdbc:mysql://127.0.0.1:3308/movie_recommend_system_cqupt?useSSL=false&useUnicode=true&characterEncoding=utf-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
         username: root
         password: root
 
@@ -49,4 +49,13 @@ mybatis-plus:
     cache-enabled: false
     call-setters-on-nulls: true
     #springboot 项目mybatis plus 设置 jdbcTypeForNull (oracle数据库需配置JdbcType.NULL, 默认是Other)
-    jdbc-type-for-null: 'null' 
+    jdbc-type-for-null: 'null'
+
+# LLM Configuration
+llm:
+  api:
+    url: ${LLM_API_URL:https://api.openai.com/v1}
+    key: ${LLM_API_KEY:}
+    model: ${LLM_MODEL:gpt-4o-mini}
+    provider: ${LLM_PROVIDER:openai}
+    anthropic-version: ${LLM_ANTHROPIC_VERSION:2023-06-01}

@@ -25,6 +25,7 @@ runTest('个人中心品牌区可点击跳首页', () => {
 })
 
 runTest('收藏页品牌区可点击跳首页', () => {
-  assert.ok(storeupSource.includes('<button class="brand-block" type="button" @click="goHome">'))
-  assert.ok(storeupSource.includes("window.location.hash = '#/index/home'"))
+  assert.ok(storeupSource.includes('<cinema-shell'))
+  assert.ok(storeupSource.includes('@open-home="openHomeView"'))
+  assert.ok(storeupSource.includes("path: '/index/home'"))
 })

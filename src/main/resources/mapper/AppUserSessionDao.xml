@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.AppUserSessionDao">
+
+    <select id="selectIdByLegacyYonghuId" resultType="java.lang.Long">
+        SELECT id
+        FROM app_user
+        WHERE legacy_yonghu_id = #{legacyYonghuId}
+        LIMIT 1
+    </select>
+
+    <insert id="upsertFromYonghu" parameterType="com.entity.YonghuEntity">
+        INSERT INTO app_user (
+            legacy_yonghu_id,
+            login_name,
+            display_name,
+            password_value,
+            avatar_url,
+            gender,
+            phone_number,
+            national_id_number,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{id},
+            COALESCE(NULLIF(#{yonghuzhanghao}, ''), NULLIF(#{yonghuming}, ''), CONCAT('yonghu_', #{id})),
+            COALESCE(NULLIF(#{yonghuxingming}, ''), NULLIF(#{xingming}, ''), NULLIF(#{yonghuzhanghao}, ''), NULLIF(#{yonghuming}, ''), CONCAT('用户', #{id})),
+            COALESCE(#{mima}, ''),
+            #{touxiang},
+            #{xingbie},
+            COALESCE(NULLIF(#{lianxidianhua}, ''), NULLIF(#{shoujihao}, '')),
+            #{shenfenzheng},
+            COALESCE(#{addtime}, CURRENT_TIMESTAMP),
+            CURRENT_TIMESTAMP
+        )
+        ON DUPLICATE KEY UPDATE
+            login_name = VALUES(login_name),
+            display_name = VALUES(display_name),
+            password_value = VALUES(password_value),
+            avatar_url = VALUES(avatar_url),
+            gender = VALUES(gender),
+            phone_number = VALUES(phone_number),
+            national_id_number = VALUES(national_id_number),
+            updated_at = CURRENT_TIMESTAMP
+    </insert>
+</mapper>

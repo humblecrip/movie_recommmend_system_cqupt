@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.AiRecommendationFeedbackDao">
+
+    <resultMap type="com.entity.AiRecommendationFeedbackEntity" id="aiRecommendationFeedbackMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="conversationId" column="conversation_id"/>
+        <result property="messageId" column="message_id"/>
+        <result property="movieId" column="movie_id"/>
+        <result property="feedbackType" column="feedback_type"/>
+        <result property="feedbackReason" column="feedback_reason"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="selectPositiveMovieIds" resultType="java.lang.Long">
+        SELECT movie_id
+        FROM app_recommendation_feedback
+        WHERE user_id = #{userId}
+          AND feedback_type IN ('like', 'want_watch')
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="selectNegativeMovieIds" resultType="java.lang.Long">
+        SELECT movie_id
+        FROM app_recommendation_feedback
+        WHERE user_id = #{userId}
+          AND feedback_type IN ('dislike', 'watched', 'not_interested')
+        ORDER BY created_at DESC
+    </select>
+
+</mapper>

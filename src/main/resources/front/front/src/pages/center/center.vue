@@ -6,8 +6,11 @@
           <i class="el-icon-film"></i>
         </div>
         <div>
-          <div class="brand-title">Aether Cinema</div>
-          <div class="brand-subtitle">The Director's Cut</div>
+          <div class="brand-title">
+            <span class="brand-main">CINEMA</span>
+            <span class="brand-accent">AI</span>
+          </div>
+          <div class="brand-subtitle">MOVIE INTELLIGENCE</div>
         </div>
       </button>
 
@@ -26,8 +29,8 @@
       </nav>
 
       <div class="sidebar-footer">
-        <div class="sidebar-meta">Security Level: Gold Tier Member</div>
-        <div class="sidebar-meta">Last Updated: {{ lastUpdatedText }}</div>
+        <div class="sidebar-meta">安全等级：金卡会员</div>
+        <div class="sidebar-meta">最近更新：{{ lastUpdatedText }}</div>
       </div>
     </aside>
 
@@ -62,9 +65,9 @@
               </div>
 
               <div class="identity-copy">
-                <div class="identity-kicker">Profile Identity</div>
+                <div class="identity-kicker">个人身份</div>
                 <h3>{{ profileName }}</h3>
-                <p>Update your photo and digital presence.</p>
+                <p>更新头像与个人展示信息。</p>
               </div>
             </div>
 
@@ -76,15 +79,15 @@
               label-position="top"
             >
               <div class="form-grid" v-if="userTableName === 'yonghu'">
-                <el-form-item class="field-block field-readonly" label="User Account" prop="yonghuzhanghao">
+                <el-form-item class="field-block field-readonly" label="用户账号" prop="yonghuzhanghao">
                   <el-input v-model="sessionForm.yonghuzhanghao" placeholder="用户账号" readonly></el-input>
                 </el-form-item>
 
-                <el-form-item class="field-block" label="User Name" prop="yonghuxingming">
+                <el-form-item class="field-block" label="用户姓名" prop="yonghuxingming">
                   <el-input v-model="sessionForm.yonghuxingming" placeholder="用户姓名"></el-input>
                 </el-form-item>
 
-                <el-form-item class="field-block" label="Gender" prop="xingbie">
+                <el-form-item class="field-block" label="性别" prop="xingbie">
                   <el-select v-model="sessionForm.xingbie" placeholder="请选择性别">
                     <el-option
                       v-for="(item, index) in dynamicProp.xingbie"
@@ -95,11 +98,11 @@
                   </el-select>
                 </el-form-item>
 
-                <el-form-item class="field-block" label="Phone Number" prop="lianxidianhua">
+                <el-form-item class="field-block" label="联系电话" prop="lianxidianhua">
                   <el-input v-model="sessionForm.lianxidianhua" placeholder="联系电话"></el-input>
                 </el-form-item>
 
-                <el-form-item class="field-block field-span-2" label="ID Card" prop="shenfenzheng">
+                <el-form-item class="field-block field-span-2" label="身份证号" prop="shenfenzheng">
                   <el-input v-model="sessionForm.shenfenzheng" placeholder="身份证"></el-input>
                 </el-form-item>
               </div>
@@ -119,9 +122,9 @@
 
           <template v-else-if="activeSection === 'password'">
             <div class="password-header">
-              <div class="identity-kicker">Security Access</div>
+              <div class="identity-kicker">账户安全</div>
               <h3>修改密码</h3>
-              <p>Use your current password to set a new secure access key.</p>
+              <p>使用当前密码设置新的安全密码。</p>
             </div>
 
             <el-form
@@ -132,17 +135,29 @@
               label-position="top"
             >
               <div class="form-grid password-grid">
-                <el-form-item class="field-block field-span-2" label="Current Password" prop="password">
+                <el-form-item class="field-block field-span-2" label="当前密码" prop="password">
                   <el-input v-model="passwordForm.password" type="password" placeholder="原密码"></el-input>
                 </el-form-item>
 
-                <el-form-item class="field-block" label="New Password" prop="newpassword">
+                <el-form-item class="field-block" label="新密码" prop="newpassword">
                   <el-input v-model="passwordForm.newpassword" type="password" placeholder="新密码"></el-input>
                 </el-form-item>
 
-                <el-form-item class="field-block" label="Confirm Password" prop="repassword">
+                <el-form-item class="field-block" label="确认密码" prop="repassword">
                   <el-input v-model="passwordForm.repassword" type="password" placeholder="确认密码"></el-input>
                 </el-form-item>
+
+                <el-form-item class="field-block" label="验证码" prop="captcha">
+                  <el-input v-model="passwordForm.captcha" placeholder="请输入验证码"></el-input>
+                </el-form-item>
+
+                <div class="field-block captcha-panel">
+                  <span class="captcha-label">当前验证码</span>
+                  <div class="captcha-row">
+                    <span class="captcha-code">{{ passwordCaptcha || '----' }}</span>
+                    <button class="secondary-btn captcha-refresh" type="button" @click="fetchPasswordCaptcha">刷新验证码</button>
+                  </div>
+                </div>
               </div>
 
               <div class="action-row">
@@ -195,7 +210,9 @@ export default {
         password: '',
         newpassword: '',
         repassword: '',
+        captcha: '',
       },
+      passwordCaptcha: '',
       passwordRules: {
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' },
@@ -205,6 +222,9 @@ export default {
         ],
         repassword: [
           { required: true, message: '确认密码不能为空', trigger: 'blur' },
+        ],
+        captcha: [
+          { required: true, message: '验证码不能为空', trigger: 'blur' },
         ],
       },
       rules: {},
@@ -234,7 +254,7 @@ export default {
       return resolveCenterAvatar(this.sessionForm, this.baseUrl, this.fallbackAvatar)
     },
     profileName() {
-      return this.sessionForm.yonghuxingming || this.sessionForm.yonghuzhanghao || 'Cinema Member'
+      return this.sessionForm.yonghuxingming || this.sessionForm.yonghuzhanghao || '影院会员'
     },
     pageTitle() {
       if (this.activeSection === 'password') {
@@ -247,21 +267,21 @@ export default {
     },
     pageSubtitle() {
       if (this.activeSection === 'password') {
-        return 'Manage your credentials and protect your cinema identity.'
+        return '管理账号凭证，保护你的个人信息安全。'
       }
       if (this.activeSection === 'storeup') {
-        return 'Browse, sort, and manage your saved cinema collection.'
+        return '浏览、排序并管理你收藏的影片。'
       }
-      return 'Edit your profile and curate your cinema experience.'
+      return '编辑个人资料，完善你的观影身份。'
     },
     lastUpdatedText() {
       return new Date().toISOString().slice(0, 10)
     },
     footerLeftText() {
-      return 'Security Level: Gold Tier Member'
+      return '安全等级：金卡会员'
     },
     footerRightText() {
-      return `Last Updated: ${this.lastUpdatedText}`
+      return `最近更新：${this.lastUpdatedText}`
     },
   },
   created() {
@@ -275,8 +295,25 @@ export default {
     '$route.query.section'() {
       this.syncSectionFromRoute()
     },
+    activeSection(next) {
+      if (next === 'password') {
+        this.fetchPasswordCaptcha()
+      }
+    },
   },
   methods: {
+    encryptPasswordValue(value) {
+      return value ? this.encryptAes(value) : value
+    },
+    sanitizeSessionForm(sessionForm) {
+      if (!sessionForm || typeof sessionForm !== 'object') {
+        return {}
+      }
+      const sanitized = { ...sessionForm }
+      delete sanitized.password
+      delete sanitized.mima
+      return sanitized
+    },
     normalizeSection(section) {
       if (section === 'password' || section === 'storeup') {
         return section
@@ -302,7 +339,7 @@ export default {
       }
 
       try {
-        this.sessionForm = JSON.parse(rawSession) || {}
+        this.sessionForm = this.sanitizeSessionForm(JSON.parse(rawSession) || {})
       } catch (error) {
         this.sessionForm = {}
       }
@@ -377,14 +414,16 @@ export default {
       }
     },
     setSession() {
-      localStorage.setItem('sessionForm', JSON.stringify(this.sessionForm))
-      const avatar = this.sessionForm.touxiang || ''
+      const sanitizedSessionForm = this.sanitizeSessionForm(this.sessionForm)
+      this.sessionForm = sanitizedSessionForm
+      localStorage.setItem('sessionForm', JSON.stringify(sanitizedSessionForm))
+      const avatar = sanitizedSessionForm.touxiang || ''
       if (avatar) {
         localStorage.setItem('frontHeadportrait', avatar.replace(new RegExp(this.$config.baseUrl, 'g'), ''))
       } else {
         localStorage.removeItem('frontHeadportrait')
       }
-      dispatchFrontAvatarChanged(this.sessionForm, localStorage.getItem('frontHeadportrait') || '')
+      dispatchFrontAvatarChanged(sanitizedSessionForm, localStorage.getItem('frontHeadportrait') || '')
     },
     notifyAvatarChanged(sessionForm, cachedAvatar) {
       dispatchFrontAvatarChanged(sessionForm, cachedAvatar)
@@ -417,6 +456,7 @@ export default {
         password: '',
         newpassword: '',
         repassword: '',
+        captcha: '',
       }
       this.$nextTick(() => {
         if (this.$refs.passwordForm) {
@@ -424,19 +464,26 @@ export default {
         }
       })
     },
+    fetchPasswordCaptcha() {
+      if (!this.userTableName) {
+        return
+      }
+      this.$http.get(`${this.userTableName}/changePasswordCaptcha`).then(({ data }) => {
+        if (data && data.code === 0 && data.data) {
+          this.passwordCaptcha = data.data.captcha || data.data.code || ''
+          return
+        }
+        this.passwordCaptcha = ''
+        if (data && data.msg) {
+          this.$message.error(data.msg)
+        }
+      }).catch(() => {
+        this.passwordCaptcha = ''
+      })
+    },
     async updatePassword() {
       this.$refs.passwordForm.validate(async valid => {
         if (!valid) {
-          return
-        }
-        let password = ''
-        if (this.sessionForm.mima) {
-          password = this.sessionForm.mima
-        } else if (this.sessionForm.password) {
-          password = this.sessionForm.password
-        }
-        if (this.passwordForm.password != password) {
-          this.$message.error('原密码错误')
           return
         }
         if (this.passwordForm.newpassword != this.passwordForm.repassword) {
@@ -447,17 +494,20 @@ export default {
           this.$message.error('新密码与原密码相同！')
           return
         }
-        this.sessionForm.password = this.passwordForm.newpassword
-        this.sessionForm.mima = this.passwordForm.newpassword
-        this.$http.post(`${this.userTableName}/update`, this.sessionForm).then(({ data }) => {
+        this.$http.post(`${this.userTableName}/changePassword`, {
+          oldPassword: this.encryptPasswordValue(this.passwordForm.password),
+          newPassword: this.encryptPasswordValue(this.passwordForm.newpassword),
+          captcha: this.passwordForm.captcha,
+        }).then(({ data }) => {
           if (data && data.code === 0) {
             this.$message({
-              message: '修改密码成功,下次登录系统生效',
+              message: '修改密码成功',
               type: 'success',
               duration: 1500,
             })
             this.setSession()
             this.resetPasswordForm()
+            this.fetchPasswordCaptcha()
           } else {
             this.$message.error(data.msg)
           }
@@ -548,7 +598,7 @@ export default {
 }
 
 .brand-block:focus-visible .brand-mark {
-  box-shadow: 0 0 0 3px rgba(255, 198, 57, 0.18), 0 12px 30px rgba(255, 198, 57, 0.28);
+  box-shadow: 0 0 0 3px rgba(47, 200, 255, 0.16), 0 12px 30px rgba(47, 200, 255, 0.24);
 }
 
 .brand-mark {
@@ -558,18 +608,31 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #3f2e00;
-  background: linear-gradient(135deg, #ffc639, #e1aa12);
-  box-shadow: 0 12px 30px rgba(255, 198, 57, 0.28);
+  color: #04111a;
+  background: linear-gradient(135deg, #2fc8ff, #2f6dff);
+  box-shadow: 0 12px 30px rgba(47, 200, 255, 0.24);
   font-size: 18px;
 }
 
 .brand-title {
-  color: #ffc639;
-  font-size: 25px;
-  font-weight: 800;
-  letter-spacing: -.03em;
-  line-height: 1.1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: #f6f7fb;
+  line-height: 1;
+}
+
+.brand-main {
+  font-size: 19px;
+  font-weight: 300;
+  letter-spacing: 0.4px;
+}
+
+.brand-accent {
+  color: #2fc8ff;
+  font-size: 19px;
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(47, 200, 255, 0.55);
 }
 
 .brand-subtitle {
@@ -814,6 +877,44 @@ export default {
   display: flex;
   justify-content: flex-end;
   gap: 16px;
+}
+
+.captcha-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.captcha-label {
+  font-size: 13px;
+  color: rgba(218, 226, 253, 0.7);
+}
+
+.captcha-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+}
+
+.captcha-code {
+  min-width: 92px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: rgba(10, 18, 36, 0.72);
+  border: 1px solid rgba(120, 160, 255, 0.22);
+  color: #8eb7ff;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+.captcha-refresh {
+  height: 44px;
+  padding: 0 18px;
+  min-width: 132px;
 }
 
 .primary-btn,

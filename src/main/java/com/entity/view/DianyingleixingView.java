@@ -19,7 +19,7 @@ import com.utils.EncryptUtil;
  * @email 
  * @date 2025-04-12 20:00:43
  */
-@TableName("dianyingleixing")
+@TableName("app_movie_type")
 public class DianyingleixingView  extends DianyingleixingEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

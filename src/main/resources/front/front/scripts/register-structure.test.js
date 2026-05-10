@@ -14,7 +14,7 @@ function run() {
   expectStructure(source.includes('class="register-atmosphere"'), '应存在背景氛围层')
   expectStructure(!source.includes('class="register-nav"'), '不应保留顶部导航容器')
   expectStructure(source.includes('class="register-card glass-card"'), '应存在玻璃质感注册卡片')
-  expectStructure(source.includes("Join the Curator's Circle"), '应存在原型主标题')
+  expectStructure(source.includes("加入观影俱乐部"), '应存在中文化后的注册主标题')
   expectStructure(source.includes('v-model="registerForm.yonghuzhanghao"'), '应保留用户账号字段绑定')
   expectStructure(source.includes('v-model="registerForm.mima"'), '应保留密码字段绑定')
   expectStructure(source.includes('v-model="registerForm.mima2"'), '应保留确认密码字段绑定')

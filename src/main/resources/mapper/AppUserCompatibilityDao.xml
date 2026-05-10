@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.AppUserCompatibilityDao">
+
+    <sql id="compatColumns">
+        u.legacy_yonghu_id AS id,
+        u.login_name AS yonghuming,
+        u.login_name AS yonghuzhanghao,
+        u.password_value AS mima,
+        u.display_name AS xingming,
+        u.display_name AS yonghuxingming,
+        u.avatar_url AS touxiang,
+        u.gender AS xingbie,
+        u.phone_number AS shoujihao,
+        u.phone_number AS lianxidianhua,
+        u.national_id_number AS shenfenzheng,
+        u.created_at AS addtime
+    </sql>
+
+    <sql id="compatWhere">
+        <where>
+            <if test="entity != null and entity.id != null">
+                AND u.legacy_yonghu_id = #{entity.id}
+            </if>
+            <if test="entity != null and entity.yonghuzhanghao != null and entity.yonghuzhanghao != ''">
+                AND u.login_name LIKE CONCAT('%', #{entity.yonghuzhanghao}, '%')
+            </if>
+            <if test="entity != null and entity.yonghuming != null and entity.yonghuming != ''">
+                AND u.login_name LIKE CONCAT('%', #{entity.yonghuming}, '%')
+            </if>
+            <if test="entity != null and entity.yonghuxingming != null and entity.yonghuxingming != ''">
+                AND u.display_name LIKE CONCAT('%', #{entity.yonghuxingming}, '%')
+            </if>
+            <if test="entity != null and entity.xingming != null and entity.xingming != ''">
+                AND u.display_name LIKE CONCAT('%', #{entity.xingming}, '%')
+            </if>
+            <if test="entity != null and entity.mima != null and entity.mima != ''">
+                AND u.password_value = #{entity.mima}
+            </if>
+            <if test="entity != null and entity.xingbie != null and entity.xingbie != ''">
+                AND u.gender = #{entity.xingbie}
+            </if>
+            <if test="entity != null and entity.lianxidianhua != null and entity.lianxidianhua != ''">
+                AND u.phone_number LIKE CONCAT('%', #{entity.lianxidianhua}, '%')
+            </if>
+            <if test="entity != null and entity.shoujihao != null and entity.shoujihao != ''">
+                AND u.phone_number LIKE CONCAT('%', #{entity.shoujihao}, '%')
+            </if>
+            <if test="entity != null and entity.shenfenzheng != null and entity.shenfenzheng != ''">
+                AND u.national_id_number LIKE CONCAT('%', #{entity.shenfenzheng}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByLegacyId" resultType="com.entity.YonghuEntity">
+        SELECT
+            <include refid="compatColumns"/>
+        FROM app_user u
+        WHERE u.legacy_yonghu_id = #{legacyYonghuId}
+        LIMIT 1
+    </select>
+
+    <select id="selectByLoginName" resultType="com.entity.YonghuEntity">
+        SELECT
+            <include refid="compatColumns"/>
+        FROM app_user u
+        WHERE u.login_name = #{loginName}
+        LIMIT 1
+    </select>
+
+    <select id="countByLoginName" resultType="int">
+        SELECT COUNT(1)
+        FROM app_user u
+        WHERE u.login_name = #{loginName}
+        <if test="excludeLegacyYonghuId != null">
+            AND u.legacy_yonghu_id != #{excludeLegacyYonghuId}
+        </if>
+    </select>
+
+    <select id="countCompat" resultType="long">
+        SELECT COUNT(1)
+        FROM app_user u
+        <include refid="compatWhere"/>
+    </select>
+
+    <select id="selectCompatList" resultType="com.entity.YonghuEntity">
+        SELECT
+            <include refid="compatColumns"/>
+        FROM app_user u
+        <include refid="compatWhere"/>
+        ORDER BY ${sortColumn} ${sortOrder}
+    </select>
+
+    <select id="selectCompatPage" resultType="com.entity.YonghuEntity">
+        SELECT
+            <include refid="compatColumns"/>
+        FROM app_user u
+        <include refid="compatWhere"/>
+        ORDER BY ${sortColumn} ${sortOrder}
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <insert id="insertFromCompat" parameterType="com.entity.YonghuEntity">
+        INSERT INTO app_user (
+            legacy_yonghu_id,
+            login_name,
+            display_name,
+            password_value,
+            avatar_url,
+            gender,
+            phone_number,
+            national_id_number,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{id},
+            COALESCE(NULLIF(#{yonghuzhanghao}, ''), NULLIF(#{yonghuming}, ''), CONCAT('yonghu_', #{id})),
+            COALESCE(NULLIF(#{yonghuxingming}, ''), NULLIF(#{xingming}, ''), NULLIF(#{yonghuzhanghao}, ''), NULLIF(#{yonghuming}, ''), CONCAT('用户', #{id})),
+            COALESCE(#{mima}, ''),
+            #{touxiang},
+            #{xingbie},
+            COALESCE(NULLIF(#{lianxidianhua}, ''), NULLIF(#{shoujihao}, '')),
+            #{shenfenzheng},
+            COALESCE(#{addtime}, CURRENT_TIMESTAMP),
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <update id="updateByLegacyId" parameterType="com.entity.YonghuEntity">
+        UPDATE app_user
+        SET login_name = COALESCE(NULLIF(#{yonghuzhanghao}, ''), NULLIF(#{yonghuming}, ''), login_name),
+            display_name = COALESCE(NULLIF(#{yonghuxingming}, ''), NULLIF(#{xingming}, ''), display_name),
+            password_value = COALESCE(#{mima}, password_value),
+            avatar_url = #{touxiang},
+            gender = #{xingbie},
+            phone_number = COALESCE(NULLIF(#{lianxidianhua}, ''), NULLIF(#{shoujihao}, ''), phone_number),
+            national_id_number = #{shenfenzheng},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE legacy_yonghu_id = #{id}
+    </update>
+
+    <delete id="deleteBatchByLegacyIds">
+        DELETE FROM app_user
+        WHERE legacy_yonghu_id IN
+        <foreach collection="legacyIds" item="legacyId" open="(" separator="," close=")">
+            #{legacyId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -3,17 +3,18 @@ package com.entity;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 /**
 * 类说明 : 
 */
-@TableName("config")
+@TableName("app_config")
 public class ConfigEntity implements Serializable{
 private static final long serialVersionUID = 1L;
 	
-	@TableId(type = IdType.AUTO)
+	@TableId(value = "legacy_config_id", type = IdType.INPUT)
 	private Long id;
 	
 	/**

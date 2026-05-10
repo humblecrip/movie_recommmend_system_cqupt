@@ -19,7 +19,7 @@ import com.utils.EncryptUtil;
  * @email 
  * @date 2025-04-12 20:00:43
  */
-@TableName("yonghu")
+@TableName("app_user")
 public class YonghuView  extends YonghuEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

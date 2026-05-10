@@ -28,6 +28,10 @@ runTest('共享前台壳子组件包含统一头部与头像同步逻辑', () =>
   assert.ok(shellSource.includes('front-avatar-updated'))
   assert.ok(shellSource.includes('openMovies'))
   assert.ok(shellSource.includes('goProfile'))
+  assert.ok(shellSource.includes('首页'))
+  assert.ok(shellSource.includes('电影'))
+  assert.ok(shellSource.includes('我的收藏'))
+  assert.ok(shellSource.includes('智能推荐'))
 })
 
 runTest('首页作为统一前台容器承载首页与电影视图', () => {
@@ -50,4 +54,18 @@ runTest('收藏独立页应隐藏收藏内容页头块', () => {
   assert.ok(storeupSource.includes(':hide-header="true"'))
   assert.ok(storeupPanelSource.includes('hideHeader'))
   assert.ok(storeupPanelSource.includes('v-if="!hideHeader"'))
+})
+
+runTest('收藏独立页改为 cinema-shell 承载且不再保留侧栏壳逻辑', () => {
+  assert.ok(storeupSource.includes('<cinema-shell'))
+  assert.ok(storeupSource.includes('active-nav="my-list"'))
+  assert.ok(storeupSource.includes('CinemaShell'))
+  assert.ok(storeupSource.includes('@open-home'))
+  assert.ok(storeupSource.includes('@open-movies'))
+  assert.ok(storeupSource.includes("path: '/index/home'"))
+  assert.ok(storeupSource.includes("view: 'movies'"))
+  assert.ok(!storeupSource.includes('center-sidebar'))
+  assert.ok(!storeupSource.includes('brand-block'))
+  assert.ok(!storeupSource.includes('side-nav'))
+  assert.ok(!storeupSource.includes('confirmFrontLogout'))
 })

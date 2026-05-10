@@ -11,9 +11,13 @@ function expectStructure(condition, message) {
 
 function run() {
   expectStructure(!source.includes('>Categories<'), '首页 header 不应再展示 Categories 导航项')
-  expectStructure(source.includes('>Home<'), '首页 header 应保留 Home 导航项')
-  expectStructure(source.includes('>Movies<'), '首页 header 应保留 Movies 导航项')
-  expectStructure(source.includes('>My List<'), '首页 header 应保留 My List 导航项')
+  expectStructure(source.includes('>首页<'), '首页 header 应保留首页导航项')
+  expectStructure(source.includes('>电影<'), '首页 header 应保留电影导航项')
+  expectStructure(source.includes('>我的收藏<'), '首页 header 应保留我的收藏导航项')
+  expectStructure(source.includes('智能推荐'), '首页 header 应保留智能推荐导航项')
+  expectStructure(source.includes("activeNav === 'my-list'"), 'My List 导航项应支持 activeNav === my-list 激活')
+  expectStructure(!source.includes('.discover-link.active'), 'Discover 不应再保留单独金色激活样式')
+  expectStructure(!source.includes('#ffc639'), 'header 激活态不应再使用金色常量')
 
   console.log('cinema-shell-nav-structure tests passed')
 }

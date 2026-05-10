@@ -7,14 +7,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.dao.AppAdminUserSessionDao;
+import com.dao.AppAuthSessionDao;
+import com.dao.AppUserSessionDao;
 import com.dao.TokenDao;
-import com.entity.TokenEntity;
+import com.entity.AppAuthSessionEntity;
 import com.entity.TokenEntity;
 import com.service.TokenService;
 import com.utils.CommonUtil;
@@ -27,6 +31,15 @@ import com.utils.Query;
  */
 @Service("tokenService")
 public class TokenServiceImpl extends ServiceImpl<TokenDao, TokenEntity> implements TokenService {
+
+	@Autowired
+	private AppAuthSessionDao appAuthSessionDao;
+
+	@Autowired
+	private AppUserSessionDao appUserSessionDao;
+
+	@Autowired
+	private AppAdminUserSessionDao appAdminUserSessionDao;
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -53,27 +66,70 @@ public class TokenServiceImpl extends ServiceImpl<TokenDao, TokenEntity> impleme
 
 	@Override
 	public String generateToken(Long userid,String username, String tableName, String role) {
-		TokenEntity tokenEntity = this.selectOne(new EntityWrapper<TokenEntity>().eq("userid", userid).eq("role", role));
 		String token = CommonUtil.getRandomString(32);
 		Calendar cal = Calendar.getInstance();   
-    	cal.setTime(new Date());   
+		Date issuedAt = new Date();
+        cal.setTime(issuedAt);
     	cal.add(Calendar.HOUR_OF_DAY, 1);
-		if(tokenEntity!=null) {
-			tokenEntity.setToken(token);
-			tokenEntity.setExpiratedtime(cal.getTime());
-			this.updateById(tokenEntity);
-		} else {
-			this.insert(new TokenEntity(userid,username, tableName, role, token, cal.getTime()));
+		Long appUserId = resolveAppUserId(userid, tableName);
+		Long appAdminUserId = resolveAppAdminUserId(userid, tableName);
+		if("yonghu".equals(tableName) && appUserId == null) {
+			throw new IllegalStateException("未找到对应的 app_user 映射，无法创建前台用户会话");
+		}
+		if("users".equals(tableName) && appAdminUserId == null) {
+			throw new IllegalStateException("未找到对应的 app_admin_user 映射，无法创建后台用户会话");
+		}
+		AppAuthSessionEntity session = new AppAuthSessionEntity();
+		session.setAppUserId(appUserId);
+		session.setAppAdminUserId(appAdminUserId);
+		session.setLegacySubjectId(userid);
+		session.setSubjectTableName(tableName);
+		session.setSubjectRoleName(role);
+		session.setSubjectKind(resolveSubjectKind(tableName));
+		session.setSubjectLoginName(username);
+		session.setSessionToken(token);
+		session.setIssuedAt(issuedAt);
+		session.setExpiresAt(cal.getTime());
+		if(appAuthSessionDao.updateActiveSession(session) == 0) {
+			appAuthSessionDao.insertSession(session);
 		}
 		return token;
 	}
 
 	@Override
 	public TokenEntity getTokenEntity(String token) {
-		TokenEntity tokenEntity = this.selectOne(new EntityWrapper<TokenEntity>().eq("token", token));
-		if(tokenEntity == null || tokenEntity.getExpiratedtime().getTime()<new Date().getTime()) {
+		return appAuthSessionDao.selectTokenEntityByToken(token);
+	}
+
+	@Override
+	public void updateSubjectLoginName(Long userid, String tableName, String username) {
+		if(userid == null || tableName == null || username == null) {
+			return;
+		}
+		appAuthSessionDao.updateSubjectLoginName(userid, tableName, username);
+	}
+
+	private Long resolveAppUserId(Long userid, String tableName) {
+		if(userid == null || !"yonghu".equals(tableName)) {
 			return null;
 		}
-		return tokenEntity;
+		return appUserSessionDao.selectIdByLegacyYonghuId(userid);
+	}
+
+	private Long resolveAppAdminUserId(Long userid, String tableName) {
+		if(userid == null || !"users".equals(tableName)) {
+			return null;
+		}
+		return appAdminUserSessionDao.selectIdByLegacyUsersId(userid);
+	}
+
+	private String resolveSubjectKind(String tableName) {
+		if("yonghu".equals(tableName)) {
+			return "front_user";
+		}
+		if("users".equals(tableName)) {
+			return "admin_user";
+		}
+		return "legacy:" + (tableName == null ? "unknown" : tableName);
 	}
 }

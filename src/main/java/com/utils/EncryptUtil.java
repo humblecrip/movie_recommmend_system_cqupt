@@ -191,8 +191,35 @@ public class EncryptUtil {
 			e.printStackTrace();
 		} catch (BadPaddingException e) {
 			e.printStackTrace();
-		}
+        }
         return null;
+    }
+
+    private static String tryAesDecryptInternal(String text) {
+        if(text==null) return null;
+        try {
+            SecretKeySpec secretKeySpec = new SecretKeySpec(AES_KEY.getBytes(StandardCharsets.UTF_8), AES_ALGORITHM);
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(AES_IV.getBytes(StandardCharsets.UTF_8));
+            Cipher cipher = Cipher.getInstance(AES_TRANSFORMATION);
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+            byte[] decodedData = Base64.getDecoder().decode(text);
+            byte[] decryptedData = cipher.doFinal(decodedData);
+            return new String(decryptedData, StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException e) {
+            return null;
+        } catch (InvalidKeyException e) {
+            return null;
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        } catch (NoSuchPaddingException e) {
+            return null;
+        } catch (InvalidAlgorithmParameterException e) {
+            return null;
+        } catch (IllegalBlockSizeException e) {
+            return null;
+        } catch (BadPaddingException e) {
+            return null;
+        }
     }
 
     /**
@@ -202,36 +229,49 @@ public class EncryptUtil {
      * @return 解密后的数据
      */
     public static String aesDecrypt(String text) {
-        if(text==null) return null;
-        try {
-			// 将AES密钥转换为SecretKeySpec对象
-			SecretKeySpec secretKeySpec = new SecretKeySpec(AES_KEY.getBytes(), AES_ALGORITHM);
-			// 将AES初始化向量转换为IvParameterSpec对象
-			IvParameterSpec ivParameterSpec = new IvParameterSpec(AES_IV.getBytes());
-			// 根据加密算法获取解密器
-			Cipher cipher = Cipher.getInstance(AES_TRANSFORMATION);
-			// 初始化解密器，设置解密模式、密钥和初始化向量
-			cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
-			// 对加密后的数据使用Base64解码
-			byte[] decodedData = Base64.getDecoder().decode(text);
-			// 解密数据
-			byte[] decryptedData = cipher.doFinal(decodedData);
-			// 返回解密后的数据
-			return new String(decryptedData, StandardCharsets.UTF_8);
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (InvalidAlgorithmParameterException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			e.printStackTrace();
-		}
-        return null;
+        return tryAesDecryptInternal(text);
+    }
+
+    /**
+     * 对前端传入密码做兼容标准化：
+     * 如果是 AES 密文则先解密，解密失败则按原值处理。
+     */
+    public static String normalizeIncomingPassword(String password) {
+        if (password == null) {
+            return null;
+        }
+        String decrypted = tryAesDecryptInternal(password);
+        return decrypted != null ? decrypted : password;
+    }
+
+    /**
+     * 持久化统一落 AES 密文，避免新写入继续保存明文。
+     */
+    public static String encryptPasswordForStorage(String password) {
+        String normalized = normalizeIncomingPassword(password);
+        if (normalized == null) {
+            return null;
+        }
+        return aesEncrypt(normalized);
+    }
+
+    /**
+     * 登录 / 旧密码校验兼容：
+     * 存量明文直接比对；新存量密文按 AES 密文比对。
+     */
+    public static boolean passwordMatches(String incomingPassword, String persistedPassword) {
+        if (incomingPassword == null || persistedPassword == null) {
+            return false;
+        }
+        String normalized = normalizeIncomingPassword(incomingPassword);
+        if (normalized == null) {
+            return false;
+        }
+        if (persistedPassword.equals(normalized)) {
+            return true;
+        }
+        String encrypted = aesEncrypt(normalized);
+        return encrypted != null && persistedPassword.equals(encrypted);
     }
 
 }

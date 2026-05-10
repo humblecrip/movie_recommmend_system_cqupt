@@ -4,52 +4,60 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 /** 
  * token表
  */
-@TableName("token")
+@TableName("app_auth_session")
 public class TokenEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@TableId(type = IdType.AUTO)
+	@TableId(value = "legacy_token_id", type = IdType.INPUT)
 	private Long id;
 	
 	/**
 	 * 用户id
 	 */
+	@TableField("legacy_subject_id")
 	private Long userid;
 	
 	/**
 	 * 用户名
 	 */
+	@TableField("subject_login_name")
 	private String username;
 	
 	/**
 	 * 表名
 	 */
+	@TableField("subject_table_name")
 	private String tablename;
 	
 	/**
 	 * 角色
 	 */
+	@TableField("subject_role_name")
 	private String role;
 	
 	/**
 	 * token
 	 */
+	@TableField("session_token")
 	private String token;
 	
 	/**
 	 * 过期时间
 	 */
+	@TableField("expires_at")
 	private Date expiratedtime;
 	
 	/**
 	 * 新增时间
 	 */
+	@TableField("issued_at")
 	private Date addtime;
 
 	public Long getId() {

@@ -1,39 +1,25 @@
 package com.controller;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.util.*;
-import java.lang.*;
-import java.math.*;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import com.utils.ValidatorUtils;
+import com.annotation.IgnoreAuth;
+import com.entity.StoreupEntity;
+import com.entity.view.StoreupView;
+import com.service.StoreupCompatibilityService;
 import com.utils.DeSensUtil;
-import org.apache.commons.lang3.StringUtils;
+import com.utils.PageUtils;
+import com.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.annotation.IgnoreAuth;
 
-import com.entity.StoreupEntity;
-import com.entity.view.StoreupView;
-
-import com.service.StoreupService;
-import com.service.TokenService;
-import com.utils.PageUtils;
-import com.utils.R;
-import com.utils.MPUtil;
-import com.utils.MapUtils;
-import com.utils.CommonUtil;
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 收藏表
@@ -45,9 +31,10 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/storeup")
 public class StoreupController {
-    @Autowired
-    private StoreupService storeupService;
+    private static final String UPDATE_FAILURE_MESSAGE = "收藏更新失败：仅支持已映射到 app_movie 的电影收藏记录";
 
+    @Autowired
+    private StoreupCompatibilityService storeupCompatibilityService;
 
 
 
@@ -63,17 +50,12 @@ public class StoreupController {
     @RequestMapping("/page")
     public R page(@RequestParam Map<String, Object> params,StoreupEntity storeup,
 		HttpServletRequest request){
-        if(!request.getSession().getAttribute("role").toString().equals("管理员")) {
-            storeup.setUserid((Long)request.getSession().getAttribute("userId"));
+        boolean adminView = isAdmin(request);
+        if(!adminView) {
+            storeup.setUserid(getSessionUserId(request));
         }
-        //设置查询条件
-        EntityWrapper<StoreupEntity> ew = new EntityWrapper<StoreupEntity>();
-
-
-        //查询结果
-		PageUtils page = storeupService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, storeup), params), params));
+		PageUtils page = storeupCompatibilityService.queryPage(params, storeup, getSessionUserId(request), adminView);
         Map<String, String> deSens = new HashMap<>();
-        //给需要脱敏的字段脱敏
         DeSensUtil.desensitize(page,deSens);
         return R.ok().put("data", page);
     }
@@ -85,13 +67,8 @@ public class StoreupController {
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params,StoreupEntity storeup, 
 		HttpServletRequest request){
-        //设置查询条件
-        EntityWrapper<StoreupEntity> ew = new EntityWrapper<StoreupEntity>();
-
-        //查询结果
-		PageUtils page = storeupService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, storeup), params), params));
+		PageUtils page = storeupCompatibilityService.queryPage(params, storeup, getSessionUserId(request), isAdmin(request));
         Map<String, String> deSens = new HashMap<>();
-        //给需要脱敏的字段脱敏
         DeSensUtil.desensitize(page,deSens);
         return R.ok().put("data", page);
     }
@@ -103,9 +80,7 @@ public class StoreupController {
      */
     @RequestMapping("/lists")
     public R list( StoreupEntity storeup){
-       	EntityWrapper<StoreupEntity> ew = new EntityWrapper<StoreupEntity>();
-      	ew.allEq(MPUtil.allEQMapPre( storeup, "storeup")); 
-        return R.ok().put("data", storeupService.selectListView(ew));
+        return R.ok().put("data", storeupCompatibilityService.selectList(storeup, null, true));
     }
 
 	 /**
@@ -113,9 +88,8 @@ public class StoreupController {
      */
     @RequestMapping("/query")
     public R query(StoreupEntity storeup){
-        EntityWrapper< StoreupEntity> ew = new EntityWrapper< StoreupEntity>();
- 		ew.allEq(MPUtil.allEQMapPre( storeup, "storeup")); 
-		StoreupView storeupView =  storeupService.selectView(ew);
+		List<StoreupView> storeupViews = storeupCompatibilityService.selectList(storeup, null, true);
+        StoreupView storeupView = storeupViews.isEmpty() ? null : storeupViews.get(0);
 		return R.ok("查询收藏表成功").put("data", storeupView);
     }
 	
@@ -124,9 +98,8 @@ public class StoreupController {
      */
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
-        StoreupEntity storeup = storeupService.selectById(id);
+        StoreupView storeup = storeupCompatibilityService.selectById(id);
         Map<String, String> deSens = new HashMap<>();
-        //给需要脱敏的字段脱敏
         DeSensUtil.desensitize(storeup,deSens);
         return R.ok().put("data", storeup);
     }
@@ -137,9 +110,8 @@ public class StoreupController {
 	@IgnoreAuth
     @RequestMapping("/detail/{id}")
     public R detail(@PathVariable("id") Long id){
-        StoreupEntity storeup = storeupService.selectById(id);
+        StoreupView storeup = storeupCompatibilityService.selectById(id);
         Map<String, String> deSens = new HashMap<>();
-        //给需要脱敏的字段脱敏
         DeSensUtil.desensitize(storeup,deSens);
         return R.ok().put("data", storeup);
     }
@@ -152,10 +124,9 @@ public class StoreupController {
      */
     @RequestMapping("/save")
     public R save(@RequestBody StoreupEntity storeup, HttpServletRequest request){
-        //ValidatorUtils.validateEntity(storeup);
-    	storeup.setUserid((Long)request.getSession().getAttribute("userId"));
-        storeupService.insert(storeup);
-        return R.ok().put("data",storeup.getId());
+        storeup.setUserid(getSessionUserId(request));
+        Long id = storeupCompatibilityService.save(storeup, getSessionUserId(request));
+        return id == null ? R.error("收藏保存失败") : R.ok().put("data",id);
     }
     
     /**
@@ -163,9 +134,11 @@ public class StoreupController {
      */
     @RequestMapping("/add")
     public R add(@RequestBody StoreupEntity storeup, HttpServletRequest request){
-        //ValidatorUtils.validateEntity(storeup);
-        storeupService.insert(storeup);
-        return R.ok().put("data",storeup.getId());
+        if (storeup.getUserid() == null) {
+            storeup.setUserid(getSessionUserId(request));
+        }
+        Long id = storeupCompatibilityService.save(storeup, getSessionUserId(request));
+        return id == null ? R.error("收藏保存失败") : R.ok().put("data",id);
     }
 
 
@@ -176,8 +149,7 @@ public class StoreupController {
     @RequestMapping("/security")
     @IgnoreAuth
     public R security(@RequestParam String username){
-        StoreupEntity storeup = storeupService.selectOne(new EntityWrapper<StoreupEntity>().eq("", username));
-        return R.ok().put("data", storeup);
+        return R.error("收藏兼容桥接未提供该能力");
     }
 
 
@@ -186,12 +158,9 @@ public class StoreupController {
      */
     @RequestMapping("/update")
     @Transactional
-    @IgnoreAuth
     public R update(@RequestBody StoreupEntity storeup, HttpServletRequest request){
-        //ValidatorUtils.validateEntity(storeup);
-        //全部更新
-        storeupService.updateById(storeup);
-        return R.ok();
+        boolean updated = storeupCompatibilityService.update(storeup, getSessionUserId(request), isAdmin(request));
+        return updated ? R.ok() : R.error(UPDATE_FAILURE_MESSAGE);
     }
 
 
@@ -203,7 +172,7 @@ public class StoreupController {
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
-        storeupService.deleteBatchIds(Arrays.asList(ids));
+        storeupCompatibilityService.deleteBatch(Arrays.asList(ids));
         return R.ok();
     }
     
@@ -213,28 +182,33 @@ public class StoreupController {
 	@IgnoreAuth
     @RequestMapping("/autoSort")
     public R autoSort(@RequestParam Map<String, Object> params,StoreupEntity storeup, HttpServletRequest request,String pre){
-        EntityWrapper<StoreupEntity> ew = new EntityWrapper<StoreupEntity>();
-        Map<String, Object> newMap = new HashMap<String, Object>();
-        Map<String, Object> param = new HashMap<String, Object>();
-        // 组装参数
-		Iterator<Map.Entry<String, Object>> it = param.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<String, Object> entry = it.next();
-			String key = entry.getKey();
-			String newKey = entry.getKey();
-			if (pre.endsWith(".")) {
-				newMap.put(pre + newKey, entry.getValue());
-			} else if (StringUtils.isEmpty(pre)) {
-				newMap.put(newKey, entry.getValue());
-			} else {
-				newMap.put(pre + "." + newKey, entry.getValue());
-			}
-		}
-		params.put("sort", "clicktime");
+		params.put("sort", "addtime");
         params.put("order", "desc");
-
-		PageUtils page = storeupService.queryPage(params, MPUtil.sort(MPUtil.between(MPUtil.likeOrEq(ew, storeup), params), params));
+		PageUtils page = storeupCompatibilityService.queryPage(params, storeup, getSessionUserId(request), isAdmin(request));
         return R.ok().put("data", page);
+    }
+
+    private Long getSessionUserId(HttpServletRequest request) {
+        if (request == null || request.getSession() == null) {
+            return null;
+        }
+        Object userId = request.getSession().getAttribute("userId");
+        if (userId == null) {
+            return null;
+        }
+        try {
+            return Long.valueOf(String.valueOf(userId));
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private boolean isAdmin(HttpServletRequest request) {
+        if (request == null || request.getSession() == null) {
+            return false;
+        }
+        Object role = request.getSession().getAttribute("role");
+        return role != null && "管理员".equals(String.valueOf(role));
     }
 
 

@@ -23,4 +23,6 @@ public interface TokenService extends IService<TokenEntity> {
    	String generateToken(Long userid,String username,String tableName, String role);
    	
    	TokenEntity getTokenEntity(String token);
+
+    void updateSubjectLoginName(Long userid, String tableName, String username);
 }

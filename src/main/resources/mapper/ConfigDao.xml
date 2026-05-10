@@ -2,4 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dao.ConfigDao">
+
+    <select id="selectListView" resultType="com.entity.ConfigEntity">
+        SELECT
+            c.legacy_config_id AS id,
+            c.name,
+            c.value,
+            c.url
+        FROM app_config c
+        <where>1=1 ${ew.sqlSegment}</where>
+    </select>
+
 </mapper>

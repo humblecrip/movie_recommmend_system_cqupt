@@ -1,13 +1,27 @@
 <template>
-	<router-view></router-view>
+	<div id="app-root">
+		<router-view></router-view>
+		<route-loading-curtain
+			:visible="routeLoadingState.visible"
+			:message="routeLoadingState.message"
+		/>
+	</div>
 </template>
 
 <script>
+	const RouteLoadingCurtain = require('./components/RouteLoadingCurtain.vue').default
+	const { routeLoadingState } = require('./utils/route-loading')
+
 	export default {
 		name: 'App',
-		created() {
-			
-		}
+		components: {
+			RouteLoadingCurtain,
+		},
+		data() {
+			return {
+				routeLoadingState,
+			}
+		},
 	}
 </script>
 
@@ -22,6 +36,14 @@
 		height: 100%;
 		margin: 0;
 		padding: 0;
+	}
+
+	#app {
+		min-height: 100%;
+	}
+
+	#app-root {
+		min-height: 100vh;
 	}
 
 	[v-cloak] {

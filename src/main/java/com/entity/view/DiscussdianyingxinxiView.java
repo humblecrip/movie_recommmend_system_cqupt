@@ -19,7 +19,7 @@ import com.utils.EncryptUtil;
  * @email 
  * @date 2025-04-12 20:00:44
  */
-@TableName("discussdianyingxinxi")
+@TableName("app_movie_comment")
 public class DiscussdianyingxinxiView  extends DiscussdianyingxinxiEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

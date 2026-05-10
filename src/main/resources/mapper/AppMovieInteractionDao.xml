@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.AppMovieInteractionDao">
+
+    <sql id="commentColumnsForParams">
+        c.id AS id,
+        c.movie_id AS movieId,
+        c.user_id AS userId,
+        c.legacy_userid AS legacyUserId,
+        COALESCE(au.display_name, c.author_name_snapshot) AS authorName,
+        COALESCE(au.avatar_url, c.author_avatar_snapshot) AS authorAvatar,
+        c.content_html AS contentHtml,
+        c.rating AS rating,
+        c.reply_html AS replyHtml,
+        c.like_count AS likeCount,
+        c.dislike_count AS dislikeCount,
+        c.is_pinned AS pinned,
+        CASE WHEN #{params.legacyUserId} IS NOT NULL AND c.legacy_userid = #{params.legacyUserId} THEN 1 ELSE 0 END AS ownedByCurrentUser,
+        (
+            SELECT v.vote_type
+            FROM app_movie_comment_vote v
+            WHERE v.comment_id = c.id
+              AND v.legacy_vote_user_id = #{params.legacyUserId}
+            ORDER BY v.id DESC
+            LIMIT 1
+        ) AS currentUserVote,
+        c.created_at AS createdAt
+    </sql>
+
+    <sql id="commentColumnsForUser">
+        c.id AS id,
+        c.movie_id AS movieId,
+        c.user_id AS userId,
+        c.legacy_userid AS legacyUserId,
+        COALESCE(au.display_name, c.author_name_snapshot) AS authorName,
+        COALESCE(au.avatar_url, c.author_avatar_snapshot) AS authorAvatar,
+        c.content_html AS contentHtml,
+        c.rating AS rating,
+        c.reply_html AS replyHtml,
+        c.like_count AS likeCount,
+        c.dislike_count AS dislikeCount,
+        c.is_pinned AS pinned,
+        CASE WHEN #{legacyUserId} IS NOT NULL AND c.legacy_userid = #{legacyUserId} THEN 1 ELSE 0 END AS ownedByCurrentUser,
+        (
+            SELECT v.vote_type
+            FROM app_movie_comment_vote v
+            WHERE v.comment_id = c.id
+              AND v.legacy_vote_user_id = #{legacyUserId}
+            ORDER BY v.id DESC
+            LIMIT 1
+        ) AS currentUserVote,
+        c.created_at AS createdAt
+    </sql>
+
+    <select id="selectAppUserIdByLegacyUserId" resultType="long">
+        SELECT id
+        FROM app_user
+        WHERE legacy_yonghu_id = #{legacyUserId}
+        LIMIT 1
+    </select>
+
+    <select id="selectMovieActionStatus" resultType="com.entity.vo.AppMovieActionStatusVO">
+        SELECT
+        m.id AS movieId,
+        CASE WHEN SUM(CASE WHEN a.action_type = 'favorite' THEN 1 ELSE 0 END) > 0 THEN 1 ELSE 0 END AS favorite,
+        CASE WHEN SUM(CASE WHEN a.action_type = 'like' THEN 1 ELSE 0 END) > 0 THEN 1 ELSE 0 END AS liked,
+        CASE WHEN SUM(CASE WHEN a.action_type = 'dislike' THEN 1 ELSE 0 END) > 0 THEN 1 ELSE 0 END AS disliked,
+        m.favorite_count AS favoriteCount,
+        m.like_count AS likeCount,
+        m.dislike_count AS dislikeCount
+        FROM app_movie m
+        LEFT JOIN app_user_movie_action a
+          ON a.movie_id = m.id
+         AND a.legacy_userid = #{legacyUserId}
+         AND a.action_type IN ('favorite', 'like', 'dislike')
+        WHERE m.id = #{movieId}
+        GROUP BY m.id, m.favorite_count, m.like_count, m.dislike_count
+        LIMIT 1
+    </select>
+
+    <select id="countMovieAction" resultType="int">
+        SELECT COUNT(1)
+        FROM app_user_movie_action
+        WHERE movie_id = #{movieId}
+          AND legacy_userid = #{legacyUserId}
+          AND action_type = #{actionType}
+    </select>
+
+    <insert id="insertMovieAction">
+        INSERT INTO app_user_movie_action (
+          legacy_storeup_id,
+          user_id,
+          movie_id,
+          legacy_userid,
+          legacy_refid,
+          legacy_tablename,
+          action_type,
+          target_name_snapshot,
+          target_picture_snapshot,
+          created_at,
+          updated_at
+        )
+        SELECT
+          NULL,
+          #{appUserId},
+          m.id,
+          #{legacyUserId},
+          m.legacy_dianyingxinxi_id,
+          'dianyingxinxi',
+          #{actionType},
+          COALESCE(#{targetName}, m.title),
+          COALESCE(#{targetPicture}, (
+            SELECT mm.media_url
+            FROM app_movie_media mm
+            WHERE mm.movie_id = m.id
+              AND mm.media_role = 'poster'
+            ORDER BY mm.sort_order
+            LIMIT 1
+          ), m.poster_urls_csv),
+          CURRENT_TIMESTAMP,
+          CURRENT_TIMESTAMP
+        FROM app_movie m
+        WHERE m.id = #{movieId}
+    </insert>
+
+    <delete id="deleteMovieAction">
+        DELETE FROM app_user_movie_action
+        WHERE movie_id = #{movieId}
+          AND legacy_userid = #{legacyUserId}
+          AND action_type = #{actionType}
+    </delete>
+
+    <update id="refreshMovieActionCounts">
+        UPDATE app_movie m
+        SET
+          m.favorite_count = (
+            SELECT COUNT(1)
+            FROM app_user_movie_action a
+            WHERE a.movie_id = #{movieId}
+              AND a.action_type = 'favorite'
+          ),
+          m.like_count = (
+            SELECT COUNT(1)
+            FROM app_user_movie_action a
+            WHERE a.movie_id = #{movieId}
+              AND a.action_type = 'like'
+          ),
+          m.dislike_count = (
+            SELECT COUNT(1)
+            FROM app_user_movie_action a
+            WHERE a.movie_id = #{movieId}
+              AND a.action_type = 'dislike'
+          )
+        WHERE m.id = #{movieId}
+    </update>
+
+    <select id="countFavorites" resultType="int">
+        SELECT COUNT(1)
+        FROM app_user_movie_action a
+        INNER JOIN app_movie m ON m.id = a.movie_id
+        WHERE a.legacy_userid = #{params.legacyUserId}
+          AND a.action_type = 'favorite'
+        <if test="params.title != null and params.title != ''">
+          AND m.title LIKE CONCAT('%', #{params.title}, '%')
+        </if>
+    </select>
+
+    <select id="selectFavorites" resultType="com.entity.vo.AppMovieFavoriteVO">
+        SELECT
+        a.id AS actionId,
+        m.id AS movieId,
+        m.title AS title,
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(tt.type_name ORDER BY rel.is_primary DESC, rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_type_rel rel
+                INNER JOIN app_movie_type tt ON tt.id = rel.type_id
+                WHERE rel.movie_id = m.id
+            ), ''),
+            t.type_name,
+            m.legacy_type_name
+        ) AS typeName,
+        COALESCE((
+            SELECT mm.media_url
+            FROM app_movie_media mm
+            WHERE mm.movie_id = m.id
+              AND mm.media_role = 'poster'
+            ORDER BY mm.sort_order
+            LIMIT 1
+        ), m.poster_urls_csv) AS posterUrl,
+        m.click_count AS clickCount,
+        m.total_score AS totalScore,
+        a.created_at AS createdAt
+        FROM app_user_movie_action a
+        INNER JOIN app_movie m ON m.id = a.movie_id
+        LEFT JOIN app_movie_type t ON t.id = m.movie_type_id
+        WHERE a.legacy_userid = #{params.legacyUserId}
+          AND a.action_type = 'favorite'
+        <if test="params.title != null and params.title != ''">
+          AND m.title LIKE CONCAT('%', #{params.title}, '%')
+        </if>
+        ORDER BY ${params.sortColumn} ${params.orderKeyword}
+        LIMIT #{params.offset}, #{params.limit}
+    </select>
+
+    <select id="countComments" resultType="int">
+        SELECT COUNT(1)
+        FROM app_movie_comment
+        WHERE movie_id = #{movieId}
+    </select>
+
+    <select id="selectComments" resultType="com.entity.vo.AppMovieCommentVO">
+        SELECT
+        <include refid="commentColumnsForParams"/>
+        FROM app_movie_comment c
+        LEFT JOIN app_user au ON au.id = c.user_id
+        WHERE c.movie_id = #{params.movieId}
+        ORDER BY ${params.sortColumn} ${params.orderKeyword}, c.created_at DESC, c.id DESC
+        LIMIT #{params.offset}, #{params.limit}
+    </select>
+
+    <select id="selectCommentById" resultType="com.entity.vo.AppMovieCommentVO">
+        SELECT
+        <include refid="commentColumnsForUser"/>
+        FROM app_movie_comment c
+        LEFT JOIN app_user au ON au.id = c.user_id
+        WHERE c.id = #{commentId}
+        LIMIT 1
+    </select>
+
+    <select id="countUserComment" resultType="int">
+        SELECT COUNT(1)
+        FROM app_movie_comment
+        WHERE movie_id = #{movieId}
+          AND legacy_userid = #{legacyUserId}
+    </select>
+
+    <insert id="insertComment">
+        INSERT INTO app_movie_comment (
+          legacy_discussdianyingxinxi_id,
+          movie_id,
+          user_id,
+          legacy_refid,
+          legacy_userid,
+          author_avatar_snapshot,
+          author_name_snapshot,
+          content_html,
+          rating,
+          reply_html,
+          like_count,
+          dislike_count,
+          is_pinned,
+          created_at,
+          updated_at
+        )
+        SELECT
+          NULL,
+          m.id,
+          #{appUserId},
+          m.legacy_dianyingxinxi_id,
+          #{legacyUserId},
+          #{authorAvatar},
+          COALESCE(au.display_name, #{authorName}, ''),
+          #{contentHtml},
+          #{rating},
+          NULL,
+          0,
+          0,
+          0,
+          CURRENT_TIMESTAMP,
+          CURRENT_TIMESTAMP
+        FROM app_movie m
+        LEFT JOIN app_user au ON au.id = #{appUserId}
+        WHERE m.id = #{movieId}
+    </insert>
+
+    <select id="selectLastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <delete id="deleteCommentVotesByCommentId">
+        DELETE FROM app_movie_comment_vote
+        WHERE comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteOwnComment">
+        DELETE FROM app_movie_comment
+        WHERE id = #{commentId}
+          AND legacy_userid = #{legacyUserId}
+    </delete>
+
+    <update id="refreshMovieCommentStats">
+        UPDATE app_movie m
+        SET
+          m.comment_count = (
+            SELECT COUNT(1)
+            FROM app_movie_comment c
+            WHERE c.movie_id = #{movieId}
+          ),
+          m.total_score = COALESCE((
+            SELECT ROUND(AVG(c.rating), 2)
+            FROM app_movie_comment c
+            WHERE c.movie_id = #{movieId}
+              AND c.rating IS NOT NULL
+          ), 0)
+        WHERE m.id = #{movieId}
+    </update>
+
+    <select id="selectMovieIdByCommentId" resultType="long">
+        SELECT movie_id
+        FROM app_movie_comment
+        WHERE id = #{commentId}
+        LIMIT 1
+    </select>
+
+    <select id="countCommentVote" resultType="int">
+        SELECT COUNT(1)
+        FROM app_movie_comment_vote
+        WHERE comment_id = #{commentId}
+          AND legacy_vote_user_id = #{legacyUserId}
+          AND vote_type = #{voteType}
+    </select>
+
+    <delete id="deleteCommentVote">
+        DELETE FROM app_movie_comment_vote
+        WHERE comment_id = #{commentId}
+          AND legacy_vote_user_id = #{legacyUserId}
+          AND vote_type = #{voteType}
+    </delete>
+
+    <delete id="deleteCommentVotesByType">
+        DELETE FROM app_movie_comment_vote
+        WHERE comment_id = #{commentId}
+          AND vote_type = #{voteType}
+    </delete>
+
+    <insert id="insertCommentVote">
+        INSERT INTO app_movie_comment_vote (
+          comment_id,
+          user_id,
+          legacy_comment_id,
+          legacy_vote_user_id,
+          vote_type,
+          created_at
+        )
+        SELECT
+          c.id,
+          #{appUserId},
+          COALESCE(c.legacy_discussdianyingxinxi_id, -c.id),
+          #{legacyUserId},
+          #{voteType},
+          CURRENT_TIMESTAMP
+        FROM app_movie_comment c
+        WHERE c.id = #{commentId}
+    </insert>
+
+    <update id="refreshCommentVoteCounts">
+        UPDATE app_movie_comment c
+        SET
+          c.like_count = (
+            SELECT COUNT(1)
+            FROM app_movie_comment_vote v
+            WHERE v.comment_id = #{commentId}
+              AND v.vote_type = 'like'
+          ),
+          c.dislike_count = (
+            SELECT COUNT(1)
+            FROM app_movie_comment_vote v
+            WHERE v.comment_id = #{commentId}
+              AND v.vote_type = 'dislike'
+          )
+        WHERE c.id = #{commentId}
+    </update>
+
+    <sql id="legacyCommentWhere">
+        <if test="params.actualCommentId != null">
+          AND c.id = #{params.actualCommentId}
+        </if>
+        <if test="params.actualCommentId == null and params.compatId != null">
+          AND c.legacy_discussdianyingxinxi_id = #{params.compatId}
+        </if>
+        <if test="params.refid != null">
+          AND c.legacy_refid = #{params.refid}
+        </if>
+        <if test="params.userid != null">
+          AND c.legacy_userid = #{params.userid}
+        </if>
+        <if test="params.nickname != null and params.nickname != ''">
+          AND COALESCE(au.display_name, c.author_name_snapshot, '') LIKE CONCAT('%', #{params.nickname}, '%')
+        </if>
+        <if test="params.content != null and params.content != ''">
+          AND COALESCE(c.content_html, '') LIKE CONCAT('%', #{params.content}, '%')
+        </if>
+        <if test="params.reply != null and params.reply != ''">
+          AND COALESCE(c.reply_html, '') LIKE CONCAT('%', #{params.reply}, '%')
+        </if>
+        <if test="params.istop != null">
+          AND c.is_pinned = #{params.istop}
+        </if>
+    </sql>
+
+    <select id="countLegacyComments" resultType="int">
+        SELECT COUNT(1)
+        FROM app_movie_comment c
+        LEFT JOIN app_user au ON au.id = c.user_id
+        WHERE 1 = 1
+        <include refid="legacyCommentWhere"/>
+    </select>
+
+    <select id="selectLegacyComments" resultType="com.entity.DiscussdianyingxinxiEntity">
+        SELECT
+        COALESCE(c.legacy_discussdianyingxinxi_id, c.id) AS id,
+        c.legacy_refid AS refid,
+        c.legacy_userid AS userid,
+        COALESCE(au.avatar_url, c.author_avatar_snapshot) AS avatarurl,
+        COALESCE(au.display_name, c.author_name_snapshot) AS nickname,
+        c.content_html AS content,
+        c.rating AS score,
+        c.reply_html AS reply,
+        c.like_count AS thumbsupnum,
+        c.dislike_count AS crazilynum,
+        CASE WHEN c.is_pinned = 1 THEN 1 ELSE 0 END AS istop,
+        (
+            SELECT GROUP_CONCAT(DISTINCT v.legacy_vote_user_id ORDER BY v.legacy_vote_user_id SEPARATOR ',')
+            FROM app_movie_comment_vote v
+            WHERE v.comment_id = c.id
+              AND v.vote_type = 'like'
+        ) AS tuserids,
+        (
+            SELECT GROUP_CONCAT(DISTINCT v.legacy_vote_user_id ORDER BY v.legacy_vote_user_id SEPARATOR ',')
+            FROM app_movie_comment_vote v
+            WHERE v.comment_id = c.id
+              AND v.vote_type = 'dislike'
+        ) AS cuserids,
+        c.created_at AS addtime
+        FROM app_movie_comment c
+        LEFT JOIN app_user au ON au.id = c.user_id
+        WHERE 1 = 1
+        <include refid="legacyCommentWhere"/>
+        ORDER BY ${params.sortColumn} ${params.orderKeyword}, c.created_at DESC, c.id DESC
+        LIMIT #{params.offset}, #{params.limit}
+    </select>
+
+    <select id="selectMovieIdByLegacyRefId" resultType="long">
+        SELECT id
+        FROM app_movie
+        WHERE legacy_dianyingxinxi_id = #{legacyRefId}
+        LIMIT 1
+    </select>
+
+    <select id="selectActualCommentIdByLegacyCommentId" resultType="long">
+        SELECT c.id
+        FROM app_movie_comment c
+        WHERE c.legacy_discussdianyingxinxi_id = #{commentId}
+        LIMIT 1
+    </select>
+
+    <select id="selectBridgeCommentIdByActualId" resultType="long">
+        SELECT c.id
+        FROM app_movie_comment c
+        WHERE c.id = #{commentId}
+          AND (c.legacy_discussdianyingxinxi_id IS NULL OR c.legacy_discussdianyingxinxi_id = c.id)
+        LIMIT 1
+    </select>
+
+    <update id="updateLegacyCommentById">
+        UPDATE app_movie_comment
+        <set>
+            <if test="legacyUserId != null">legacy_userid = #{legacyUserId},</if>
+            <if test="avatarUrl != null">author_avatar_snapshot = #{avatarUrl},</if>
+            <if test="nickname != null">author_name_snapshot = #{nickname},</if>
+            <if test="content != null">content_html = #{content},</if>
+            <if test="score != null">rating = #{score},</if>
+            <if test="reply != null">reply_html = #{reply},</if>
+            <if test="istop != null">is_pinned = #{istop},</if>
+            updated_at = CURRENT_TIMESTAMP
+        </set>
+        WHERE id = #{commentId}
+    </update>
+
+    <delete id="deleteCommentById">
+        DELETE FROM app_movie_comment
+        WHERE id = #{commentId}
+    </delete>
+</mapper>

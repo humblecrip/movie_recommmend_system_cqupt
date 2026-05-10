@@ -1,6 +1,9 @@
 <template>
   <div class="container"  :style='{"margin":"0 200px 20px"}'>
-    <el-alert title="确认支付前请先核对订单信息" type="success" :closable="false"></el-alert>
+    <el-alert title="支付功能当前已停用" type="warning" :closable="false"></el-alert>
+    <div class="disabled-notice">
+      当前页面仅保留路由兼容性，暂不开放在线支付，也不会修改订单支付状态。
+    </div>
     <!-- <div class="top-content">
       <span>收款人</span>
       <el-input style="width:300px" v-model="name" placeholder="收款人"></el-input>
@@ -13,38 +16,38 @@
     </div> -->
     <div class="pay-type-content">
       <div class="pay-type-item">
-        <el-radio v-model="type" label="微信支付"></el-radio>
+        <el-radio v-model="type" label="微信支付" disabled></el-radio>
         <img src="@/assets/img/test/weixin.png" alt>
         <!-- <span>微信支付</span> -->
       </div>
       <div class="pay-type-item">
-        <el-radio v-model="type" label="支付宝支付"></el-radio>
+        <el-radio v-model="type" label="支付宝支付" disabled></el-radio>
         <img src="@/assets/img/test/zhifubao.png" alt>
         <!-- <span>支付宝支付</span> -->
       </div>
       <div class="pay-type-item">
-        <el-radio v-model="type" label="建设银行"></el-radio>
+        <el-radio v-model="type" label="建设银行" disabled></el-radio>
         <img src="@/assets/img/test/jianshe.png" alt>
         <!-- <span>建设银行</span> -->
       </div>
       <div class="pay-type-item">
-        <el-radio v-model="type" label="农业银行"></el-radio>
+        <el-radio v-model="type" label="农业银行" disabled></el-radio>
         <img src="@/assets/img/test/nongye.png" alt>
         <!-- <span>农业银行</span> -->
       </div>
       <div class="pay-type-item">
-        <el-radio v-model="type" label="中国银行"></el-radio>
+        <el-radio v-model="type" label="中国银行" disabled></el-radio>
         <img src="@/assets/img/test/zhongguo.png" alt>
         <!-- <span>中国银行</span> -->
       </div>
       <div class="pay-type-item">
-        <el-radio v-model="type" label="交通银行"></el-radio>
+        <el-radio v-model="type" label="交通银行" disabled></el-radio>
         <img src="@/assets/img/test/jiaotong.png" alt>
         <!-- <span>交通银行</span> -->
       </div>
     </div>
     <div class="buton-content">
-      <el-button @click="submitTap" type="primary">确认支付</el-button>
+      <el-button type="primary" disabled>支付已停用</el-button>
       <el-button @click="back()">返回</el-button>
     </div>
   </div>
@@ -54,58 +57,12 @@
 export default {
   data() {
     return {
-      name: "",
-      account: "",
       type: "",
-      table: "",
-      obj: ""
     };
-  },
-  mounted() {
-    let table = this.$storage.get("paytable");
-    let obj = this.$storage.getObj("payObject");
-    this.table = table;
-    this.obj = obj;
   },
   methods: {
     submitTap() {
-      // if (!this.name) {
-      //   this.$message.error("请输入收款人姓名");
-      //   return;
-      // }
-      // if (!this.account) {
-      //   this.$message.error("请输入收款人账号");
-      //   return;
-      // }
-      if (!this.type) {
-        this.$message.error("请选择支付方式");
-        return;
-      }
-      this.$confirm(`确定支付?`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        this.obj.ispay = "已支付";
-        this.$http({
-          url: `${this.table}/update`,
-          method: "post",
-          data: this.obj
-        }).then(({ data }) => {
-          if (data && data.code === 0) {
-            this.$message({
-              message: "支付成功",
-              type: "success",
-              duration: 1500,
-              onClose: () => {
-                this.$router.go(-1);
-              }
-            });
-          } else {
-            this.$message.error(data.msg);
-          }
-        });
-      });
+      this.$message.warning("支付功能当前未开放，订单支付状态不会在此页修改。");
     },
     back(){
       this.$router.go(-1);
@@ -117,6 +74,11 @@ export default {
 .container {
   margin: 10px;
   font-size: 14px;
+  .disabled-notice {
+    margin-top: 16px;
+    color: #c45656;
+    line-height: 1.8;
+  }
   span {
     width: 60px;
   }
@@ -152,7 +114,7 @@ export default {
       margin: 20px;
       border: 1px solid #eeeeee;
       padding: 20px;
-	  background: #fff;
+      background: #fff;
     }
   }
   .buton-content {

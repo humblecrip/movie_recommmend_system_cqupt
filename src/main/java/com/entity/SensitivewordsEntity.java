@@ -28,7 +28,7 @@ import com.baomidou.mybatisplus.enums.IdType;
  * @email 
  * @date 2025-04-12 20:00:44
  */
-@TableName("sensitivewords")
+@TableName("app_sensitive_word")
 public class SensitivewordsEntity<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -49,7 +49,7 @@ public class SensitivewordsEntity<T> implements Serializable {
 	/**
 	 * 主键id
 	 */
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "legacy_sensitivewords_id", type = IdType.INPUT)
 	private Long id;
 	/**
 	 * 内容
@@ -58,6 +58,7 @@ public class SensitivewordsEntity<T> implements Serializable {
 	private String content;
 	
 	
+    @TableField("created_at")
 	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat
 	private Date addtime;

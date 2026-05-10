@@ -5,8 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.dao.AppUserSessionDao;
 import com.entity.YonghuEntity;
+import com.service.TokenService;
 import com.service.YonghuService;
+import com.utils.EncryptUtil;
 import com.utils.R;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,10 +24,17 @@ class YonghuControllerRegisterCompatibilityTest {
     @Mock
     private YonghuService yonghuService;
 
+    @Mock
+    private AppUserSessionDao appUserSessionDao;
+
+    @Mock
+    private TokenService tokenService;
+
     @Test
     void registerShouldBackfillLegacyFieldsFromCurrentFormValues() {
         YonghuController controller = new YonghuController();
         ReflectionTestUtils.setField(controller, "yonghuService", yonghuService);
+        ReflectionTestUtils.setField(controller, "appUserSessionDao", appUserSessionDao);
 
         when(yonghuService.selectOne(any())).thenReturn(null);
         when(yonghuService.selectCount(any())).thenReturn(0);
@@ -48,5 +58,30 @@ class YonghuControllerRegisterCompatibilityTest {
         assertEquals("user_001", legacyUsername);
         assertEquals("测试用户", legacyName);
         assertEquals("13800000000", legacyMobile);
+        assertEquals(EncryptUtil.aesEncrypt("123456"), captor.getValue().getMima());
+        verify(appUserSessionDao).upsertFromYonghu(captor.getValue());
+    }
+
+    @Test
+    void loginShouldReturnExplicitErrorWhenAppUserSessionBridgeIsMissing() {
+        YonghuController controller = new YonghuController();
+        ReflectionTestUtils.setField(controller, "yonghuService", yonghuService);
+        ReflectionTestUtils.setField(controller, "appUserSessionDao", appUserSessionDao);
+        ReflectionTestUtils.setField(controller, "tokenService", tokenService);
+
+        YonghuEntity entity = new YonghuEntity();
+        entity.setId(1001L);
+        entity.setYonghuzhanghao("user_001");
+        entity.setMima("123456");
+
+        when(yonghuService.selectOne(any())).thenReturn(entity);
+        when(tokenService.generateToken(1001L, "user_001", "yonghu", "用户"))
+            .thenThrow(new IllegalStateException("未找到对应的 app_user 映射，无法创建前台用户会话"));
+
+        R result = controller.login("user_001", "123456", null, null);
+
+        assertEquals(500, result.get("code"));
+        assertEquals("未找到对应的 app_user 映射，无法创建前台用户会话", result.get("msg"));
+        verify(appUserSessionDao).upsertFromYonghu(entity);
     }
 }

@@ -5,8 +5,16 @@
 
     <select id="selectListView"
 		resultType="com.entity.TokenEntity" >
-
-		SELECT  t.* FROM token  t 	        
+		SELECT
+            t.legacy_token_id AS id,
+            t.legacy_subject_id AS userid,
+            t.subject_login_name AS username,
+            t.subject_table_name AS tablename,
+            t.subject_role_name AS role,
+            t.session_token AS token,
+            t.expires_at AS expiratedtime,
+            t.issued_at AS addtime
+        FROM app_auth_session t
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	

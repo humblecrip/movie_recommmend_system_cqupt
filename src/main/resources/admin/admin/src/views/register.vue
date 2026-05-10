@@ -4,7 +4,7 @@
 			<div class="register-swiper3">
 				<div class="swiper-container mySwiper3">
 					<div class="swiper-wrapper">
-						<div class="swiper-slide" v-for="(item,index) in swiperList" :key="item.id">
+						<div class="swiper-slide" v-for="item in swiperList" :key="item.id">
 							<div>
 								<el-image :src="item.url" fit="cover"></el-image>
 							</div>
@@ -135,8 +135,11 @@ export default {
 	created() {
 	},
 	destroyed() {
-		  	},
+	},
 	methods: {
+		encryptPasswordValue(value) {
+			return value ? this.encryptAes(value) : value
+		},
 		changeRules(name){
 			if(this.rules[name]){
 				return true
@@ -190,7 +193,11 @@ export default {
 			this.$http({
 				url: url,
 				method: "post",
-				data:this.ruleForm
+				data:{
+					...this.ruleForm,
+					mima: this.encryptPasswordValue(this.ruleForm.mima),
+					mima2: this.encryptPasswordValue(this.ruleForm.mima2),
+				}
 			}).then(({ data }) => {
 				if (data && data.code === 0) {
 					this.$message({
@@ -613,6 +620,6 @@ export default {
 }
 	
 	::-webkit-scrollbar {
-	  display: none;
+		display: none;
 	}
 </style>

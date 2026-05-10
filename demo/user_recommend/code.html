@@ -1,0 +1,271 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CINEMA AI - The Curator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700;800&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-tint": "#f7be2c",
+                      "tertiary-fixed-dim": "#c6c6c6",
+                      "tertiary-container": "#b2b3b3",
+                      "surface-container-low": "#131b2e",
+                      "background": "#0b1326",
+                      "surface-container-lowest": "#060e20",
+                      "primary": "#ffc639",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "tertiary": "#cecece",
+                      "inverse-on-surface": "#283044",
+                      "surface-variant": "#2d3449",
+                      "on-primary-container": "#594100",
+                      "on-primary-fixed": "#261a00",
+                      "secondary-fixed": "#d8e3fb",
+                      "on-secondary-fixed-variant": "#3d475a",
+                      "inverse-surface": "#dae2fd",
+                      "outline": "#99907c",
+                      "secondary-container": "#424c5f",
+                      "outline-variant": "#4d4635",
+                      "on-secondary-container": "#b2bcd3",
+                      "on-secondary-fixed": "#111c2d",
+                      "secondary": "#bcc7de",
+                      "on-primary-fixed-variant": "#5b4300",
+                      "on-primary": "#3f2e00",
+                      "inverse-primary": "#795900",
+                      "surface": "#0b1326",
+                      "primary-container": "#e1aa12",
+                      "primary-fixed": "#ffdf9e",
+                      "on-error": "#690005",
+                      "primary-fixed-dim": "#f7be2c",
+                      "surface-container-high": "#222a3d",
+                      "error-container": "#93000a",
+                      "surface-container": "#171f33",
+                      "on-secondary": "#273143",
+                      "on-error-container": "#ffdad6",
+                      "tertiary-fixed": "#e2e2e2",
+                      "on-tertiary": "#2f3131",
+                      "on-surface": "#dae2fd",
+                      "surface-bright": "#31394d",
+                      "on-surface-variant": "#d0c5af",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "on-background": "#dae2fd",
+                      "surface-dim": "#0b1326",
+                      "surface-container-highest": "#2d3449",
+                      "on-tertiary-container": "#444546",
+                      "error": "#ffb4ab",
+                      "secondary-fixed-dim": "#bcc7de"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {},
+              "fontFamily": {
+                      "headline": [
+                              "Epilogue"
+                      ],
+                      "display": [
+                              "Epilogue"
+                      ],
+                      "body": [
+                              "Manrope"
+                      ],
+                      "label": [
+                              "Manrope"
+                      ]
+              },
+              "fontSize": {}
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background font-body h-screen flex flex-col antialiased overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between px-8 h-20 w-full z-50 bg-[#0b1326] border-b border-outline-variant/30 flex-shrink-0">
+<div class="flex items-center gap-12">
+<div class="text-2xl font-bold tracking-tight text-[#ffc639] font-headline">
+            CINEMA AI
+        </div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-[#dae2fd] font-body text-sm font-medium opacity-60 hover:opacity-100 transition-opacity" href="#">Home</a>
+<a class="text-[#dae2fd] font-body text-sm font-medium opacity-60 hover:opacity-100 transition-opacity" href="#">Movies</a>
+<a class="text-[#dae2fd] font-body text-sm font-medium opacity-60 hover:opacity-100 transition-opacity" href="#">My List</a>
+<a class="flex items-center gap-2 text-[#ffc639] font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: &quot;FILL&quot; 1;">explore</span>
+                Discover
+            </a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<img alt="User profile portrait" class="w-10 h-10 rounded-full object-cover border border-primary/20" data-alt="A cinematic, high-fashion portrait of a person in moody, dramatic studio lighting. The aesthetic is sophisticated and editorial, with deep shadows and subtle radiant gold highlights accentuating their features. The background is a solid, deep midnight blue to seamlessly blend with the UI canvas. The mood is confident, premium, and slightly enigmatic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfNrXPI5KsuwexGgW4_SuShzfFnJOZC_Ot3xWwyfMAQ3b3Wjt2QAS2HdZKz5Wh0rzWaCUMxT-Zh_VCmaMl7RjgEmU30-4cYxjpEIF66M7zZ_GBt_x69mJG7tXnTaVSWXDOsBpFa0vMfUbriKQ8Y8ox52oaJSaVENG42AMmYPxMzdgvNZmGMtpHX57neLgHbMHG8CDNzDVgwt45ajxlgZd6MrirOoNKwBxtQ_oBHl9AVRJeNsHu0y6cOf5XD_Hbln_U2RuSiO4bDBM">
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar Chat History -->
+<aside class="hidden md:flex flex-col py-6 gap-4 w-64 z-40 bg-[#0b1326] border-r border-outline-variant/30 flex-shrink-0">
+<div class="px-6 mb-2">
+<button class="w-full flex items-center justify-center gap-2 bg-primary/10 text-primary border border-primary/20 py-2.5 rounded-lg hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span class="font-body text-sm font-semibold">New Chat</span>
+</button>
+</div>
+<div class="px-6 mt-4">
+<h3 class="text-xs font-headline font-semibold text-on-surface-variant uppercase tracking-wider">Conversations</h3>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 space-y-1 w-full scrollbar-hide">
+<a class="flex items-center gap-3 bg-surface-container-high text-on-surface py-3 px-4 rounded-lg scale-[1.02] duration-200" href="#">
+<span class="material-symbols-outlined text-[18px] text-primary">chat_bubble</span>
+<span class="font-body text-sm font-medium truncate">Sci-Fi Explorations</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant py-3 px-4 rounded-lg hover:bg-surface-container-high/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+<span class="font-body text-sm font-medium truncate">Classic Thrillers</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant py-3 px-4 rounded-lg hover:bg-surface-container-high/50 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+<span class="font-body text-sm font-medium truncate">Midnight Cinema</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas (Chat Interface) -->
+<main class="flex-1 relative flex flex-col h-full bg-background overflow-hidden">
+<!-- Ambient Background Glow -->
+<div class="absolute inset-0 pointer-events-none z-0">
+<div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-secondary-container/10 rounded-full blur-[150px]"></div>
+</div>
+<!-- Chat Header -->
+<div class="h-24 flex-shrink-0 flex items-center justify-center px-8 z-10 bg-surface/50 backdrop-blur-md relative">
+<div class="text-center">
+<h1 class="font-headline text-xl text-primary font-bold tracking-wide"><br></h1>
+<p class="font-body text-xs text-on-surface-variant uppercase tracking-[0.2em] mt-1"><br></p>
+</div>
+<div class="absolute right-8 top-1/2 -translate-y-1/2 flex gap-4">
+<button class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-surface-bright transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">history</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Chat Area -->
+<div class="flex-1 overflow-y-auto px-6 md:px-24 py-8 space-y-12 z-10 scrollbar-hide">
+<!-- AI Greeting Message -->
+<div class="flex gap-6 max-w-4xl mx-auto w-full">
+<div class="w-12 h-12 rounded-full bg-surface-container-high border border-primary/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+</div>
+<div class="flex-1 space-y-3">
+<div class="font-headline text-sm text-primary font-semibold">The Curator</div>
+<div class="bg-surface-container-low p-6 rounded-xl rounded-tl-sm text-on-surface font-body text-base leading-relaxed shadow-[0px_10px_30px_rgba(0,0,0,0.2)]">
+<p class="">Good evening. I sense you are looking for an immersive experience tonight. Whether it is a slow-burn psychological thriller or a visually stunning epic, I am here to curate your evening. What mood are we aiming for?</p>
+</div>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex gap-6 max-w-4xl mx-auto w-full flex-row-reverse">
+<img alt="User Profile" class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-outline-variant" data-alt="A cinematic, high-fashion portrait of a person in moody, dramatic studio lighting. The aesthetic is sophisticated and editorial, with deep shadows and subtle radiant gold highlights accentuating their features. The background is a solid, deep midnight blue to seamlessly blend with the UI canvas. The mood is confident, premium, and slightly enigmatic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArb5VX0vtYSn8brhEctzyL3UnA0-JY-auqxnBn0pYwjWZkg8KBguK8ugxubUAgJOgBv8Yb2SJkHjrwO6UddrRCToHwx2GSAXPzcohkAlQkK6_VwH_ABLF3tZAVxKalIzTXyzF9HXMBcFbBIE41obD1_NyQT87DOyfp9F4m8yopHZe_ROBV7Ab3yklhfFWXWXZfwXPEc8Co0DSHZTWrZzXgcxANwLnjGiRiMMS2XoGJEJKLd_jKrtRREwJxLbVn9YE9aF4qwiaR8UY">
+<div class="flex-1 space-y-3 flex flex-col items-end">
+<div class="font-headline text-sm text-on-surface-variant font-semibold">You</div>
+<div class="bg-surface-container-highest p-6 rounded-xl rounded-tr-sm text-on-surface font-body text-base leading-relaxed max-w-2xl">
+<p class="">I'm looking for a visually stunning Sci-Fi film. Something visually dark, highly atmospheric, perhaps involving deep space or cyberpunk themes. Not too action-heavy.</p>
+</div>
+</div>
+</div>
+<!-- AI Response with embedded Card -->
+<div class="flex gap-6 max-w-4xl mx-auto w-full">
+<div class="w-12 h-12 rounded-full bg-surface-container-high border border-primary/20 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(255,198,57,0.15)]">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+</div>
+<div class="flex-1 space-y-6">
+<div class="font-headline text-sm text-primary font-semibold">The Curator</div>
+<div class="bg-surface-container-low p-6 rounded-xl rounded-tl-sm text-on-surface font-body text-base leading-relaxed">
+<p class="mb-6">An excellent choice. Given your preference for dark, atmospheric science fiction over pure action, I highly recommend this masterpiece. It relies on profound philosophical questions wrapped in a breathtaking, high-contrast visual language.</p>
+<!-- Embedded Interactive Movie Card -->
+<div class="bg-background rounded-xl overflow-hidden shadow-[0px_20px_50px_rgba(0,0,0,0.4)] flex flex-col md:flex-row relative group">
+<!-- Background Blur Overlay -->
+<div class="absolute inset-0 bg-surface-variant/40 backdrop-blur-xl z-0 transition-opacity duration-500 group-hover:bg-surface-variant/20"></div>
+<div class="w-full md:w-1/3 relative h-64 md:h-auto z-10">
+<img alt="Movie Poster" class="w-full h-full object-cover rounded-l-xl md:rounded-r-none" data-alt="A highly detailed cinematic movie poster showing a dark, moody sci-fi landscape. The scene features monumental brutalist architecture bathed in stark, cold neon lighting against an inky black sky. Minimalist, geometric spacecraft hover silently in the distance. The overall aesthetic is heavily atmospheric, sophisticated, and deeply cinematic, utilizing a palette of deep midnight blue and sudden, piercing gold accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ_N6sISWfI3SQ9iSnNnT-vfCsIygf5WUoRS6rUrAlelsCM0-xPEzPPCvHqY6rvxd6XtIZTgsfniQ1H4OvcfO6d7G5JRvDC9d5ZydDzxK80LzhWFyxjjJdqouShd7zEFdxCQ4TDaM5rYsrRcTK5ItO-of6kC5QYATaZ_kPSwhmNXNBoD7QfnejlmsH3EJ4xcyLOXe4aQZkpx_VVHbzcJFpgR6HFccM3NhyIREk2c4WBTFSn1zAgS5BVe2lWpuodO-UdThRkVwdT3c">
+</div>
+<div class="p-8 flex flex-col justify-center w-full md:w-2/3 z-10 relative">
+<div class="flex gap-2 mb-4">
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[0.6875rem] font-body uppercase tracking-widest text-on-surface-variant">2049</span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[0.6875rem] font-body uppercase tracking-widest text-on-surface-variant">Sci-Fi</span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-[0.6875rem] font-body uppercase tracking-widest text-on-surface-variant">163 MIN</span>
+</div>
+<h3 class="font-headline text-3xl font-bold text-on-surface mb-2">Echoes of Synthetica</h3>
+<p class="font-body text-sm text-on-surface-variant mb-8 line-clamp-3">A blade runner unearths a long-buried secret that has the potential to plunge what's left of society into chaos. The discovery leads him on a quest to find a former blade runner who has been missing for thirty years.</p>
+<div class="flex gap-4">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary font-body text-sm font-semibold px-8 py-3 rounded-full hover:scale-[1.02] transition-transform duration-300 shadow-[0_5px_20px_rgba(255,198,57,0.3)]">
+                                        View Details
+                                    </button>
+<button class="border border-outline-variant text-on-surface font-body text-sm font-semibold px-6 py-3 rounded-full hover:bg-surface-container-high transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                                        My List
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacer for bottom input area -->
+<div class="h-32"></div>
+</div>
+<!-- Bottom Input Area -->
+<div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-background via-background/90 to-transparent pt-12 pb-8 px-6 md:px-24 z-20">
+<div class="max-w-4xl mx-auto flex flex-col gap-4">
+<!-- Quick Action Chips -->
+<div class="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+<button class="flex-shrink-0 bg-surface-container-highest hover:bg-surface-bright px-5 py-2.5 rounded-full text-xs font-body font-medium text-on-surface transition-colors border border-outline-variant/30 whitespace-nowrap">
+                        Recommend a Thriller
+                    </button>
+<button class="flex-shrink-0 bg-surface-container-highest hover:bg-surface-bright px-5 py-2.5 rounded-full text-xs font-body font-medium text-on-surface transition-colors border border-outline-variant/30 whitespace-nowrap">
+                        What's trending today?
+                    </button>
+<button class="flex-shrink-0 bg-surface-container-highest hover:bg-surface-bright px-5 py-2.5 rounded-full text-xs font-body font-medium text-on-surface transition-colors border border-outline-variant/30 whitespace-nowrap">
+                        Based on my watchlist
+                    </button>
+</div>
+<!-- Input Container -->
+<div class="relative w-full">
+<div class="absolute inset-0 bg-surface-container-highest rounded-xl blur-sm opacity-50"></div>
+<div class="relative bg-surface-container-highest rounded-xl border border-outline-variant focus-within:border-primary transition-colors flex items-center px-4 py-3 shadow-[0px_20px_50px_rgba(0,0,0,0.4)]">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<input class="flex-1 bg-transparent border-none text-on-surface font-body text-base focus:ring-0 placeholder:text-on-surface-variant/50 px-4" placeholder="Tell The Curator what you desire..." type="text">
+<button class="p-2 bg-primary text-on-primary rounded-lg hover:scale-105 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1;">send</span>
+</button>
+</div>
+</div>
+<div class="text-center text-[10px] font-body text-on-surface-variant/50 uppercase tracking-widest mt-2">
+                    The Curator may occasionally recommend unreleased artifacts.
+                </div>
+</div>
+</div>
+</main>
+</div>
+<style>
+        /* Hide scrollbar for a cleaner look */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+
+
+</body></html>

@@ -32,8 +32,14 @@ runTest('收藏独立页复用收藏组件', () => {
 })
 
 runTest('收藏组件保留核心交互区', () => {
-  assert.ok(storeupPanelSource.includes('class="page-header"'))
-  assert.ok(storeupPanelSource.includes('class="toolbar"'))
-  assert.ok(storeupPanelSource.includes('class="card-grid"'))
+  assert.ok(storeupPanelSource.includes('appmovie/favorites/page'))
+  assert.ok(storeupPanelSource.includes('appmovie/favorites/cancel'))
+  assert.ok(storeupPanelSource.includes('class="collection-hero"'))
+  assert.ok(storeupPanelSource.includes('class="collection-status-bar"'))
+  assert.ok(storeupPanelSource.includes('class="collection-poster-grid"'))
   assert.ok(storeupPanelSource.includes('class="favorite-pagination"'))
+  assert.ok(storeupPanelSource.includes('我的收藏'))
+  assert.ok(storeupPanelSource.includes('收藏影片'))
+  assert.ok(storeupPanelSource.includes('搜索'))
+  assert.ok(storeupPanelSource.includes('排序方式'))
 })

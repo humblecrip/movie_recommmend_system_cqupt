@@ -4,7 +4,7 @@
 			<div class="hero-copy">
 				<p class="hero-kicker">Dashboard Overview</p>
 				<h2>影院业务总览</h2>
-				<span>复用现有影片、用户、收藏与行为统计接口，集中展示后台关键指标。</span>
+				<span>读取 app_movie 与真实互动表聚合接口，集中展示后台关键指标。</span>
 			</div>
 
 			<div class="hero-pill">
@@ -81,7 +81,7 @@
 				<div class="card-head">
 					<div>
 						<h3>口碑得分</h3>
-						<span>点赞 / 点踩 / 点击叠加</span>
+						<span>点击 / 点赞 / 收藏叠加</span>
 					</div>
 				</div>
 				<div class="stack-metrics">
@@ -89,7 +89,7 @@
 						<div class="stack-bar">
 							<div class="stack-part clicks" :style="{ height: item.clickHeight + '%' }"></div>
 							<div class="stack-part likes" :style="{ height: item.likeHeight + '%' }"></div>
-							<div class="stack-part dislikes" :style="{ height: item.dislikeHeight + '%' }"></div>
+							<div class="stack-part favorites" :style="{ height: item.favoriteHeight + '%' }"></div>
 						</div>
 						<p>{{ item.shortName }}</p>
 					</div>
@@ -100,7 +100,7 @@
 				<div class="engagement-copy">
 					<p class="hero-kicker">User Engagement</p>
 					<h3>用户参与度</h3>
-					<span>通过收藏、点赞与点踩行为，快速观察影片库的互动分布。</span>
+					<span>通过真实收藏、点赞与点踩行为，快速观察影片库的互动分布。</span>
 
 					<div class="engagement-legend">
 						<div class="legend-row">
@@ -223,32 +223,27 @@ export default {
 		},
 		async loadDashboard() {
 			try {
-				const [filmCount, userPage, storeupPage, scoreTrend, collectionTrend, clickTrend, likesTrend, dislikesTrend] = await Promise.all([
-					this.request('dianyingxinxi/count'),
-					this.request('yonghu/page', { page: 1, limit: 1, sort: 'id', order: 'desc' }),
-					this.request('storeup/page', { page: 1, limit: 1, sort: 'id', order: 'desc' }),
-					this.request('dianyingxinxi/value/dianyingmingcheng/discussnum'),
-					this.request('dianyingxinxi/value/dianyingmingcheng/storeupnum'),
-					this.request('dianyingxinxi/value/dianyingmingcheng/clicknum'),
-					this.request('dianyingxinxi/value/dianyingmingcheng/thumbsupnum'),
-					this.request('dianyingxinxi/value/dianyingmingcheng/crazilynum')
+				const [overview, userPage] = await Promise.all([
+					this.request('appmovie/admin/dashboard/overview'),
+					this.request('yonghu/page', { page: 1, limit: 1, sort: 'id', order: 'desc' })
 				])
+				const dashboard = overview || {}
 
-				this.dianyingxinxiCount = Number(filmCount || 0)
-				this.totalUsers = Number((userPage && userPage.total) || 0)
-				this.totalCollections = Number((storeupPage && storeupPage.total) || 0)
+				this.dianyingxinxiCount = this.pickNumber(dashboard, ['movieTotal'])
+				this.totalUsers = this.pickNumber(dashboard, ['totalUsers', 'userCount'], Number((userPage && userPage.total) || 0))
+				this.totalCollections = this.pickNumber(dashboard, ['totalFavoriteCount'])
 
-				this.scoreTrend = this.normalizeMetricList(scoreTrend, 7)
-				this.collectionTrend = this.normalizeMetricList(collectionTrend, 7)
-				const clickList = this.normalizeMetricList(clickTrend, 5)
-				const likesList = this.normalizeMetricList(likesTrend, 5)
-				const dislikesList = this.normalizeMetricList(dislikesTrend, 5)
+				this.scoreTrend = this.normalizeMetricList(this.pickList(dashboard, ['releaseYearDistribution', 'typeDistribution']), 7, ['value'])
+				this.collectionTrend = this.normalizeMetricList(this.pickList(dashboard, ['topFavoritedMovies']), 7, ['favoriteCount'])
+				const clickList = this.normalizeMetricList(this.pickList(dashboard, ['topClickedMovies']), 5, ['clickCount'])
+				const likesList = this.normalizeMetricList(this.pickList(dashboard, ['topLikedMovies']), 5, ['likeCount'])
+				const favoritesList = this.normalizeMetricList(this.pickList(dashboard, ['topFavoritedMovies']), 5, ['favoriteCount'])
 
-				this.totalClicks = this.sumMetricValue(clickList)
-				this.totalLikes = this.sumMetricValue(likesList)
-				this.totalDislikes = this.sumMetricValue(dislikesList)
+				this.totalClicks = this.pickNumber(dashboard, ['totalClickCount'], this.sumMetricValue(clickList))
+				this.totalLikes = this.pickNumber(dashboard, ['totalLikeCount'], this.sumMetricValue(likesList))
+				this.totalDislikes = this.pickNumber(dashboard, ['totalDislikeCount'])
 				this.clickRanking = this.buildRanking(clickList)
-				this.popularityStacks = this.buildStacks(clickList, likesList, dislikesList)
+				this.popularityStacks = this.buildStacks(clickList, likesList, favoritesList)
 				this.engagementSlices = [
 					{ name: '收藏量', value: this.totalCollections },
 					{ name: '点赞量', value: this.totalLikes },
@@ -280,10 +275,29 @@ export default {
 				throw new Error((data && data.msg) || '请求失败')
 			})
 		},
-		normalizeMetricList(list, limit) {
+		pickNumber(source, keys, fallback = 0) {
+			for (let index = 0; index < keys.length; index++) {
+				const value = source && source[keys[index]]
+				if (value !== undefined && value !== null && value !== '') {
+					const numberValue = Number(value)
+					return Number.isFinite(numberValue) ? numberValue : fallback
+				}
+			}
+			return fallback
+		},
+		pickList(source, keys) {
+			for (let index = 0; index < keys.length; index++) {
+				const value = source && source[keys[index]]
+				if (Array.isArray(value)) {
+					return value
+				}
+			}
+			return []
+		},
+		normalizeMetricList(list, limit, valueKeys = ['total', 'value']) {
 			return (list || []).slice(0, limit).map(item => ({
-				name: item.dianyingmingcheng,
-				value: Number(item.total || 0)
+				name: item.title || item.movieTitle || item.label || item.name || item.dianyingmingcheng || '未命名电影',
+				value: this.pickNumber(item, valueKeys)
 			}))
 		},
 		sumMetricValue(list) {
@@ -297,7 +311,7 @@ export default {
 				percent: Math.max(18, (item.value / max) * 100)
 			}))
 		},
-		buildStacks(clicks, likes, dislikes) {
+		buildStacks(clicks, likes, favorites) {
 			const lookup = {}
 			clicks.slice(0, 3).forEach(item => {
 				lookup[item.name] = {
@@ -305,7 +319,7 @@ export default {
 					shortName: item.name.length > 6 ? `${item.name.slice(0, 6)}...` : item.name,
 					clicks: item.value,
 					likes: 0,
-					dislikes: 0
+					favorites: 0
 				}
 			})
 			likes.forEach(item => {
@@ -313,19 +327,19 @@ export default {
 					lookup[item.name].likes = item.value
 				}
 			})
-			dislikes.forEach(item => {
+			favorites.forEach(item => {
 				if (lookup[item.name]) {
-					lookup[item.name].dislikes = item.value
+					lookup[item.name].favorites = item.value
 				}
 			})
 			return Object.values(lookup).map(item => {
-				const total = Math.max(item.clicks + item.likes + item.dislikes, 1)
+				const total = Math.max(item.clicks + item.likes + item.favorites, 1)
 				return {
 					name: item.name,
 					shortName: item.shortName,
 					clickHeight: (item.clicks / total) * 100,
 					likeHeight: (item.likes / total) * 100,
-					dislikeHeight: (item.dislikes / total) * 100
+					favoriteHeight: (item.favorites / total) * 100
 				}
 			})
 		},
@@ -805,7 +819,7 @@ export default {
 		background: rgba(255, 198, 57, 0.56);
 	}
 
-	.stack-part.dislikes {
+	.stack-part.favorites {
 		background: rgba(218, 226, 253, 0.34);
 	}
 

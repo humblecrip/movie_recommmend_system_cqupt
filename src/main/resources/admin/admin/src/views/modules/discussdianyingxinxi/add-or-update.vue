@@ -62,7 +62,7 @@
 								<div class="panel-kicker">Reply Editor</div>
 								<h3>编辑评分与回复</h3>
 							</div>
-							<p>评分和回复仍然写回原 `discussdianyingxinxi` 表，不新增额外业务字段。</p>
+							<p>评分和回复通过兼容桥接写入 `app_movie_comment` / `app_movie_comment_vote`，不再直连旧表。</p>
 						</div>
 
 						<div class="field-grid single-column">

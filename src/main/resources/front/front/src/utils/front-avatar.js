@@ -49,7 +49,18 @@ function resolveFrontAvatar(options) {
     return avatar
   }
 
-  return `${baseUrl || ''}${avatar}`
+  if (/^data:/i.test(avatar)) {
+    return avatar
+  }
+
+  const normalizedBaseUrl = String(baseUrl || '').replace(/\/+$/, '')
+  const normalizedAvatar = avatar.replace(/^\/+/, '')
+
+  if (!normalizedBaseUrl) {
+    return avatar.startsWith('/') ? avatar : `/${normalizedAvatar}`
+  }
+
+  return `${normalizedBaseUrl}/${normalizedAvatar}`
 }
 
 function getFrontIdentityState(options) {

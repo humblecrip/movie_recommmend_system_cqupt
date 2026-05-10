@@ -2,7 +2,7 @@
   <div class="cinema-register">
     <div class="register-atmosphere">
       <div class="atmosphere-mask"></div>
-      <img class="atmosphere-image" :src="backgroundImage" alt="cinema background">
+      <img class="atmosphere-image" :src="backgroundImage" alt="影院氛围背景">
     </div>
 
     <main class="register-main">
@@ -15,14 +15,14 @@
         @submit.native.prevent
       >
         <header class="register-header">
-          <h1>Join the Curator's Circle</h1>
-          <p>Create your account to start curating your cinematic journey.</p>
+          <h1>加入观影俱乐部</h1>
+          <p>创建你的账号，开启专属的电影探索与收藏之旅。</p>
         </header>
 
         <section class="avatar-section" v-if="tableName == 'yonghu'">
           <div class="avatar-shell">
             <div class="avatar-ring" :class="{ 'has-avatar': avatarPreviewUrl }">
-              <img v-if="avatarPreviewUrl" class="avatar-preview" :src="avatarPreviewUrl" alt="uploaded avatar">
+              <img v-if="avatarPreviewUrl" class="avatar-preview" :src="avatarPreviewUrl" alt="已上传头像">
               <file-upload
                 class="avatar-upload-layer"
                 tip="点击上传头像"
@@ -38,32 +38,32 @@
               <i class="el-icon-camera"></i>
             </div>
           </div>
-          <span class="avatar-label">Profile Avatar</span>
+          <span class="avatar-label">头像</span>
         </section>
 
         <section class="register-grid">
           <el-form-item class="field-row field-span-2" v-if="tableName == 'yonghu'" prop="yonghuzhanghao">
-            <label class="field-label" :class="{ required: changeRules('yonghuzhanghao') }">Username</label>
+            <label class="field-label" :class="{ required: changeRules('yonghuzhanghao') }">用户账号</label>
             <el-input v-model="registerForm.yonghuzhanghao" placeholder="请输入用户账号" />
           </el-form-item>
 
           <el-form-item class="field-row" v-if="tableName == 'yonghu'" prop="mima">
-            <label class="field-label" :class="{ required: changeRules('mima') }">Password</label>
+            <label class="field-label" :class="{ required: changeRules('mima') }">密码</label>
             <el-input v-model="registerForm.mima" type="password" placeholder="请输入密码" />
           </el-form-item>
 
           <el-form-item class="field-row" v-if="tableName == 'yonghu'" prop="mima2">
-            <label class="field-label" :class="{ required: changeRules('mima') }">Confirm Password</label>
+            <label class="field-label" :class="{ required: changeRules('mima') }">确认密码</label>
             <el-input v-model="registerForm.mima2" type="password" placeholder="请再次输入密码" />
           </el-form-item>
 
           <el-form-item class="field-row field-span-2" v-if="tableName == 'yonghu'" prop="yonghuxingming">
-            <label class="field-label" :class="{ required: changeRules('yonghuxingming') }">Full Name</label>
+            <label class="field-label" :class="{ required: changeRules('yonghuxingming') }">姓名</label>
             <el-input v-model="registerForm.yonghuxingming" placeholder="请输入用户姓名" />
           </el-form-item>
 
           <el-form-item class="field-row" v-if="tableName == 'yonghu'" prop="xingbie">
-            <label class="field-label" :class="{ required: changeRules('xingbie') }">Gender Identity</label>
+            <label class="field-label" :class="{ required: changeRules('xingbie') }">性别</label>
             <el-select v-model="registerForm.xingbie" placeholder="请选择性别">
               <el-option
                 v-for="(item, index) in yonghuxingbieOptions"
@@ -75,23 +75,22 @@
           </el-form-item>
 
           <el-form-item class="field-row" v-if="tableName == 'yonghu'" prop="lianxidianhua">
-            <label class="field-label" :class="{ required: changeRules('lianxidianhua') }">Phone Number</label>
+            <label class="field-label" :class="{ required: changeRules('lianxidianhua') }">联系电话</label>
             <el-input v-model="registerForm.lianxidianhua" placeholder="请输入联系电话" />
           </el-form-item>
 
           <el-form-item class="field-row field-span-2" v-if="tableName == 'yonghu'" prop="shenfenzheng">
-            <label class="field-label" :class="{ required: changeRules('shenfenzheng') }">ID Card / Passport Number</label>
+            <label class="field-label" :class="{ required: changeRules('shenfenzheng') }">身份证号</label>
             <el-input v-model="registerForm.shenfenzheng" placeholder="请输入身份证" />
           </el-form-item>
         </section>
 
         <div class="register-actions">
-          <button class="register-submit" type="button" @click="submitForm('registerForm')">Register</button>
+          <button class="register-submit" type="button" @click="submitForm('registerForm')">立即注册</button>
         </div>
 
         <div class="signin-section">
           <p>
-            Already have an account?
             <router-link class="signin-link" to="/login">已有账号，直接登录</router-link>
           </p>
         </div>
@@ -100,13 +99,13 @@
 
     <footer class="register-footer">
       <div class="footer-links">
-        <a href="javascript:void(0);">Terms of Service</a>
-        <a href="javascript:void(0);">Privacy Policy</a>
-        <a href="javascript:void(0);">Help Center</a>
-        <a href="javascript:void(0);">Accessibility</a>
+        <a href="javascript:void(0);">服务条款</a>
+        <a href="javascript:void(0);">隐私政策</a>
+        <a href="javascript:void(0);">帮助中心</a>
+        <a href="javascript:void(0);">无障碍说明</a>
       </div>
-      <router-link class="footer-brand footer-home-link" to="/index/home">AETHER CINEMA</router-link>
-      <p class="footer-copy">© 2024 AETHER CINEMA. THE DIRECTOR'S CUT.</p>
+      <router-link class="footer-brand footer-home-link" to="/index/home">以太影院</router-link>
+      <p class="footer-copy">© 2024 以太影院 · 导演剪辑版</p>
     </footer>
   </div>
 </template>
@@ -199,6 +198,9 @@ export default {
     },
   },
   methods: {
+    encryptPasswordValue(value) {
+      return value ? this.encryptAes(value) : value
+    },
     getRegisterDraftStore() {
       return useRegisterDraftStore()
     },
@@ -238,7 +240,12 @@ export default {
             this.$message.error(`两次密码输入不一致`)
             return
           }
-          this.$http.post(url, this.registerForm).then(res => {
+          const payload = {
+            ...this.registerForm,
+            mima: this.encryptPasswordValue(this.registerForm.mima),
+            mima2: this.encryptPasswordValue(this.registerForm.mima2),
+          }
+          this.$http.post(url, payload).then(res => {
             if (res.data.code === 0) {
               this.clearRegisterDraft()
               this.$message({

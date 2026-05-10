@@ -6,7 +6,7 @@
           :key="currentHeroSlide.placeholderKey"
           class="hero-backdrop"
           :src="heroBackdropSrc"
-          alt="hero background"
+          alt="首页主视觉背景"
           @error="heroImageError = true"
         >
       </transition>
@@ -14,15 +14,18 @@
       <div class="hero-content">
         <transition name="hero-copy" mode="out-in">
           <div :key="currentHeroSlide.placeholderKey" class="hero-copy-wrap">
-            <h1 class="hero-title">{{ currentHeroSlide.dianyingmingcheng }}</h1>
-            <p class="hero-subtitle">{{ currentHeroSlide.tagline }}</p>
+            <h1 class="hero-title">{{ currentHeroTitle }}</h1>
+            <p class="hero-subtitle">{{ currentHeroSubtitle }}</p>
           </div>
         </transition>
         <div class="hero-actions">
-          <button class="hero-button hero-button-primary glow-pulse" type="button" @click="watchFeatured">Watch Now</button>
-          <button class="hero-button hero-button-secondary" type="button" @click="showFeaturedInfo">More Info</button>
+          <template v-if="hasHeroData">
+            <button class="hero-button hero-button-primary glow-pulse" type="button" @click="watchFeatured">立即观看</button>
+            <button class="hero-button hero-button-secondary" type="button" @click="showFeaturedInfo">查看详情</button>
+          </template>
+          <div v-else class="hero-empty-note">{{ homeStatusMessage }}</div>
         </div>
-        <div class="hero-dots">
+        <div v-if="hasHeroData && heroSlides.length > 1" class="hero-dots">
           <button
             v-for="(slide, index) in heroSlides"
             :key="slide.placeholderKey"
@@ -38,8 +41,8 @@
     <section class="content-grid fade-up delay-3">
       <div class="left-column">
         <section class="shelf">
-          <div class="section-title">Recommended for You</div>
-          <div class="poster-row poster-row-top">
+          <div class="section-title">为你推荐</div>
+          <div v-if="recommendedMovies.length" class="poster-row poster-row-top">
             <button
               v-for="(item, index) in recommendedMovies"
               :key="getItemKey(item, 'recommended')"
@@ -57,11 +60,12 @@
               </div>
             </button>
           </div>
+          <div v-else class="section-empty">当前暂无高分电影</div>
         </section>
 
         <section class="shelf shelf-trending">
-          <div class="section-title">Trending Now</div>
-          <div class="poster-row poster-row-bottom">
+          <div class="section-title">热议影片</div>
+          <div v-if="trendingMovies.length" class="poster-row poster-row-bottom">
             <button
               v-for="(item, index) in trendingMovies"
               :key="getItemKey(item, 'trending')"
@@ -79,158 +83,99 @@
               </div>
             </button>
           </div>
+          <div v-else class="section-empty">当前暂无热议电影</div>
         </section>
       </div>
 
       <section class="week-column">
-        <div class="section-title section-title-caps">MOVIE OF THE WEEK</div>
-        <button class="week-card" type="button" @click="toDetail(weekMovie)">
+        <div class="section-title section-title-caps">最新上映</div>
+        <button v-if="weekMovie" class="week-card" type="button" @click="toDetail(weekMovie)">
           <div class="week-poster-box">
             <img :src="getMovieCover(weekMovie)" :alt="weekMovie.dianyingmingcheng" @error="markImageError(getItemKey(weekMovie, 'week'))">
           </div>
           <div class="week-content">
-            <div class="week-kicker">MOVIE OF THE WEEK</div>
+            <div class="week-kicker">最新上映</div>
             <div class="week-name">{{ weekMovie.dianyingmingcheng }}</div>
-            <div class="week-meta">Release Date: {{ weekMovie.releaseDate }}</div>
-            <div class="week-meta">Rating: {{ getScore(weekMovie) }}/5</div>
-            <div class="week-meta">Genre: {{ weekMovie.genre }}</div>
-            <div class="week-meta">Area: {{ weekMovie.area }}</div>
-            <div class="week-meta">Runtime: {{ weekMovie.runtime }}</div>
+            <div class="week-meta">上映时间：{{ weekMovie.releaseDate }}</div>
+            <div class="week-meta">评分：{{ getScore(weekMovie) }}/5</div>
+            <div class="week-meta">类型：{{ weekMovie.genre }}</div>
+            <div class="week-meta">地区：{{ weekMovie.area }}</div>
+            <div class="week-meta">时长：{{ weekMovie.runtime }}</div>
           </div>
         </button>
+        <div v-else class="section-empty">当前暂无最新上映影片</div>
       </section>
 
       <aside class="editors-column">
-        <div class="section-title section-title-caps">EDITORS' CHOICE</div>
-        <button
-          v-for="item in editorsChoice"
-          :key="getItemKey(item, 'editor')"
-          class="editor-card"
-          type="button"
-          @click="toDetail(item)"
-        >
-          <div class="editor-cover">
-            <img :src="getMovieCover(item)" :alt="item.dianyingmingcheng" @error="markImageError(getItemKey(item, 'editor'))">
-          </div>
-          <div class="editor-name">{{ item.dianyingmingcheng }}</div>
-        </button>
+        <div class="section-title section-title-caps">高收藏影片</div>
+        <template v-if="editorsChoice.length">
+          <button
+            v-for="item in editorsChoice"
+            :key="getItemKey(item, 'editor')"
+            class="editor-card"
+            type="button"
+            @click="toDetail(item)"
+          >
+            <div class="editor-cover">
+              <img :src="getMovieCover(item)" :alt="item.dianyingmingcheng" @error="markImageError(getItemKey(item, 'editor'))">
+            </div>
+            <div class="editor-name">{{ item.dianyingmingcheng }}</div>
+          </button>
+        </template>
+        <div v-else class="section-empty section-empty-tight">当前暂无高收藏影片</div>
       </aside>
     </section>
   </div>
 </template>
 
 <script>
-const FALLBACK_HERO_SLIDES = [
-  {
-    placeholder: true,
-    placeholderKey: 'hero-midnight-sky',
-    dianyingmingcheng: 'THE MIDNIGHT SKY',
-    tagline: 'A dystopian thriller.',
-    backdropUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/68/Majestic_Cinema%2C_City_Square%2C_interior_view%2C_1923.jpg',
-  },
-  {
-    placeholder: true,
-    placeholderKey: 'hero-forbidden-planet',
-    dianyingmingcheng: 'FORBIDDEN PLANET',
-    tagline: 'A radiant sci-fi classic.',
-    backdropUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Forbiddenplanetposter.jpg',
-  },
-  {
-    placeholder: true,
-    placeholderKey: 'hero-sunset-boulevard',
-    dianyingmingcheng: 'SUNSET BOULEVARD',
-    tagline: 'A dark Hollywood noir.',
-    backdropUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/14/Sunset_Boulevard_%281950_poster%29.jpg',
-  },
-]
+const {
+  extractAppMovieList,
+  normalizeAppMovieList,
+} = require('../dianyingxinxi/detail-helpers')
+const {
+  EMPTY_HERO_SLIDE,
+  normalizeConfigHeroSlides,
+  normalizeHomeMovieRecord,
+  hydrateConfigHeroSlide,
+} = require('./home-landing-helpers')
 
-const FALLBACK_RECOMMENDED_MOVIES = [
-  { placeholder: true, placeholderKey: 'poster-dracula', dianyingmingcheng: 'Dracula', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Dracula_%281931_film_poster_-_Style_A%29.jpg' },
-  { placeholder: true, placeholderKey: 'poster-wonderful-life', dianyingmingcheng: 'It\'s a Wonderful Life', totalscore: 4.9, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/25/It%27s_a_Wonderful_Life_%281946_poster%29.jpeg' },
-  { placeholder: true, placeholderKey: 'poster-creature', dianyingmingcheng: 'Creature from the Black Lagoon', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/55/Creature_from_the_Black_Lagoon_poster.jpg' },
-  { placeholder: true, placeholderKey: 'poster-forbidden-planet', dianyingmingcheng: 'Forbidden Planet', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Forbiddenplanetposter.jpg' },
-  { placeholder: true, placeholderKey: 'poster-rebel', dianyingmingcheng: 'Rebel Without a Cause', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Rebel_Without_a_Cause_%281955_poster%29.jpg' },
-  { placeholder: true, placeholderKey: 'poster-day-earth', dianyingmingcheng: 'The Day the Earth Stood Still', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/63/The_Day_the_Earth_Stood_Still_%281951_poster%29.jpeg' },
-]
-
-const FALLBACK_TRENDING_MOVIES = [
-  { placeholder: true, placeholderKey: 'poster-miracle-34', dianyingmingcheng: 'Miracle on 34th Street', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Miracle_on_34th_Street_%281947_film_poster%29.jpg' },
-  { placeholder: true, placeholderKey: 'poster-jaws', dianyingmingcheng: 'Jaws', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Jaws_movie_poster.png' },
-  { placeholder: true, placeholderKey: 'poster-wizard-oz', dianyingmingcheng: 'Wizard of Oz', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/69/Wizard_of_oz_movie_poster.jpg' },
-  { placeholder: true, placeholderKey: 'poster-plan9', dianyingmingcheng: 'Plan 9 from Outer Space', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Plan_9_Alternative_poster.jpg' },
-  { placeholder: true, placeholderKey: 'poster-attack-50', dianyingmingcheng: 'Attack of the 50 Foot Woman', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Attackofthe50ftwoman.jpg' },
-  { placeholder: true, placeholderKey: 'poster-sunset', dianyingmingcheng: 'Sunset Boulevard', totalscore: 4.8, coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/14/Sunset_Boulevard_%281950_poster%29.jpg' },
-]
-
-const FALLBACK_WEEK_MOVIE = {
-  placeholder: true,
-  placeholderKey: 'week-forbidden-planet',
-  dianyingmingcheng: 'FORBIDDEN PLANET',
-  totalscore: 4.8,
-  genre: 'Sci-Fi',
-  area: 'United States',
-  runtime: '98 min',
-  releaseDate: '1956-03-15',
-  coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/50/Forbiddenplanetposter.jpg',
+const HOME_SECTION_REQUESTS = {
+  hero: { sort: 'clickCount', order: 'desc', limit: 3 },
+  recommended: { sort: 'totalScore', order: 'desc', limit: 6 },
+  trending: { sort: 'commentCount', order: 'desc', limit: 6 },
+  week: { sort: 'releaseDate', order: 'desc', limit: 1 },
+  editorsChoice: { sort: 'favoriteCount', order: 'desc', limit: 3 },
 }
 
-const FALLBACK_EDITORS_CHOICE = [
-  { placeholder: true, placeholderKey: 'editor-dracula', dianyingmingcheng: 'Dracula', coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Dracula_%281931_film_poster_-_Style_A%29.jpg' },
-  { placeholder: true, placeholderKey: 'editor-wonderful-life', dianyingmingcheng: 'It\'s a Wonderful Life', coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/25/It%27s_a_Wonderful_Life_%281946_poster%29.jpeg' },
-  { placeholder: true, placeholderKey: 'editor-creature', dianyingmingcheng: 'Creature from the Black Lagoon', coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/55/Creature_from_the_Black_Lagoon_poster.jpg' },
-]
-
-function cloneItems(list) {
-  return (list || []).map(item => Object.assign({}, item))
-}
-
-function normalizeBackdropUrl(item, baseUrl) {
-  if (!item || !item.haibao) {
-    return ''
-  }
-  const poster = String(item.haibao).split(',')[0]
-  if (!poster) {
-    return ''
-  }
-  if (/^https?:\/\//.test(poster)) {
-    return poster
-  }
-  return `${baseUrl}${poster}`
-}
-
-function normalizeTagline(text) {
-  const content = String(text || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
-  if (!content) {
-    return 'A featured movie from our curated collection.'
-  }
-  return content.length > 72 ? `${content.slice(0, 72)}...` : content
-}
-
-function normalizeMovieRecord(item, index, baseUrl) {
-  const movie = Object.assign({}, item || {})
-  const identifier = movie.id || `fallback-${index}`
-  return Object.assign(movie, {
-    placeholder: false,
-    placeholderKey: `movie-${identifier}`,
-    coverUrl: normalizeBackdropUrl(movie, baseUrl),
-    backdropUrl: normalizeBackdropUrl(movie, baseUrl),
-    tagline: normalizeTagline(movie.juqingjianjie || movie.dianyingxiangqing),
-    genre: movie.dianyingleixing || '未分类',
-    area: movie.quyu || '未知区域',
-    runtime: movie.runtime || 'TBA',
-    releaseDate: movie.shangyingshijian || '待定',
-  })
-}
-
-function takeLoopItems(source, count, startIndex) {
+function takeTopItems(source, count) {
   if (!Array.isArray(source) || !source.length || count <= 0) {
     return []
   }
-  const list = []
-  for (let index = 0; index < count; index++) {
-    list.push(source[(startIndex + index) % source.length])
+  return source.slice(0, count)
+}
+
+function extractPageList(payload) {
+  if (Array.isArray(payload)) {
+    return payload
   }
-  return list
+  if (payload && Array.isArray(payload.list)) {
+    return payload.list
+  }
+  return []
+}
+
+function parseDetailRouteMovieId(target) {
+  const normalizedTarget = String(target || '').trim()
+  if (!normalizedTarget) {
+    return null
+  }
+  const match = normalizedTarget.match(/(?:^|[?#&])id=(\d+)/i)
+  if (!match) {
+    return null
+  }
+  const movieId = Number(match[1])
+  return Number.isFinite(movieId) ? movieId : null
 }
 
 export default {
@@ -241,29 +186,43 @@ export default {
       heroImageError: false,
       heroIndex: 0,
       heroTimer: null,
+      homeStatusMessage: '当前暂无可展示的轮播内容。',
       fallbackHero: require('@/assets/login-bg.jpg'),
       fallbackPoster: require('@/assets/chapter.jpg'),
-      heroSlides: cloneItems(FALLBACK_HERO_SLIDES),
-      recommendedMovies: cloneItems(FALLBACK_RECOMMENDED_MOVIES),
-      trendingMovies: cloneItems(FALLBACK_TRENDING_MOVIES),
-      weekMovie: Object.assign({}, FALLBACK_WEEK_MOVIE),
-      editorsChoice: cloneItems(FALLBACK_EDITORS_CHOICE),
+      heroSlides: [],
+      movieHeroSlides: [],
+      recommendedMovies: [],
+      trendingMovies: [],
+      weekMovie: null,
+      editorsChoice: [],
     }
   },
   computed: {
+    hasHeroData() {
+      return this.heroSlides.length > 0
+    },
     currentHeroSlide() {
-      return this.heroSlides[this.heroIndex] || this.heroSlides[0]
+      return this.heroSlides[this.heroIndex] || EMPTY_HERO_SLIDE
+    },
+    currentHeroTitle() {
+      return this.currentHeroSlide.heroTitle || this.currentHeroSlide.dianyingmingcheng || EMPTY_HERO_SLIDE.heroTitle
+    },
+    currentHeroSubtitle() {
+      return this.currentHeroSlide.heroSubtitle || this.currentHeroSlide.tagline || EMPTY_HERO_SLIDE.heroSubtitle
     },
     heroBackdropSrc() {
       if (this.heroImageError) {
-        return this.fallbackHero
+        return this.currentHeroSlide.fallbackBackdropUrl || this.currentHeroSlide.fallbackCoverUrl || this.fallbackHero
       }
-      return this.currentHeroSlide.backdropUrl || this.fallbackHero
+      return this.currentHeroSlide.backdropUrl
+        || this.currentHeroSlide.fallbackBackdropUrl
+        || this.currentHeroSlide.fallbackCoverUrl
+        || this.fallbackHero
     },
   },
   created() {
     this.baseUrl = this.$config.baseUrl
-    this.fetchHomeMovies()
+    this.fetchHomeContent()
   },
   mounted() {
     this.startHeroAutoplay()
@@ -272,44 +231,188 @@ export default {
     this.stopHeroAutoplay()
   },
   methods: {
-    async fetchHomeMovies() {
-      try {
-        const res = await this.$http.get('dianyingxinxi/list', {
-          params: {
-            page: 1,
-            limit: 18,
-            sort: 'clicknum',
-            order: 'desc',
-          },
+    async fetchHomeContent() {
+      let configHeroSlides = []
+      let configErrorMessage = ''
+      let moviePayload = {
+        sectionLists: {},
+        errorMessage: '',
+      }
+      const [configResult, movieResult] = await Promise.allSettled([
+        this.fetchConfigHeroSlides(),
+        this.fetchMovieCollections(),
+      ])
+      if (configResult.status === 'fulfilled') {
+        configHeroSlides = configResult.value
+      } else {
+        configErrorMessage = (configResult.reason && configResult.reason.message) || '首页轮播加载失败，请稍后重试。'
+      }
+      if (movieResult.status === 'fulfilled') {
+        moviePayload = movieResult.value
+      } else {
+        moviePayload.errorMessage = (movieResult.reason && movieResult.reason.message) || '电影数据加载失败，请稍后重试。'
+      }
+      const { sectionLists, errorMessage } = moviePayload
+      const hasMovieCollections = Object.keys(HOME_SECTION_REQUESTS).some(sectionName => {
+        return ((sectionLists && sectionLists[sectionName]) || []).length > 0
+      })
+      if (hasMovieCollections) {
+        this.applyHomeMovieCollections(sectionLists)
+      } else {
+        this.resetMovieCollections()
+      }
+      this.applyHeroSlides(configHeroSlides, configErrorMessage || errorMessage || '当前暂无可展示的内容。')
+      if (!this.heroSlides.length && !this.recommendedMovies.length && !this.trendingMovies.length && !this.weekMovie && !this.editorsChoice.length) {
+        this.homeStatusMessage = configErrorMessage || errorMessage || '当前暂无可展示的内容。'
+      }
+    },
+    async fetchConfigHeroSlides() {
+      const res = await this.$http.get('config/list', {
+        params: {
+          page: 1,
+          limit: 8,
+          sort: 'id',
+          order: 'desc',
+          name: '%picture%',
+        },
+      })
+      if (res && res.data && res.data.code !== undefined && res.data.code !== 0) {
+        throw new Error(res.data.msg || '首页轮播加载失败')
+      }
+      const responseData = res && res.data && res.data.data !== undefined ? res.data.data : ((res || {}).data || {})
+      const slides = normalizeConfigHeroSlides(extractPageList(responseData), this.baseUrl)
+      return this.hydrateConfigHeroSlides(slides)
+    },
+    async hydrateConfigHeroSlides(slides) {
+      const sourceSlides = Array.isArray(slides) ? slides : []
+      const hydratedSlides = await Promise.all(sourceSlides.map(async slide => {
+        const movieId = parseDetailRouteMovieId(slide && (slide.actionUrl || slide.url))
+        if (!movieId) {
+          return slide
+        }
+        try {
+          const res = await this.$http.get(`appmovie/front/detail/${movieId}`)
+          if (res && res.data && res.data.code !== undefined && res.data.code !== 0) {
+            return slide
+          }
+          const detailPayload = res && res.data && res.data.data !== undefined ? res.data.data : ((res || {}).data || {})
+          return hydrateConfigHeroSlide(Object.assign({}, slide, {
+            detailMovieId: movieId,
+          }), detailPayload, this.baseUrl)
+        } catch (error) {
+          return slide
+        }
+      }))
+      return hydratedSlides.map((slide, index) => {
+        if (!slide) {
+          return slide
+        }
+        if (slide.heroTitle) {
+          return slide
+        }
+        return Object.assign({}, slide, {
+          heroTitle: slide.rawName && !/^picture[\W_\d-]*$/i.test(slide.rawName)
+            ? slide.rawName.replace(/[_-]+/g, ' ').trim()
+            : `精选影片 ${index + 1}`,
         })
-        const list = (((res || {}).data || {}).data || {}).list || []
-        if (res && res.data && res.data.code === 0 && list.length) {
-          this.applyHomeMovieCollections(list)
+      })
+    },
+    async fetchMovieCollections() {
+      const sectionNames = Object.keys(HOME_SECTION_REQUESTS)
+      const results = await Promise.allSettled(
+        sectionNames.map(sectionName => {
+          if (sectionName === 'recommended') {
+            return this.fetchRecommendedSection(HOME_SECTION_REQUESTS[sectionName])
+          }
+          return this.fetchMovieSection(HOME_SECTION_REQUESTS[sectionName])
+        })
+      )
+      const sectionLists = {}
+      let errorMessage = ''
+      results.forEach((result, index) => {
+        const sectionName = sectionNames[index]
+        if (result.status === 'fulfilled') {
+          sectionLists[sectionName] = result.value
           return
         }
-      } catch (error) {}
-      this.resetHomeMovieCollections()
+        sectionLists[sectionName] = []
+        if (!errorMessage) {
+          errorMessage = (result.reason && result.reason.message) || '电影数据加载失败，请稍后重试。'
+        }
+      })
+      return {
+        sectionLists,
+        errorMessage,
+      }
     },
-    resetHomeMovieCollections() {
-      this.heroSlides = cloneItems(FALLBACK_HERO_SLIDES)
-      this.recommendedMovies = cloneItems(FALLBACK_RECOMMENDED_MOVIES)
-      this.trendingMovies = cloneItems(FALLBACK_TRENDING_MOVIES)
-      this.weekMovie = Object.assign({}, FALLBACK_WEEK_MOVIE)
-      this.editorsChoice = cloneItems(FALLBACK_EDITORS_CHOICE)
+    async fetchRecommendedSection(sectionConfig) {
+      const res = await this.$http.get('appmovie/front/recommended', {
+        params: {
+          page: 1,
+          limit: sectionConfig.limit,
+          sort: sectionConfig.sort,
+          order: sectionConfig.order,
+        },
+      })
+      if (res && res.data && res.data.code !== undefined && res.data.code !== 0) {
+        throw new Error(res.data.msg || '个性化推荐加载失败')
+      }
+      const responseData = res && res.data && res.data.data !== undefined ? res.data.data : ((res || {}).data || {})
+      return normalizeAppMovieList(extractAppMovieList(responseData))
     },
-    applyHomeMovieCollections(list) {
-      const normalizedList = (list || []).map((item, index) => normalizeMovieRecord(item, index, this.baseUrl))
-      this.heroSlides = takeLoopItems(normalizedList, 3, 0)
-      this.recommendedMovies = takeLoopItems(normalizedList, 6, 0)
-      this.trendingMovies = takeLoopItems(normalizedList, 6, Math.min(6, Math.max(normalizedList.length - 1, 0)))
-      this.weekMovie = takeLoopItems(normalizedList, 1, 0)[0] || Object.assign({}, FALLBACK_WEEK_MOVIE)
-      this.editorsChoice = takeLoopItems(normalizedList, 3, Math.min(3, Math.max(normalizedList.length - 1, 0)))
+    async fetchMovieSection(sectionConfig) {
+      const res = await this.$http.get('appmovie/front/list', {
+        params: {
+          page: 1,
+          limit: sectionConfig.limit,
+          sort: sectionConfig.sort,
+          order: sectionConfig.order,
+        },
+      })
+      if (res && res.data && res.data.code !== undefined && res.data.code !== 0) {
+        throw new Error(res.data.msg || '电影列表加载失败')
+      }
+      const responseData = res && res.data && res.data.data !== undefined ? res.data.data : ((res || {}).data || {})
+      return normalizeAppMovieList(extractAppMovieList(responseData))
+    },
+    resetMovieCollections() {
+      this.movieHeroSlides = []
+      this.recommendedMovies = []
+      this.trendingMovies = []
+      this.weekMovie = null
+      this.editorsChoice = []
+    },
+    applyHomeMovieCollections(sectionLists) {
+      const normalizedSections = {}
+      Object.keys(HOME_SECTION_REQUESTS).forEach(sectionName => {
+        const sectionConfig = HOME_SECTION_REQUESTS[sectionName]
+        const rawList = Array.isArray(sectionLists && sectionLists[sectionName]) ? sectionLists[sectionName] : []
+        normalizedSections[sectionName] = takeTopItems(
+          rawList.map((item, index) => normalizeHomeMovieRecord(item, index, this.baseUrl)),
+          sectionConfig.limit
+        )
+      })
+      this.movieHeroSlides = normalizedSections.hero || []
+      this.recommendedMovies = normalizedSections.recommended || []
+      this.trendingMovies = normalizedSections.trending || []
+      this.weekMovie = (normalizedSections.week || [])[0] || null
+      this.editorsChoice = normalizedSections.editorsChoice || []
+    },
+    applyHeroSlides(configHeroSlides, message) {
+      const nextHeroSlides = configHeroSlides.length ? configHeroSlides : this.movieHeroSlides
+      this.heroSlides = nextHeroSlides
+      this.homeStatusMessage = nextHeroSlides.length ? '' : (message || '当前暂无可展示的轮播内容。')
       this.heroIndex = 0
       this.heroImageError = false
+      if (nextHeroSlides.length) {
+        this.startHeroAutoplay()
+        return
+      }
+      this.stopHeroAutoplay()
     },
     getItemKey(item, prefix) {
       if (!item) {
-        return prefix + '-fallback'
+        return prefix + '-empty'
       }
       return item.id ? prefix + '-' + item.id : prefix + '-' + item.placeholderKey
     },
@@ -335,13 +438,17 @@ export default {
       }
     },
     getScore(item) {
-      if (item && item.totalscore) {
-        return Number(item.totalscore).toFixed(1)
+      const score = Number(item && item.totalscore)
+      if (Number.isFinite(score)) {
+        return score.toFixed(1)
       }
-      return '4.8'
+      return '--'
     },
     startHeroAutoplay() {
       this.stopHeroAutoplay()
+      if (this.heroSlides.length <= 1) {
+        return
+      }
       this.heroTimer = setInterval(() => {
         this.heroIndex = (this.heroIndex + 1) % this.heroSlides.length
         this.heroImageError = false
@@ -354,18 +461,58 @@ export default {
       }
     },
     setHeroSlide(index) {
+      if (!this.heroSlides.length) {
+        return
+      }
       this.heroIndex = index
       this.heroImageError = false
       this.startHeroAutoplay()
     },
     watchFeatured() {
-      this.toDetail(this.currentHeroSlide)
+      if (!this.hasHeroData) {
+        return
+      }
+      this.openHeroTarget(this.currentHeroSlide)
     },
     showFeaturedInfo() {
-      this.toDetail(this.currentHeroSlide)
+      if (!this.hasHeroData) {
+        return
+      }
+      this.openHeroTarget(this.currentHeroSlide)
+    },
+    resolveInternalHeroTarget(target) {
+      const normalizedTarget = String(target || '').trim()
+      if (!normalizedTarget || /^https?:\/\//i.test(normalizedTarget)) {
+        return ''
+      }
+      if (normalizedTarget.startsWith('#')) {
+        return normalizedTarget.replace(/^#+/, '/')
+      }
+      if (normalizedTarget.startsWith('/')) {
+        return normalizedTarget
+      }
+      if (/^(index|front)(\/|$)/i.test(normalizedTarget)) {
+        return `/${normalizedTarget}`
+      }
+      return ''
+    },
+    openHeroTarget(item) {
+      const actionUrl = String((item && item.actionUrl) || '').trim()
+      if (actionUrl) {
+        if (/^https?:\/\//i.test(actionUrl)) {
+          window.open(actionUrl, '_blank', 'noopener')
+          return
+        }
+        const routeTarget = this.resolveInternalHeroTarget(actionUrl)
+        if (routeTarget) {
+          this.$router.push(routeTarget)
+          return
+        }
+      }
+      this.toDetail(item)
     },
     toDetail(item) {
-      if (item && item.id && !item.placeholder) {
+      if (item && item.sourceType === 'movie' && item.id && !item.placeholder) {
         this.$router.push({ path: '/index/dianyingxinxiDetail', query: { id: item.id } })
         return
       }
@@ -486,6 +633,13 @@ export default {
 
 .hero-subtitle { margin: 10px 0 0; color: rgba(255, 255, 255, 0.86); font-size: 22px; font-weight: 300; }
 .hero-actions { display: flex; gap: 16px; margin-top: 20px; }
+.hero-empty-note {
+  max-width: 520px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 16px;
+  line-height: 1.7;
+  text-align: center;
+}
 
 .hero-button {
   min-width: 206px;
@@ -547,6 +701,20 @@ export default {
 .shelf-trending { margin-top: 2px; }
 .section-title { margin-bottom: 12px; color: rgba(255, 255, 255, 0.96); font-size: 17px; font-weight: 500; }
 .section-title.section-title-caps { font-size: 18px; text-transform: uppercase; }
+.section-empty {
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+  border-radius: 18px;
+  padding: 22px 18px;
+  color: rgba(255, 255, 255, 0.76);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.section-empty-tight {
+  min-height: 104px;
+  display: flex;
+  align-items: center;
+}
 .poster-row { display: grid; gap: 14px; }
 .poster-row-top, .poster-row-bottom { grid-template-columns: repeat(6, minmax(88px, 1fr)); }
 

@@ -19,6 +19,8 @@ function buildYearOptions(list = []) {
 
 function filterMovieList(list = [], filters = {}) {
   const normalizeFilterValue = value => (value === null || value === undefined ? '' : String(value).trim())
+  const isAllGenre = value => value === 'All' || value === '全部'
+  const isAnyValue = value => value === 'Any' || value === '不限'
   const normalizedGenre = normalizeFilterValue(filters.genre)
   const normalizedYear = normalizeFilterValue(filters.year)
   const normalizedRating = normalizeFilterValue(filters.rating)
@@ -26,14 +28,14 @@ function filterMovieList(list = [], filters = {}) {
   return list.filter(item => {
     const matchesGenre =
       !normalizedGenre ||
-      normalizedGenre === 'All' ||
+      isAllGenre(normalizedGenre) ||
       String(item.dianyingleixing || '') === normalizedGenre
     const movieYear = extractMovieYear(item)
-    const matchesYear = !normalizedYear || normalizedYear === 'Any' || movieYear === normalizedYear
+    const matchesYear = !normalizedYear || isAnyValue(normalizedYear) || movieYear === normalizedYear
     const score = normalizeMovieScore(item.totalscore)
     const matchesRating =
       !normalizedRating ||
-      normalizedRating === 'Any' ||
+      isAnyValue(normalizedRating) ||
       (normalizedRating === '9.0+' && score >= 9) ||
       (normalizedRating === '8.0+' && score >= 8) ||
       (normalizedRating === '7.0+' && score >= 7) ||
@@ -64,9 +66,13 @@ function paginateMovieList(list = [], page = 1, pageSize = 24) {
 function resolveSortRequest(sortBy = 'Popularity') {
   const mapping = {
     Popularity: { sort: 'clicknum', order: 'desc' },
+    热门优先: { sort: 'clicknum', order: 'desc' },
     'Newest First': { sort: 'addtime', order: 'desc' },
+    最新上映: { sort: 'addtime', order: 'desc' },
     'Highest Rated': { sort: 'totalscore', order: 'desc' },
+    高分优先: { sort: 'totalscore', order: 'desc' },
     'A-Z': { sort: 'dianyingmingcheng', order: 'asc' },
+    名称排序: { sort: 'dianyingmingcheng', order: 'asc' },
   }
   return mapping[sortBy] || mapping.Popularity
 }

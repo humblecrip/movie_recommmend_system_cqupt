@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.StoreupCompatibilityDao">
+
+    <sql id="legacyStoreupColumns">
+        a.id AS id,
+        a.legacy_userid AS userid,
+        a.legacy_refid AS refid,
+        a.legacy_tablename AS tablename,
+        a.target_name_snapshot AS name,
+        a.target_picture_snapshot AS picture,
+        CASE
+            WHEN a.action_type = 'favorite' THEN '1'
+            WHEN a.action_type = 'like' THEN '21'
+            WHEN a.action_type = 'dislike' THEN '22'
+            WHEN a.action_type LIKE 'legacy_unknown:%' THEN REPLACE(a.action_type, 'legacy_unknown:', '')
+            ELSE a.action_type
+        END AS type,
+        a.recommend_type AS inteltype,
+        a.remark AS remark,
+        a.created_at AS addtime
+    </sql>
+
+    <sql id="legacyStoreupWhere">
+        <where>
+            1 = 1
+            <if test="!adminView and sessionUserId != null">
+                AND a.legacy_userid = #{sessionUserId}
+            </if>
+            <if test="filter != null and filter.userid != null">
+                AND a.legacy_userid = #{filter.userid}
+            </if>
+            <if test="filter != null and filter.refid != null">
+                AND a.legacy_refid = #{filter.refid}
+            </if>
+            <if test="filter != null and filter.tablename != null and filter.tablename != ''">
+                AND a.legacy_tablename = #{filter.tablename}
+            </if>
+            <if test="filter != null and filter.picture != null and filter.picture != ''">
+                AND a.target_picture_snapshot = #{filter.picture}
+            </if>
+            <if test="filter != null and filter.type != null and filter.type != ''">
+                AND a.action_type = #{filter.type}
+            </if>
+            <if test="filter != null and filter.inteltype != null and filter.inteltype != ''">
+                AND a.recommend_type = #{filter.inteltype}
+            </if>
+            <if test="filter != null and filter.remark != null and filter.remark != ''">
+                AND a.remark = #{filter.remark}
+            </if>
+            <if test="nameKeyword != null and nameKeyword != ''">
+                AND a.target_name_snapshot LIKE CONCAT('%', #{nameKeyword}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="countByFilter" resultType="int">
+        SELECT COUNT(1)
+        FROM app_user_movie_action a
+        <include refid="legacyStoreupWhere"/>
+    </select>
+
+    <select id="selectPageByFilter" resultType="com.entity.view.StoreupView">
+        SELECT
+        <include refid="legacyStoreupColumns"/>
+        FROM app_user_movie_action a
+        <include refid="legacyStoreupWhere"/>
+        ORDER BY ${sortColumn} ${orderKeyword}, a.id DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="selectListByFilter" resultType="com.entity.view.StoreupView">
+        SELECT
+        <include refid="legacyStoreupColumns"/>
+        FROM app_user_movie_action a
+        <include refid="legacyStoreupWhere"/>
+        ORDER BY ${sortColumn} ${orderKeyword}, a.id DESC
+    </select>
+
+    <select id="selectById" resultType="com.entity.view.StoreupView">
+        SELECT
+        <include refid="legacyStoreupColumns"/>
+        FROM app_user_movie_action a
+        WHERE a.id = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="selectMovieIdByLegacyRefId" resultType="long">
+        SELECT id
+        FROM app_movie
+        WHERE legacy_dianyingxinxi_id = #{legacyRefId}
+        LIMIT 1
+    </select>
+
+    <insert id="insertAction">
+        INSERT INTO app_user_movie_action (
+          user_id,
+          movie_id,
+          legacy_userid,
+          legacy_refid,
+          legacy_tablename,
+          action_type,
+          target_name_snapshot,
+          target_picture_snapshot,
+          recommend_type,
+          remark,
+          created_at,
+          updated_at
+        )
+        VALUES (
+          #{appUserId},
+          #{movieId},
+          #{legacyUserId},
+          #{legacyRefId},
+          #{legacyTableName},
+          #{actionType},
+          COALESCE(#{name}, ''),
+          #{picture},
+          #{recommendType},
+          #{remark},
+          CURRENT_TIMESTAMP,
+          CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="selectLastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <update id="updateAction">
+        UPDATE app_user_movie_action
+        SET
+          movie_id = #{movieId},
+          legacy_refid = #{legacyRefId},
+          legacy_tablename = #{legacyTableName},
+          action_type = #{actionType},
+          target_name_snapshot = COALESCE(#{name}, ''),
+          target_picture_snapshot = #{picture},
+          recommend_type = #{recommendType},
+          remark = #{remark},
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+        <if test="!adminView and legacyUserId != null">
+          AND legacy_userid = #{legacyUserId}
+        </if>
+    </update>
+
+    <delete id="deleteBatch">
+        DELETE FROM app_user_movie_action
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

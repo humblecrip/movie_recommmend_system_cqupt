@@ -10,26 +10,43 @@
 
 	<select id="selectListVO"
 		resultType="com.entity.vo.SensitivewordsVO" >
-		SELECT * FROM sensitivewords  sensitivewords         
+		SELECT
+			sensitivewords.legacy_sensitivewords_id AS id,
+			sensitivewords.content,
+			sensitivewords.created_at AS addtime
+		FROM app_sensitive_word sensitivewords
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 	<select id="selectVO"
 		resultType="com.entity.vo.SensitivewordsVO" >
-		SELECT  sensitivewords.* FROM sensitivewords  sensitivewords 	
+		SELECT
+			sensitivewords.legacy_sensitivewords_id AS id,
+			sensitivewords.content,
+			sensitivewords.created_at AS addtime
+		FROM app_sensitive_word sensitivewords
  		<where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 
     <select id="selectListView"
 		resultType="com.entity.view.SensitivewordsView" >
 
-		SELECT  sensitivewords.* FROM sensitivewords  sensitivewords 	        
+		SELECT
+			sensitivewords.legacy_sensitivewords_id AS id,
+			sensitivewords.content,
+			sensitivewords.created_at AS addtime
+		FROM app_sensitive_word sensitivewords
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 	<select id="selectView"
 		resultType="com.entity.view.SensitivewordsView" >
-		SELECT * FROM sensitivewords  sensitivewords <where> 1=1 ${ew.sqlSegment}</where>
+		SELECT
+			sensitivewords.legacy_sensitivewords_id AS id,
+			sensitivewords.content,
+			sensitivewords.created_at AS addtime
+		FROM app_sensitive_word sensitivewords
+        <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 

@@ -45,6 +45,18 @@ function run() {
   )
 
   assert.deepStrictEqual(
+    filterMovieList(sampleList, { genre: '全部', year: '不限', rating: '不限' }).map(item => item.id),
+    [1, 2, 3],
+    '中文全部/不限筛选不应误过滤有数据的电影列表'
+  )
+
+  assert.deepStrictEqual(
+    filterMovieList(sampleList, { genre: '动作', year: '不限', rating: '不限' }).map(item => item.id),
+    [1, 3],
+    '中文不限选项下应仅按实际类型过滤'
+  )
+
+  assert.deepStrictEqual(
     filterMovieList(sampleList, { rating: '6.0+' }).map(item => item.id),
     [1, 2, 3],
     '未知 rating 应视为不过滤'
@@ -108,6 +120,30 @@ function run() {
     resolveSortRequest('A-Z'),
     { sort: 'dianyingmingcheng', order: 'asc' },
     'A-Z 应映射到电影名称正序'
+  )
+
+  assert.deepStrictEqual(
+    resolveSortRequest('热门优先'),
+    { sort: 'clicknum', order: 'desc' },
+    '热门优先 应映射到点击量倒序'
+  )
+
+  assert.deepStrictEqual(
+    resolveSortRequest('最新上映'),
+    { sort: 'addtime', order: 'desc' },
+    '最新上映 应映射到新增时间倒序'
+  )
+
+  assert.deepStrictEqual(
+    resolveSortRequest('高分优先'),
+    { sort: 'totalscore', order: 'desc' },
+    '高分优先 应映射到评分倒序'
+  )
+
+  assert.deepStrictEqual(
+    resolveSortRequest('名称排序'),
+    { sort: 'dianyingmingcheng', order: 'asc' },
+    '名称排序 应映射到电影名称正序'
   )
 
   assert.deepStrictEqual(

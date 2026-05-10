@@ -143,12 +143,15 @@ export default {
 		}
 	},
 	methods: {
+		encryptPasswordValue(value) {
+			return value ? this.encryptAes(value) : value
+		},
 		normalizeCredentials() {
 			this.rulesForm.username = (this.rulesForm.username || '').trim()
 			this.rulesForm.password = (this.rulesForm.password || '').trim()
 		},
 		clearSessionCache() {
-			;['Token', 'role', 'sessionTable', 'adminName', 'headportrait', 'userForm', 'userid'].forEach(key => {
+			['Token', 'role', 'sessionTable', 'adminName', 'headportrait', 'userForm', 'userid'].forEach(key => {
 				this.$storage.remove(key)
 			})
 		},
@@ -190,8 +193,9 @@ export default {
 		},
 		async loginPost() {
 			try {
+				const encryptedPassword = this.encryptPasswordValue(this.rulesForm.password)
 				const loginResponse = await this.$http({
-					url: `${this.tableName}/login?username=${encodeURIComponent(this.rulesForm.username)}&password=${encodeURIComponent(this.rulesForm.password)}`,
+					url: `${this.tableName}/login?username=${encodeURIComponent(this.rulesForm.username)}&password=${encodeURIComponent(encryptedPassword)}`,
 					method: 'post'
 				})
 				const loginData = loginResponse.data

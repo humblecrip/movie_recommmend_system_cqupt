@@ -2,12 +2,12 @@
   <div class="cinema-login">
     <div class="login-atmosphere">
       <div class="atmosphere-mask"></div>
-      <img class="atmosphere-image" :src="backgroundImage" alt="cinema background">
+      <img class="atmosphere-image" :src="backgroundImage" alt="影院背景">
     </div>
 
     <header class="login-nav">
-      <router-link class="brand-text brand-link" to="/index/home">Aether Cinema</router-link>
-      <button class="help-button" type="button" aria-label="help">
+      <router-link class="brand-text brand-link" to="/index/home">以太影院</router-link>
+      <button class="help-button" type="button" aria-label="帮助">
         <i class="el-icon-question"></i>
       </button>
     </header>
@@ -15,13 +15,13 @@
     <main class="login-main">
       <section class="login-card glass-card">
         <div class="login-header">
-          <h1>The Screen Awaits</h1>
-          <p>Sign in to access your curated collection.</p>
+          <h1>银幕已就绪</h1>
+          <p>登录后查看你的专属观影收藏。</p>
         </div>
 
         <el-form ref="loginForm" :model="loginForm" :rules="rules" class="login-form" @submit.native.prevent>
           <el-form-item v-if="loginType == 1" prop="username" class="field-row">
-            <label class="field-label">Account</label>
+            <label class="field-label">账号</label>
             <input
               v-model="loginForm.username"
               class="field-input"
@@ -32,7 +32,7 @@
           </el-form-item>
 
           <el-form-item v-if="loginType == 1" prop="password" class="field-row">
-            <label class="field-label">Password</label>
+            <label class="field-label">密码</label>
             <div class="password-field">
               <input
                 v-model="loginForm.password"
@@ -53,7 +53,7 @@
           </el-form-item>
 
           <el-form-item v-if="roles.length > 1" class="field-row field-row-select">
-            <label class="field-label">Role</label>
+            <label class="field-label">角色</label>
             <el-select v-model="loginForm.tableName" placeholder="请选择角色" @change="selectChange">
               <el-option
                 v-for="item,index in roles"
@@ -65,14 +65,14 @@
           </el-form-item>
 
           <div class="login-actions">
-            <button class="login-submit" type="button" @click="submitForm('loginForm')">Sign In</button>
+            <button class="login-submit" type="button" @click="submitForm('loginForm')">立即登录</button>
           </div>
         </el-form>
 
         <div class="register-section">
           <p class="register-copy">
-            New to the gallery?
-            <span> Create an account </span>
+            还没有账号？
+            <span> 立即注册 </span>
           </p>
           <div class="register-links">
             <router-link
@@ -90,12 +90,12 @@
     </main>
 
     <footer class="login-footer">
-      <div class="footer-copy">© 2024 Aether Cinema. All rights reserved.</div>
+      <div class="footer-copy">© 2024 以太影院 · 保留所有权利</div>
       <div class="footer-links">
-        <a href="javascript:void(0);">Terms of Service</a>
-        <a href="javascript:void(0);">Privacy Policy</a>
-        <a href="javascript:void(0);">Cookie Preferences</a>
-        <a href="javascript:void(0);">Contact Support</a>
+        <a href="javascript:void(0);">服务条款</a>
+        <a href="javascript:void(0);">隐私政策</a>
+        <a href="javascript:void(0);">Cookie 设置</a>
+        <a href="javascript:void(0);">联系支持</a>
       </div>
     </footer>
   </div>
@@ -139,6 +139,9 @@ export default {
     }
   },
   methods: {
+    encryptPasswordValue(value) {
+      return value ? this.encryptAes(value) : value
+    },
     notifyAvatarChanged(sessionForm, cachedAvatar) {
       dispatchFrontAvatarChanged(sessionForm, cachedAvatar)
     },
@@ -189,7 +192,11 @@ export default {
     loginPost(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$http.get(`${this.loginForm.tableName}/login`, { params: this.loginForm }).then(res => {
+          const payload = {
+            ...this.loginForm,
+            password: this.encryptPasswordValue(this.loginForm.password),
+          }
+          this.$http.get(`${this.loginForm.tableName}/login`, { params: payload }).then(res => {
             if (res.data.code === 0) {
               this.resetFrontUserCache()
               localStorage.setItem('frontToken', res.data.token)

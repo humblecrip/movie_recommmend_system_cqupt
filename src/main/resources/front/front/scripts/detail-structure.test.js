@@ -11,10 +11,11 @@ function has(text) {
 
 function run() {
   assert.ok(has('class="hero-section"'), '应保留原型 Hero 区')
-  assert.ok(has('Overview'), '应保留 Overview 标题')
-  assert.ok(has('Similar Movies'), '应保留 Similar Movies 标题')
-  assert.ok(has('Watch Trailer'), '应保留 Watch Trailer 按钮')
-  assert.ok(has('Add to My List'), '应保留 Add to My List 按钮')
+  assert.ok(has('影片概览'), '详情页应保留中文概览标题')
+  assert.ok(has('相似影片'), '详情页应保留中文相似影片标题')
+  assert.ok(has('查看详情'), '详情页应保留中文主按钮')
+  assert.ok(has('加入收藏') || has('取消收藏'), '详情页应保留中文收藏按钮')
+  assert.ok(has('更多信息'), '详情页应保留中文更多信息标题')
 
   assert.ok(!has('class="cinematic-topbar"'), '不应保留自定义顶部标题栏')
   assert.ok(!has('class="poster-thumb-row"'), '不应保留海报缩略图条')

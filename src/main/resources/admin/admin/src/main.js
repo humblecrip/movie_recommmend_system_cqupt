@@ -44,6 +44,7 @@ import JsonExcel from 'vue-json-excel'
 import printJS from 'print-js'
 //MD5
 import md5 from 'js-md5';
+import { encryptDes, decryptDes, encryptAes, decryptAes } from '@/utils/des.js'
 
 Vue.prototype.$validate = validate
 Vue.prototype.$http = http // ajax请求方法
@@ -68,6 +69,10 @@ Vue.component('editor', Editor)
 Vue.component('downloadExcel', JsonExcel)
 //MD5
 Vue.prototype.$md5 = md5;
+Vue.prototype.encryptDes = encryptDes
+Vue.prototype.decryptDes = decryptDes
+Vue.prototype.encryptAes = encryptAes
+Vue.prototype.decryptAes = decryptAes
 new Vue({
   render: h => h(App),
   router,

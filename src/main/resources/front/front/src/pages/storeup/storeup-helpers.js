@@ -12,7 +12,7 @@ function normalizePicture(value) {
 }
 
 function resolveStoreupPicture(item, baseUrl, fallbackPicture) {
-  const picture = normalizePicture(item && item.picture)
+  const picture = normalizePicture(item && (item.posterUrl || item.picture))
   if (!picture) {
     return fallbackPicture || ''
   }

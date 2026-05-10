@@ -19,7 +19,7 @@ import com.utils.EncryptUtil;
  * @email 
  * @date 2025-04-12 20:00:44
  */
-@TableName("sensitivewords")
+@TableName("app_sensitive_word")
 public class SensitivewordsView  extends SensitivewordsEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 

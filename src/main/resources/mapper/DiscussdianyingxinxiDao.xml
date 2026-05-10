@@ -19,28 +19,64 @@
         <result property="cuserids" column="cuserids"/>
     </resultMap>
 
+    <sql id="legacyCommentColumns">
+        COALESCE(c.legacy_discussdianyingxinxi_id, c.id) AS id,
+        c.legacy_refid AS refid,
+        c.legacy_userid AS userid,
+        COALESCE(au.avatar_url, c.author_avatar_snapshot) AS avatarurl,
+        COALESCE(au.display_name, c.author_name_snapshot) AS nickname,
+        c.content_html AS content,
+        c.rating AS score,
+        c.reply_html AS reply,
+        c.like_count AS thumbsupnum,
+        c.dislike_count AS crazilynum,
+        CASE WHEN c.is_pinned = 1 THEN 1 ELSE 0 END AS istop,
+        (
+            SELECT GROUP_CONCAT(DISTINCT v.legacy_vote_user_id ORDER BY v.legacy_vote_user_id SEPARATOR ',')
+            FROM app_movie_comment_vote v
+            WHERE v.comment_id = c.id
+              AND v.vote_type = 'like'
+        ) AS tuserids,
+        (
+            SELECT GROUP_CONCAT(DISTINCT v.legacy_vote_user_id ORDER BY v.legacy_vote_user_id SEPARATOR ',')
+            FROM app_movie_comment_vote v
+            WHERE v.comment_id = c.id
+              AND v.vote_type = 'dislike'
+        ) AS cuserids,
+        c.created_at AS addtime
+    </sql>
+
 	<select id="selectListVO"
 		resultType="com.entity.vo.DiscussdianyingxinxiVO" >
-		SELECT * FROM discussdianyingxinxi  discussdianyingxinxi         
+		SELECT <include refid="legacyCommentColumns"/>
+        FROM app_movie_comment c
+        LEFT JOIN app_user au ON au.id = c.user_id
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 	<select id="selectVO"
 		resultType="com.entity.vo.DiscussdianyingxinxiVO" >
-		SELECT  discussdianyingxinxi.* FROM discussdianyingxinxi  discussdianyingxinxi 	
+		SELECT <include refid="legacyCommentColumns"/>
+        FROM app_movie_comment c
+        LEFT JOIN app_user au ON au.id = c.user_id
  		<where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 
     <select id="selectListView"
 		resultType="com.entity.view.DiscussdianyingxinxiView" >
 
-		SELECT  discussdianyingxinxi.* FROM discussdianyingxinxi  discussdianyingxinxi 	        
+		SELECT <include refid="legacyCommentColumns"/>
+        FROM app_movie_comment c
+        LEFT JOIN app_user au ON au.id = c.user_id
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 	<select id="selectView"
 		resultType="com.entity.view.DiscussdianyingxinxiView" >
-		SELECT * FROM discussdianyingxinxi  discussdianyingxinxi <where> 1=1 ${ew.sqlSegment}</where>
+		SELECT <include refid="legacyCommentColumns"/>
+        FROM app_movie_comment c
+        LEFT JOIN app_user au ON au.id = c.user_id
+        <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 

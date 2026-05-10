@@ -3,7 +3,6 @@
 
 <mapper namespace="com.dao.DianyingxinxiDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.entity.DianyingxinxiEntity" id="dianyingxinxiMap">
         <result property="dianyingmingcheng" column="dianyingmingcheng"/>
         <result property="haibao" column="haibao"/>
@@ -23,67 +22,316 @@
         <result property="storeupnum" column="storeupnum"/>
     </resultMap>
 
-	<select id="selectListVO"
-		resultType="com.entity.vo.DianyingxinxiVO" >
-		SELECT * FROM dianyingxinxi  dianyingxinxi         
-        <where> 1=1 ${ew.sqlSegment}</where>
-	</select>
-	
-	<select id="selectVO"
-		resultType="com.entity.vo.DianyingxinxiVO" >
-		SELECT  dianyingxinxi.* FROM dianyingxinxi  dianyingxinxi 	
- 		<where> 1=1 ${ew.sqlSegment}</where>
-	</select>
+    <sql id="movieTypeNameExpr">
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(tt.type_name ORDER BY rel.is_primary DESC, rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_type_rel rel
+                INNER JOIN app_movie_type tt ON tt.id = rel.type_id
+                WHERE rel.movie_id = m.id
+            ), ''),
+            t.type_name,
+            m.legacy_type_name
+        )
+    </sql>
 
-    <select id="selectListView"
-		resultType="com.entity.view.DianyingxinxiView" >
+    <sql id="moviePosterExpr">
+        COALESCE((
+            SELECT GROUP_CONCAT(mm.media_url ORDER BY mm.sort_order SEPARATOR ',')
+            FROM app_movie_media mm
+            WHERE mm.movie_id = m.id
+              AND mm.media_role = 'poster'
+        ), m.poster_urls_csv)
+    </sql>
 
-		SELECT  dianyingxinxi.* FROM dianyingxinxi  dianyingxinxi 	        
-        <where> 1=1 ${ew.sqlSegment}</where>
-	</select>
-	
-	<select id="selectView"
-		resultType="com.entity.view.DianyingxinxiView" >
-		SELECT * FROM dianyingxinxi  dianyingxinxi <where> 1=1 ${ew.sqlSegment}</where>
-	</select>
-	
+    <sql id="movieRegionExpr">
+        COALESCE(r.region_name, m.region_name)
+    </sql>
 
-    <select id="selectValue" resultType="map" >
-        SELECT ${params.xColumn}, ROUND(sum(${params.yColumn}),1) total FROM dianyingxinxi
+    <sql id="movieDirectorExpr">
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(p.person_name ORDER BY rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_person_rel rel
+                INNER JOIN app_movie_person p ON p.id = rel.person_id
+                WHERE rel.movie_id = m.id
+                  AND rel.relation_type = 'director'
+            ), ''),
+            m.director_name
+        )
+    </sql>
+
+    <sql id="movieCastExpr">
+        COALESCE(
+            NULLIF((
+                SELECT GROUP_CONCAT(p.person_name ORDER BY rel.sort_order ASC, rel.id ASC SEPARATOR ' / ')
+                FROM app_movie_person_rel rel
+                INNER JOIN app_movie_person p ON p.id = rel.person_id
+                WHERE rel.movie_id = m.id
+                  AND rel.relation_type = 'cast'
+            ), ''),
+            m.cast_names
+        )
+    </sql>
+
+    <sql id="legacyMovieBaseJoins">
+        LEFT JOIN app_movie_type t ON t.id = m.movie_type_id
+        LEFT JOIN app_movie_region r ON r.id = m.region_id
+    </sql>
+
+    <sql id="legacyMovieColumns">
+        COALESCE(m.legacy_dianyingxinxi_id, m.id) AS id,
+        m.title AS dianyingmingcheng,
+        <include refid="moviePosterExpr"/> AS haibao,
+        <include refid="movieTypeNameExpr"/> AS dianyingleixing,
+        <include refid="movieRegionExpr"/> AS quyu,
+        m.release_date AS shangyingshijian,
+        <include refid="movieDirectorExpr"/> AS daoyan,
+        <include refid="movieCastExpr"/> AS zhuyan,
+        m.synopsis AS juqingjianjie,
+        m.detail_html AS dianyingxiangqing,
+        m.like_count AS thumbsupnum,
+        m.dislike_count AS crazilynum,
+        m.last_clicked_at AS clicktime,
+        m.click_count AS clicknum,
+        m.comment_count AS discussnum,
+        m.total_score AS totalscore,
+        m.favorite_count AS storeupnum,
+        m.created_at AS addtime
+    </sql>
+
+    <select id="selectListVO" resultType="com.entity.vo.DianyingxinxiVO">
+        SELECT <include refid="legacyMovieColumns"/>
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
         <where> 1=1 ${ew.sqlSegment}</where>
-        group by ${params.xColumn}
     </select>
 
-    <select id="selectTimeStatValue" resultType="map" >
-        <if test = 'params.timeStatType == "日"'>
-                SELECT DATE_FORMAT(${params.xColumn},'%Y-%m-%d') ${params.xColumn}, sum(${params.yColumn}) total FROM dianyingxinxi
-                <where> 1=1 ${ew.sqlSegment}</where>
-                group by DATE_FORMAT(${params.xColumn},'%Y-%m-%d')
+    <select id="selectVO" resultType="com.entity.vo.DianyingxinxiVO">
+        SELECT <include refid="legacyMovieColumns"/>
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        <where> 1=1 ${ew.sqlSegment}</where>
+    </select>
+
+    <select id="selectListView" resultType="com.entity.view.DianyingxinxiView">
+        SELECT <include refid="legacyMovieColumns"/>
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        <where> 1=1 ${ew.sqlSegment}</where>
+    </select>
+
+    <select id="selectView" resultType="com.entity.view.DianyingxinxiView">
+        SELECT <include refid="legacyMovieColumns"/>
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        <where> 1=1 ${ew.sqlSegment}</where>
+    </select>
+
+    <select id="selectValue" resultType="map">
+        SELECT
+        <choose>
+            <when test='params.xColumn == "dianyingmingcheng"'>m.title</when>
+            <when test='params.xColumn == "dianyingleixing"'><include refid="movieTypeNameExpr"/></when>
+            <when test='params.xColumn == "quyu"'><include refid="movieRegionExpr"/></when>
+            <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+            <when test='params.xColumn == "daoyan"'><include refid="movieDirectorExpr"/></when>
+            <when test='params.xColumn == "zhuyan"'><include refid="movieCastExpr"/></when>
+            <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+            <when test='params.xColumn == "addtime"'>m.created_at</when>
+            <otherwise>m.id</otherwise>
+        </choose>
+        ${params.xColumn},
+        ROUND(SUM(
+        <choose>
+            <when test='params.yColumn == "thumbsupnum"'>m.like_count</when>
+            <when test='params.yColumn == "crazilynum"'>m.dislike_count</when>
+            <when test='params.yColumn == "clicknum"'>m.click_count</when>
+            <when test='params.yColumn == "discussnum"'>m.comment_count</when>
+            <when test='params.yColumn == "totalscore"'>m.total_score</when>
+            <when test='params.yColumn == "storeupnum"'>m.favorite_count</when>
+            <otherwise>0</otherwise>
+        </choose>
+        ), 1) total
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        GROUP BY
+        <choose>
+            <when test='params.xColumn == "dianyingmingcheng"'>m.title</when>
+            <when test='params.xColumn == "dianyingleixing"'><include refid="movieTypeNameExpr"/></when>
+            <when test='params.xColumn == "quyu"'><include refid="movieRegionExpr"/></when>
+            <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+            <when test='params.xColumn == "daoyan"'><include refid="movieDirectorExpr"/></when>
+            <when test='params.xColumn == "zhuyan"'><include refid="movieCastExpr"/></when>
+            <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+            <when test='params.xColumn == "addtime"'>m.created_at</when>
+            <otherwise>m.id</otherwise>
+        </choose>
+    </select>
+
+    <select id="selectTimeStatValue" resultType="map">
+        <if test='params.timeStatType == "日"'>
+            SELECT DATE_FORMAT(
+            <choose>
+                <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                <otherwise>m.created_at</otherwise>
+            </choose>
+            , '%Y-%m-%d') ${params.xColumn},
+            SUM(
+            <choose>
+                <when test='params.yColumn == "thumbsupnum"'>m.like_count</when>
+                <when test='params.yColumn == "crazilynum"'>m.dislike_count</when>
+                <when test='params.yColumn == "clicknum"'>m.click_count</when>
+                <when test='params.yColumn == "discussnum"'>m.comment_count</when>
+                <when test='params.yColumn == "totalscore"'>m.total_score</when>
+                <when test='params.yColumn == "storeupnum"'>m.favorite_count</when>
+                <otherwise>0</otherwise>
+            </choose>
+            ) total
+            FROM app_movie m
+            GROUP BY DATE_FORMAT(
+            <choose>
+                <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                <otherwise>m.created_at</otherwise>
+            </choose>
+            , '%Y-%m-%d')
         </if>
-        <if test = 'params.timeStatType == "月"'>
-                SELECT DATE_FORMAT(${params.xColumn},'%Y-%m') ${params.xColumn}, sum(${params.yColumn}) total FROM dianyingxinxi
-                <where> 1=1 ${ew.sqlSegment}</where>
-                group by DATE_FORMAT(${params.xColumn},'%Y-%m')
+        <if test='params.timeStatType == "月"'>
+            SELECT DATE_FORMAT(
+            <choose>
+                <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                <otherwise>m.created_at</otherwise>
+            </choose>
+            , '%Y-%m') ${params.xColumn},
+            SUM(
+            <choose>
+                <when test='params.yColumn == "thumbsupnum"'>m.like_count</when>
+                <when test='params.yColumn == "crazilynum"'>m.dislike_count</when>
+                <when test='params.yColumn == "clicknum"'>m.click_count</when>
+                <when test='params.yColumn == "discussnum"'>m.comment_count</when>
+                <when test='params.yColumn == "totalscore"'>m.total_score</when>
+                <when test='params.yColumn == "storeupnum"'>m.favorite_count</when>
+                <otherwise>0</otherwise>
+            </choose>
+            ) total
+            FROM app_movie m
+            GROUP BY DATE_FORMAT(
+            <choose>
+                <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                <otherwise>m.created_at</otherwise>
+            </choose>
+            , '%Y-%m')
         </if>
         <if test='params.timeStatType == "季"'>
-                SELECT CONCAT(YEAR(${params.xColumn}), ' - ', ELT(QUARTER(${params.xColumn}), '第一季度', '第二季度', '第三季度', '第四季度')) as ${params.xColumn}, sum(${params.yColumn}) total FROM orders
-                <where> 1=1 ${ew.sqlSegment}</where>
-                group by CONCAT(YEAR(${params.xColumn}), ' - ', ELT(QUARTER(${params.xColumn}), '第一季度', '第二季度', '第三季度', '第四季度'))
+            SELECT CONCAT(
+                YEAR(
+                <choose>
+                    <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                    <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                    <otherwise>m.created_at</otherwise>
+                </choose>
+                ),
+                ' - ',
+                ELT(QUARTER(
+                <choose>
+                    <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                    <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                    <otherwise>m.created_at</otherwise>
+                </choose>
+                ), '第一季度', '第二季度', '第三季度', '第四季度')
+            ) AS ${params.xColumn},
+            SUM(
+            <choose>
+                <when test='params.yColumn == "thumbsupnum"'>m.like_count</when>
+                <when test='params.yColumn == "crazilynum"'>m.dislike_count</when>
+                <when test='params.yColumn == "clicknum"'>m.click_count</when>
+                <when test='params.yColumn == "discussnum"'>m.comment_count</when>
+                <when test='params.yColumn == "totalscore"'>m.total_score</when>
+                <when test='params.yColumn == "storeupnum"'>m.favorite_count</when>
+                <otherwise>0</otherwise>
+            </choose>
+            ) total
+            FROM app_movie m
+            GROUP BY CONCAT(
+                YEAR(
+                <choose>
+                    <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                    <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                    <otherwise>m.created_at</otherwise>
+                </choose>
+                ),
+                ' - ',
+                ELT(QUARTER(
+                <choose>
+                    <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                    <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                    <otherwise>m.created_at</otherwise>
+                </choose>
+                ), '第一季度', '第二季度', '第三季度', '第四季度')
+            )
         </if>
-        <if test = 'params.timeStatType == "年"'>
-                SELECT DATE_FORMAT(${params.xColumn},'%Y') ${params.xColumn}, sum(${params.yColumn}) total FROM dianyingxinxi
-                <where> 1=1 ${ew.sqlSegment}</where>
-                group by DATE_FORMAT(${params.xColumn},'%Y')
+        <if test='params.timeStatType == "年"'>
+            SELECT DATE_FORMAT(
+            <choose>
+                <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                <otherwise>m.created_at</otherwise>
+            </choose>
+            , '%Y') ${params.xColumn},
+            SUM(
+            <choose>
+                <when test='params.yColumn == "thumbsupnum"'>m.like_count</when>
+                <when test='params.yColumn == "crazilynum"'>m.dislike_count</when>
+                <when test='params.yColumn == "clicknum"'>m.click_count</when>
+                <when test='params.yColumn == "discussnum"'>m.comment_count</when>
+                <when test='params.yColumn == "totalscore"'>m.total_score</when>
+                <when test='params.yColumn == "storeupnum"'>m.favorite_count</when>
+                <otherwise>0</otherwise>
+            </choose>
+            ) total
+            FROM app_movie m
+            GROUP BY DATE_FORMAT(
+            <choose>
+                <when test='params.xColumn == "shangyingshijian"'>m.release_date</when>
+                <when test='params.xColumn == "clicktime"'>m.last_clicked_at</when>
+                <otherwise>m.created_at</otherwise>
+            </choose>
+            , '%Y')
         </if>
     </select>
 
-    <select id="selectGroup" resultType="map" >
-        SELECT ${params.column} , count(1) total FROM dianyingxinxi
-        <where> 1=1 ${ew.sqlSegment}</where>
-        group by ${params.column}
+    <select id="selectGroup" resultType="map">
+        SELECT
+        <choose>
+            <when test='params.column == "dianyingmingcheng"'>m.title</when>
+            <when test='params.column == "dianyingleixing"'><include refid="movieTypeNameExpr"/></when>
+            <when test='params.column == "quyu"'><include refid="movieRegionExpr"/></when>
+            <when test='params.column == "shangyingshijian"'>m.release_date</when>
+            <when test='params.column == "daoyan"'><include refid="movieDirectorExpr"/></when>
+            <when test='params.column == "zhuyan"'><include refid="movieCastExpr"/></when>
+            <when test='params.column == "clicktime"'>m.last_clicked_at</when>
+            <when test='params.column == "addtime"'>m.created_at</when>
+            <otherwise>m.id</otherwise>
+        </choose>
+        ${params.column},
+        COUNT(1) total
+        FROM app_movie m
+        <include refid="legacyMovieBaseJoins"/>
+        GROUP BY
+        <choose>
+            <when test='params.column == "dianyingmingcheng"'>m.title</when>
+            <when test='params.column == "dianyingleixing"'><include refid="movieTypeNameExpr"/></when>
+            <when test='params.column == "quyu"'><include refid="movieRegionExpr"/></when>
+            <when test='params.column == "shangyingshijian"'>m.release_date</when>
+            <when test='params.column == "daoyan"'><include refid="movieDirectorExpr"/></when>
+            <when test='params.column == "zhuyan"'><include refid="movieCastExpr"/></when>
+            <when test='params.column == "clicktime"'>m.last_clicked_at</when>
+            <when test='params.column == "addtime"'>m.created_at</when>
+            <otherwise>m.id</otherwise>
+        </choose>
     </select>
-
-
-
-
 </mapper>

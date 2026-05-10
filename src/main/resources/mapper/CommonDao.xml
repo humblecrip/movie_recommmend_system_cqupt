@@ -3,10 +3,10 @@
 
 <mapper namespace="com.dao.CommonDao">
 	<select id="getOption" resultType="String" >
-		SELECT distinct ${column} FROM ${table} 
-			where ${column} is not null and ${column} !=''
-            <if test = "conditionColumn != null and conditionValue != null">
-            and ${conditionColumn}=#{conditionValue}
+		SELECT distinct ${validatedColumnName} FROM ${validatedTableName}
+			where ${validatedColumnName} is not null and ${validatedColumnName} !=''
+            <if test = "validatedConditionColumnName != null and conditionValue != null">
+            and ${validatedConditionColumnName}=#{conditionValue}
             </if>
 			<if test = "level != null"> 
 			and level=#{level} 
@@ -14,59 +14,59 @@
 			<if test = "parent != null"> 
 			and parent=#{parent} 
 			</if>
-		order by ${column} desc
+		order by ${validatedColumnName} desc
 	</select>
 	
 	<select id="getFollowByOption" resultType="map" >
-		SELECT * FROM ${table} where ${column}=#{columnValue}
+		SELECT * FROM ${validatedTableName} where ${validatedColumnName}=#{columnValue}
 	</select>
 	
 	<update id="sh">
-		UPDATE ${table} set sfsh=#{sfsh} where id=#{id}
+		UPDATE ${validatedTableName} set sfsh=#{sfsh} where id=#{id}
 	</update>
 	
 	<select id="remindCount" resultType="int" >
-		SELECT count(1) FROM ${table} 
+		SELECT count(1) FROM ${validatedTableName}
 			where 1=1 
 			<if test = "type == 1 ">
 				<if test = " remindstart != null ">
-				     and ${column} &gt;= #{remindstart}
+				     and ${validatedColumnName} &gt;= #{remindstart}
 				</if>
 				<if test = " remindend != null ">
-				     and ${column} &lt;= #{remindend}
+				     and ${validatedColumnName} &lt;= #{remindend}
 				</if>
 			</if>
 			<if test = "type == 2 ">
 				<if test = " remindstart != null ">
-				     and ${column} &gt;= str_to_date(#{remindstart},'%Y-%m-%d')
+				     and ${validatedColumnName} &gt;= str_to_date(#{remindstart},'%Y-%m-%d')
 				</if>
 				<if test = " remindend != null ">
-				     and ${column} &lt;= str_to_date(#{remindend},'%Y-%m-%d')
+				     and ${validatedColumnName} &lt;= str_to_date(#{remindend},'%Y-%m-%d')
 				</if>
 			</if>
 	</select>
 	
 	<select id="selectCal" resultType="map" >
-		SELECT sum(${column}) sum,max(${column}) max,min(${column}) min,avg(${column}) avg FROM ${table}
+		SELECT sum(${validatedColumnName}) sum,max(${validatedColumnName}) max,min(${validatedColumnName}) min,avg(${validatedColumnName}) avg FROM ${validatedTableName}
 	</select>
 	
 	<select id="selectGroup" resultType="map" >
-		SELECT ${column} , count(1) total FROM ${table} group by ${column}
+		SELECT ${validatedColumnName} , count(1) total FROM ${validatedTableName} group by ${validatedColumnName}
 	</select>
 	
 	<select id="selectValue" resultType="map" >
-		SELECT ${xColumn}, sum(${yColumn}) total FROM ${table} group by ${xColumn}
+		SELECT ${validatedXColumnName}, sum(${validatedYColumnName}) total FROM ${validatedTableName} group by ${validatedXColumnName}
 	</select>
 
         <select id="selectTimeStatValue" resultType="map" >
                 <if test = 'timeStatType == "日"'>
-                        SELECT DATE_FORMAT(${xColumn},'%Y-%m-%d') ${xColumn}, sum(${yColumn}) total FROM ${table} group by DATE_FORMAT(${xColumn},'%Y-%m-%d')
+                        SELECT DATE_FORMAT(${validatedXColumnName},'%Y-%m-%d') ${validatedXColumnName}, sum(${validatedYColumnName}) total FROM ${validatedTableName} group by DATE_FORMAT(${validatedXColumnName},'%Y-%m-%d')
                 </if>
                 <if test = 'timeStatType == "月"'>
-                        SELECT DATE_FORMAT(${xColumn},'%Y-%m') ${xColumn}, sum(${yColumn}) total FROM ${table} group by DATE_FORMAT(${xColumn},'%Y-%m')
+                        SELECT DATE_FORMAT(${validatedXColumnName},'%Y-%m') ${validatedXColumnName}, sum(${validatedYColumnName}) total FROM ${validatedTableName} group by DATE_FORMAT(${validatedXColumnName},'%Y-%m')
                 </if>
                 <if test = 'timeStatType == "年"'>
-                        SELECT DATE_FORMAT(${xColumn},'%Y') ${xColumn}, sum(${yColumn}) total FROM ${table} group by DATE_FORMAT(${xColumn},'%Y')
+                        SELECT DATE_FORMAT(${validatedXColumnName},'%Y') ${validatedXColumnName}, sum(${validatedYColumnName}) total FROM ${validatedTableName} group by DATE_FORMAT(${validatedXColumnName},'%Y')
                 </if>
         </select>
 	

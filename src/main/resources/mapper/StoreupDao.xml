@@ -15,28 +15,52 @@
         <result property="remark" column="remark"/>
     </resultMap>
 
+    <sql id="legacyStoreupColumns">
+        a.id AS id,
+        a.legacy_userid AS userid,
+        a.legacy_refid AS refid,
+        a.legacy_tablename AS tablename,
+        a.target_name_snapshot AS name,
+        a.target_picture_snapshot AS picture,
+        CASE
+            WHEN a.action_type = 'favorite' THEN '1'
+            WHEN a.action_type = 'like' THEN '21'
+            WHEN a.action_type = 'dislike' THEN '22'
+            WHEN a.action_type LIKE 'legacy_unknown:%' THEN REPLACE(a.action_type, 'legacy_unknown:', '')
+            ELSE a.action_type
+        END AS type,
+        a.recommend_type AS inteltype,
+        a.remark AS remark,
+        a.created_at AS addtime
+    </sql>
+
 	<select id="selectListVO"
 		resultType="com.entity.vo.StoreupVO" >
-		SELECT * FROM storeup  storeup         
+		SELECT <include refid="legacyStoreupColumns"/>
+        FROM app_user_movie_action a
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 	<select id="selectVO"
 		resultType="com.entity.vo.StoreupVO" >
-		SELECT  storeup.* FROM storeup  storeup 	
+		SELECT <include refid="legacyStoreupColumns"/>
+        FROM app_user_movie_action a
  		<where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 
     <select id="selectListView"
 		resultType="com.entity.view.StoreupView" >
 
-		SELECT  storeup.* FROM storeup  storeup 	        
+		SELECT <include refid="legacyStoreupColumns"/>
+        FROM app_user_movie_action a
         <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 	<select id="selectView"
 		resultType="com.entity.view.StoreupView" >
-		SELECT * FROM storeup  storeup <where> 1=1 ${ew.sqlSegment}</where>
+		SELECT <include refid="legacyStoreupColumns"/>
+        FROM app_user_movie_action a
+        <where> 1=1 ${ew.sqlSegment}</where>
 	</select>
 	
 

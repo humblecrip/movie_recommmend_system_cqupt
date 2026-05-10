@@ -14,7 +14,7 @@
           <div class="hero-content">
             <div class="hero-inner">
               <div class="hero-poster-wrap">
-                <img :src="primaryPoster || fallbackPoster" :alt="detail.dianyingmingcheng || 'movie poster'">
+                <img :src="primaryPoster || fallbackPoster" :alt="detail.dianyingmingcheng || '电影海报'">
               </div>
               <div class="hero-copy">
                 <div class="hero-meta-row">
@@ -32,11 +32,11 @@
                 <div class="hero-actions">
                   <el-button class="primary-btn" type="primary" @click="scrollToDetailSection">
                     <i class="el-icon-video-play"></i>
-                    Watch Trailer
+                    查看详情
                   </el-button>
                   <el-button class="ghost-btn" @click="handleStoreupToggle">
                     <i class="el-icon-plus"></i>
-                    {{ isStoreup ? 'Remove from My List' : 'Add to My List' }}
+                    {{ isStoreup ? '取消收藏' : '加入收藏' }}
                   </el-button>
                 </div>
               </div>
@@ -47,7 +47,7 @@
         <section class="overview-section">
           <div class="overview-grid">
             <div class="overview-copy">
-              <h2>Overview</h2>
+              <h2>影片概览</h2>
               <p>{{ heroMeta.overview }}</p>
               <div class="genre-chips" v-if="genreList.length">
                 <span class="genre-chip" v-for="item in genreList" :key="item">{{ item }}</span>
@@ -77,7 +77,7 @@
 
         <section class="similar-section">
           <div class="section-head">
-            <h2>Similar Movies</h2>
+            <h2>相似影片</h2>
           </div>
 
           <div class="similar-grid" v-if="similarMovies.length">
@@ -99,7 +99,7 @@
 
         <section class="engagement-section">
           <div class="engagement-head">
-            <h2>More Details</h2>
+            <h2>更多信息</h2>
           </div>
 
           <div class="zancai prototype-zancai">
@@ -131,7 +131,7 @@
                 <section class="comment-composer-card">
                   <div class="comment-composer-head">
                     <div class="comment-composer-copy">
-                      <span class="comment-kicker">Audience Notes</span>
+                      <span class="comment-kicker">观众短评</span>
                       <h3>写下你的观影感受</h3>
                       <p>支持图文短评与评分展示，提交后会直接出现在当前影片评论区。现有评论规则保持不变，每位用户仅可评论一次。</p>
                     </div>
@@ -191,7 +191,7 @@
                 <section class="comment-stream">
                   <div class="comment-stream-head">
                     <div class="comment-stream-copy">
-                      <span class="comment-kicker">Viewer Reviews</span>
+                      <span class="comment-kicker">观众评论</span>
                       <h3>观众评论</h3>
                     </div>
                     <div class="comment-stream-total">{{ total }} 条评论</div>
@@ -291,10 +291,10 @@
 
     <div class="share_view">
       <div class="share share-weibo" @click="shareToMicroblog">
-        <img src="@/assets/weibo.png" alt="weibo">
+        <img src="@/assets/weibo.png" alt="微博分享">
       </div>
       <div class="share share-qq" @click="shareToQQRom">
-        <img src="@/assets/qq.png" alt="qq">
+        <img src="@/assets/qq.png" alt="QQ空间分享">
       </div>
     </div>
   </div>
@@ -303,10 +303,14 @@
 <script>
 import axios from 'axios'
 import {
+  extractAppMovieDetail,
+  extractAppMovieList,
   getPosterList,
   getPrimaryPoster,
   formatHeroMeta,
   buildSimilarMovies,
+  normalizeAppMovieList,
+  normalizeAppMovieRecord,
   resolvePosterUrl,
 } from './detail-helpers'
 import { useCommentDraftStore } from '@/stores/comment-draft'
@@ -327,10 +331,10 @@ export default {
       similarMovies: [],
       heroMeta: {
         year: '未知年份',
-        runtime: '2h 16m',
-        maturityRating: 'PG-13',
+        runtime: '2小时16分钟',
+        maturityRating: '建议13岁以上观看',
         overview: '暂无剧情简介',
-        scoreText: 'N/A',
+        scoreText: '暂无',
         releaseDateText: '上映日期待定',
       },
       form: {
@@ -434,7 +438,7 @@ export default {
       return useCommentDraftStore()
     },
     getCommentDraftMovieId() {
-      return this.detail.id || this.id || ((this.$route.query || {}).id)
+      return (this.detail && this.detail.id) || this.id || ((this.$route.query || {}).id)
     },
     resetCommentFormFields() {
       this.form.content = ''
@@ -499,10 +503,10 @@ export default {
     },
     formatScore(score) {
       if (score === undefined || score === null || score === '') {
-        return 'N/A'
+        return '暂无'
       }
       const value = Number(score)
-      return Number.isNaN(value) ? 'N/A' : value.toFixed(1)
+      return Number.isNaN(value) ? '暂无' : value.toFixed(1)
     },
     getMovieYearText(dateText) {
       if (!dateText) {
@@ -515,38 +519,59 @@ export default {
         this.similarMovies = []
         return
       }
-      const res = await this.$http.get('dianyingxinxi/list', {
-        params: {
-          page: 1,
-          limit: 60,
-          sort: 'clicknum',
-          order: 'desc',
-        },
-      })
-      if (res.data.code == 0) {
-        this.similarMovies = buildSimilarMovies(this.detail, res.data.data.list || [], 5)
+      try {
+        const res = await this.$http.get('appmovie/front/list', {
+          params: {
+            page: 1,
+            limit: 60,
+            sort: 'clickCount',
+            order: 'desc',
+          },
+        })
+        if (res.data && res.data.code !== undefined && res.data.code != 0) {
+          throw new Error(res.data.msg || '相似电影加载失败')
+        }
+        const list = normalizeAppMovieList(extractAppMovieList((res.data && res.data.data) || res.data || {}))
+        this.similarMovies = buildSimilarMovies(this.detail, list, 5)
+      } catch (error) {
+        this.similarMovies = []
       }
     },
     async init() {
       this.id = this.$route.query.id
       this.baseUrl = this.$config.baseUrl
       this.resetCommentFormFields()
-      const res = await this.$http.get(this.tablename + '/detail/' + this.id, {})
-      if (res.data.code == 0) {
-        this.detail = res.data.data
+      try {
+        const res = await this.$http.get('appmovie/front/detail/' + this.id, {})
+        if (res.data && res.data.code !== undefined && res.data.code != 0) {
+          throw new Error(res.data.msg || '电影详情加载失败')
+        }
+        const responseData = (res.data && res.data.data) || res.data || {}
+        this.detail = normalizeAppMovieRecord(extractAppMovieDetail(responseData))
         this.title = this.detail.dianyingmingcheng
         this.posterList = getPosterList(this.detail)
         this.primaryPoster = getPrimaryPoster(this.detail, this.baseUrl) || this.fallbackPoster
         this.heroMeta = formatHeroMeta(this.detail)
+        const embeddedSimilarMovies = normalizeAppMovieList(extractAppMovieList(responseData))
+        this.similarMovies = embeddedSimilarMovies.length ? buildSimilarMovies(this.detail, embeddedSimilarMovies, 5) : []
         this.getSensitiveWords()
         this.getDiscussList(1)
-        await this.loadSimilarMovies()
+        if (!this.similarMovies.length) {
+          await this.loadSimilarMovies()
+        }
         if (localStorage.getItem('frontToken')) {
           this.getStoreupStatus()
           this.getThumbsupOrCrazilyStatus()
         }
         this.restoreCommentDraft()
         this.restoreActiveTabSection('auto')
+      } catch (error) {
+        this.detail = {}
+        this.title = ''
+        this.posterList = []
+        this.primaryPoster = this.fallbackPoster
+        this.similarMovies = []
+        this.heroMeta = formatHeroMeta(this.detail)
       }
     },
     scrollToDetailSection() {
@@ -585,99 +610,68 @@ export default {
       window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + encodeURIComponent(this.shareUrl) + '&title=' + this.title + '&summary=' + this.title)
     },
     getSensitiveWords() {
-      this.$http.get('sensitivewords/detail/1').then(rs => {
-        this.sensitiveWordsArr = rs.data.data.content.split(',')
+      this.$http.get('keywords/list').then(rs => {
+        this.sensitiveWordsArr = rs.data && rs.data.code === 0 && Array.isArray(rs.data.data) ? rs.data.data : []
       })
     },
+    maskSensitiveWords(content) {
+      let maskedContent = content || ''
+      for (let i = 0; i < this.sensitiveWordsArr.length; i++) {
+        const keyword = this.sensitiveWordsArr[i]
+        if (!keyword || maskedContent.indexOf(keyword) === -1) {
+          continue
+        }
+        const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        maskedContent = maskedContent.replace(new RegExp(escapedKeyword, 'g'), '**')
+      }
+      return maskedContent
+    },
     storeup(type) {
-      const primaryPosterRaw = this.posterList[0] || ''
-      if (type == 1 && !this.isStoreup) {
-        this.storeupParams.name = this.title
-        this.storeupParams.picture = primaryPosterRaw
-        this.storeupParams.refid = this.detail.id
-        this.storeupParams.type = String(type)
-        this.$http.post('storeup/add', this.storeupParams).then(res => {
-          if (res.data.code == 0) {
-            this.isStoreup = true
-            this.detail.storeupnum = Number(this.detail.storeupnum || 0) + 1
-            this.$http.post('dianyingxinxi/update', this.detail).then(() => {})
-            this.$message({ type: 'success', message: '收藏成功!', duration: 1500 })
-          }
-        })
-      }
-      if (type == -1 && this.isStoreup) {
-        this.$http.get('storeup/list', { params: { page: 1, limit: 1, type: '1', refid: this.detail.id, tablename: 'dianyingxinxi', userid: Number(localStorage.getItem('frontUserid')) } }).then(res => {
-          if (res.data.code == 0 && res.data.data.list.length > 0) {
-            this.storeupInfo = res.data.data.list[0]
-            const delIds = [this.storeupInfo.id]
-            this.$http.post('storeup/delete', delIds).then(rs => {
-              if (rs.data.code == 0) {
-                this.isStoreup = false
-                this.detail.storeupnum = Math.max(Number(this.detail.storeupnum || 0) - 1, 0)
-                this.$http.post('dianyingxinxi/update', this.detail).then(() => {})
-                this.$message({ type: 'success', message: '取消成功!', duration: 1500 })
-              }
-            })
-          }
-        })
-      }
+      const actionType = type == 1 ? 'favorite' : 'favorite'
+      this.$http.post('appmovie/actions/toggle', {
+        movieId: this.detail.id || this.id,
+        actionType,
+      }).then(res => {
+        if (res.data && res.data.code == 0) {
+          this.applyActionStatus(res.data.data || {})
+          this.$message({ type: 'success', message: type == 1 ? '收藏成功!' : '取消成功!', duration: 1500 })
+        }
+      })
+    },
+    applyActionStatus(status) {
+      this.isStoreup = !!status.favorite
+      this.isThumbsupnum = !!status.liked
+      this.isCrazilynum = !!status.disliked
+      this.detail.storeupnum = Number(status.favoriteCount || 0)
+      this.detail.thumbsupnum = Number(status.likeCount || 0)
+      this.detail.crazilynum = Number(status.dislikeCount || 0)
     },
     getStoreupStatus() {
       if (localStorage.getItem('frontToken')) {
-        this.$http.get('storeup/list', { params: { page: 1, limit: 1, type: '1', refid: this.detail.id, tablename: 'dianyingxinxi', userid: Number(localStorage.getItem('frontUserid')) } }).then(res => {
-          if (res.data.code == 0 && res.data.data.list.length > 0) {
-            this.isStoreup = true
-            this.storeupInfo = res.data.data.list[0]
-          } else {
-            this.isStoreup = false
+        this.$http.get('appmovie/actions/status', { params: { movieId: this.detail.id || this.id } }).then(res => {
+          if (res.data && res.data.code == 0) {
+            this.applyActionStatus(res.data.data || {})
           }
         })
       }
     },
     thumbsupOrCrazily(type) {
-      const primaryPosterRaw = this.posterList[0] || ''
-      this.storeupParams.name = this.title
-      this.storeupParams.picture = primaryPosterRaw
-      this.storeupParams.refid = this.detail.id
-      this.storeupParams.type = String(type)
-      this.$http.post('storeup/add', this.storeupParams).then(res => {
-        if (res.data.code == 0) {
-          this.getThumbsupOrCrazilyStatus()
+      const actionType = type == 21 ? 'like' : 'dislike'
+      this.$http.post('appmovie/actions/toggle', {
+        movieId: this.detail.id || this.id,
+        actionType,
+      }).then(res => {
+        if (res.data && res.data.code == 0) {
+          this.applyActionStatus(res.data.data || {})
           this.$message({ type: 'success', message: '操作成功!', duration: 1500 })
         }
       })
-      if (type == 21) this.detail.thumbsupnum = Number(this.detail.thumbsupnum || 0) + 1
-      if (type == 22) this.detail.crazilynum = Number(this.detail.crazilynum || 0) + 1
-      this.$http.post('dianyingxinxi/update', this.detail).then(() => {})
     },
     cancelThumbsupOrCrazily(type) {
-      const delIds = [this.thumbsupOrCrazilyInfo.id]
-      this.$http.post('storeup/delete', delIds).then(res => {
-        if (res.data.code == 0) {
-          this.isThumbsupnum = false
-          this.isCrazilynum = false
-          this.$message({ type: 'success', message: '取消成功!', duration: 1500 })
-        }
-      })
-      if (type == 21) this.detail.thumbsupnum = Math.max(Number(this.detail.thumbsupnum || 0) - 1, 0)
-      if (type == 22) this.detail.crazilynum = Math.max(Number(this.detail.crazilynum || 0) - 1, 0)
-      this.$http.post('dianyingxinxi/update', this.detail).then(() => {})
+      this.thumbsupOrCrazily(type)
     },
     getThumbsupOrCrazilyStatus() {
-      if (localStorage.getItem('frontToken')) {
-        this.$http.get('storeup/list', { params: { page: 1, limit: 1, type: '21', refid: this.detail.id, tablename: 'dianyingxinxi', userid: Number(localStorage.getItem('frontUserid')) } }).then(res => {
-          if (res.data.code == 0 && res.data.data.list.length > 0) {
-            this.isThumbsupnum = true
-            this.thumbsupOrCrazilyInfo = res.data.data.list[0]
-          }
-        })
-        this.$http.get('storeup/list', { params: { page: 1, limit: 1, type: '22', refid: this.detail.id, tablename: 'dianyingxinxi', userid: Number(localStorage.getItem('frontUserid')) } }).then(res => {
-          if (res.data.code == 0 && res.data.data.list.length > 0) {
-            this.isCrazilynum = true
-            this.thumbsupOrCrazilyInfo = res.data.data.list[0]
-          }
-        })
-      }
+      this.getStoreupStatus()
     },
     curChange(page) {
       this.getDiscussList(page)
@@ -723,13 +717,29 @@ export default {
       })
     },
     getDiscussList(page) {
-      this.$http.get('discussdianyingxinxi/list', { params: { page, limit: this.pageSize, refid: this.detail.id, sort: 'istop', order: 'desc' } }).then(res => {
+      this.$http.get('appmovie/comments/page', { params: { page, limit: this.pageSize, movieId: this.detail.id || this.id, legacyUserId: this.userid, sort: 'istop', order: 'desc' } }).then(res => {
         if (res.data.code == 0) {
-          this.infoList = res.data.data.list
+          this.infoList = (res.data.data.list || []).map(this.normalizeCommentItem)
           this.total = res.data.data.total
           this.pageSize = Number(res.data.data.pageSize)
           this.totalPage = res.data.data.totalPage
         }
+      })
+    },
+    normalizeCommentItem(item) {
+      return Object.assign({}, item || {}, {
+        userid: item.legacyUserId,
+        nickname: item.authorName || '匿名用户',
+        avatarurl: item.authorAvatar || '',
+        content: item.contentHtml || '',
+        score: Number(item.rating || 0),
+        reply: item.replyHtml || '',
+        thumbsupnum: Number(item.likeCount || 0),
+        crazilynum: Number(item.dislikeCount || 0),
+        istop: item.pinned ? 1 : 0,
+        addtime: item.createdAt || '',
+        tuserids: item.currentUserVote === 'like' ? String(this.userid || '') : '',
+        cuserids: item.currentUserVote === 'dislike' ? String(this.userid || '') : '',
       })
     },
     comzanChange(row) {
@@ -750,21 +760,9 @@ export default {
       if (!this.comzanChange(row)) {
         row.thumbsupnum++
         row.tuserids = row.tuserids ? row.tuserids + ',' + this.userid : String(this.userid)
-        this.$http.post('discussdianyingxinxi/update', row).then(() => {
-          this.$message.success('点赞成功')
-        })
+        this.toggleCommentVote(row, 'like', '点赞成功')
       } else {
-        row.thumbsupnum--
-        const arr = row.tuserids.split(',')
-        for (let x in arr) {
-          if (arr[x] == this.userid) {
-            arr.splice(x, 1)
-          }
-        }
-        row.tuserids = arr.join(',')
-        this.$http.post('discussdianyingxinxi/update', row).then(() => {
-          this.$message.success('取消成功')
-        })
+        this.toggleCommentVote(row, 'like', '取消成功')
       }
     },
     comcaiChange(row) {
@@ -785,22 +783,21 @@ export default {
       if (!this.comcaiChange(row)) {
         row.crazilynum++
         row.cuserids = row.cuserids ? row.cuserids + ',' + this.userid : String(this.userid)
-        this.$http.post('discussdianyingxinxi/update', row).then(() => {
-          this.$message.success('点踩成功')
-        })
+        this.toggleCommentVote(row, 'dislike', '点踩成功')
       } else {
-        row.crazilynum--
-        const arr = row.cuserids.split(',')
-        for (let x in arr) {
-          if (arr[x] == this.userid) {
-            arr.splice(x, 1)
-          }
-        }
-        row.cuserids = arr.join(',')
-        this.$http.post('discussdianyingxinxi/update', row).then(() => {
-          this.$message.success('取消成功')
-        })
+        this.toggleCommentVote(row, 'dislike', '取消成功')
       }
+    },
+    toggleCommentVote(row, voteType, message) {
+      this.$http.post('appmovie/comments/vote', {
+        commentId: row.id,
+        voteType,
+      }).then(res => {
+        if (res.data && res.data.code == 0 && res.data.data) {
+          Object.assign(row, this.normalizeCommentItem(res.data.data))
+          this.$message.success(message)
+        }
+      })
     },
     discussEnter(index) {
       this.showIndex = index
@@ -810,7 +807,7 @@ export default {
     },
     discussDel(id) {
       this.$confirm('是否删除此评论？').then(() => {
-        this.$http.post('discussdianyingxinxi/delete', [id]).then(res => {
+        this.$http.post('appmovie/comments/delete', { commentId: id }).then(res => {
           if (res.data && res.data.code == 0) {
             this.addDiscussNum(1)
             this.$message({
@@ -831,31 +828,26 @@ export default {
         this.redirectToFrontLogin('second', '请先登录后再发表评论')
         return false
       }
-      for (let i = 0; i < this.sensitiveWordsArr.length; i++) {
-        const reg = new RegExp(this.sensitiveWordsArr[i], 'g')
-        if (this.form.content.indexOf(this.sensitiveWordsArr[i]) > -1) {
-          this.form.content = this.form.content.replace(reg, '**')
-        }
-      }
+      this.form.content = this.maskSensitiveWords(this.form.content)
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$http.get('discussdianyingxinxi/page', { params: { page: 1, limit: 1, refid: this.detail.id, userid: Number(localStorage.getItem('frontUserid')) } }).then(rs => {
-            if (rs.data.data.list.length) {
+          const payload = {
+            movieId: this.detail.id || this.id,
+            contentHtml: this.form.content,
+            rating: Number(this.form.score || 0),
+            authorAvatar: localStorage.getItem('frontHeadportrait') ? localStorage.getItem('frontHeadportrait') : '',
+          }
+          this.$http.post('appmovie/comments/add', payload).then(rs2 => {
+            if (rs2.data.code == 0 && rs2.data.data) {
+              this.addDiscussNum(2)
+              this.clearCommentDraft()
+              this.form.content = ''
+              this.form.score = 0
+              this.getDiscussList(1)
+              this.$message({ type: 'success', message: '评论成功!', duration: 1500 })
+            } else {
               this.$message({ type: 'error', message: '每个用户只能评论一次!', duration: 1500 })
-              return false
             }
-            this.form.refid = this.detail.id
-            this.form.avatarurl = localStorage.getItem('frontHeadportrait') ? localStorage.getItem('frontHeadportrait') : ''
-            this.$http.post('discussdianyingxinxi/add', this.form).then(rs2 => {
-              if (rs2.data.code == 0) {
-                this.addDiscussNum(2)
-                this.clearCommentDraft()
-                this.form.content = ''
-                this.form.score = 0
-                this.getDiscussList(1)
-                this.$message({ type: 'success', message: '评论成功!', duration: 1500 })
-              }
-            })
           })
         } else {
           return false
@@ -872,14 +864,13 @@ export default {
       } else if (type == 1) {
         this.detail.discussnum = Math.max(Number(this.detail.discussnum || 0) - 1, 0)
       }
-      this.$http.get('discussdianyingxinxi/list', { params: { page: 1, limit: 10000, refid: this.detail.id } }).then(rs => {
-        let score = 0
-        for (let x in rs.data.data.list) {
-          score += Number(rs.data.data.list[x].score)
+      this.$http.get('appmovie/front/detail/' + (this.detail.id || this.id), {}).then(rs => {
+        if (rs.data && rs.data.code == 0 && rs.data.data) {
+          const latest = normalizeAppMovieRecord(extractAppMovieDetail(rs.data.data))
+          this.detail.discussnum = latest.discussnum
+          this.detail.totalscore = latest.totalscore
+          this.heroMeta = formatHeroMeta(this.detail)
         }
-        this.detail.totalscore = Number((score / Number(rs.data.data.list.length || 1)).toFixed(2))
-        this.heroMeta = formatHeroMeta(this.detail)
-        this.$http.post('dianyingxinxi/update', this.detail).then(() => {})
       })
     },
   },

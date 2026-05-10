@@ -263,11 +263,13 @@ export default {
 		},
 		loadFilterOptions() {
 			this.$http({
-				url: 'option/dianyingleixing/dianyingleixing',
+				url: 'appmovie/types',
 				method: 'get'
 			}).then(({ data }) => {
 				if (data && data.code === 0) {
-					this.dianyingleixingOptions = data.data || []
+					this.dianyingleixingOptions = (data.data || []).map(function(item) {
+						return item.typeName
+					})
 				}
 			})
 		},
@@ -425,24 +427,6 @@ export default {
 					data: ids
 				}).then(async ({ data }) => {
 					if (data && data.code === 0) {
-						for (var x in ids) {
-							await this.$http.get('storeup/list', {
-								params: {
-									page: 1,
-									limit: 100,
-									refid: ids[x],
-									tablename: 'dianyingxinxi'
-								}
-							}).then(async obj => {
-								if (obj.data && obj.data.code === 0 && obj.data.data.list.length) {
-									var arr = []
-									for (var i in obj.data.data.list) {
-										arr.push(obj.data.data.list[i].id)
-									}
-									await this.$http.post('storeup/delete', arr).then(() => {})
-								}
-							})
-						}
 						this.$message({
 							message: '操作成功',
 							type: 'success',

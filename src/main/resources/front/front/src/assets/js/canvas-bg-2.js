@@ -75,7 +75,7 @@ export default function canvasBg(){
 		var spacex = Math.abs((this.x - (this.speedx < 0 ? -1 : 1) * (canvas.width / 2 + this.radius)) / this.speedx),
 			spacey = Math.abs((this.y - (this.speedy < 0 ? -1 : 1) * (canvas.height / 2 + this.radius)) / this.speedy);
 		this.ttl = Math.min(spacex, spacey);
-	};
+	}
 	
 	Circle.prototype.init = function() {
 		Circle.call(this, this.background);

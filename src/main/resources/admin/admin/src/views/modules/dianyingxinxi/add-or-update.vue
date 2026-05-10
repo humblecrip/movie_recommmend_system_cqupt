@@ -393,11 +393,11 @@ export default {
 				}
 			})
 			this.$http({
-				url: 'option/dianyingleixing/dianyingleixing',
+				url: 'appmovie/types',
 				method: 'get'
 			}).then(({ data }) => {
 				if (data && data.code === 0) {
-					this.dianyingleixingOptions = data.data
+					this.dianyingleixingOptions = (data.data || []).map(item => item.typeName)
 				} else {
 					this.$message.error(data.msg)
 				}

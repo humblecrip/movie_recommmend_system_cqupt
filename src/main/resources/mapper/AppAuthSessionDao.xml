@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.AppAuthSessionDao">
+
+    <update id="updateActiveSession" parameterType="com.entity.AppAuthSessionEntity">
+        UPDATE app_auth_session
+        SET app_user_id = #{appUserId},
+            app_admin_user_id = #{appAdminUserId},
+            subject_role_name = #{subjectRoleName},
+            subject_kind = #{subjectKind},
+            subject_login_name = #{subjectLoginName},
+            session_token = #{sessionToken},
+            issued_at = #{issuedAt},
+            expires_at = #{expiresAt},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE legacy_subject_id = #{legacySubjectId}
+          AND subject_table_name = #{subjectTableName}
+          AND expires_at &gt; NOW()
+        ORDER BY updated_at DESC, id DESC
+        LIMIT 1
+    </update>
+
+    <insert id="insertSession" parameterType="com.entity.AppAuthSessionEntity">
+        INSERT INTO app_auth_session (
+            legacy_token_id,
+            app_user_id,
+            app_admin_user_id,
+            legacy_subject_id,
+            subject_table_name,
+            subject_role_name,
+            subject_kind,
+            subject_login_name,
+            session_token,
+            issued_at,
+            expires_at,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{legacyTokenId},
+            #{appUserId},
+            #{appAdminUserId},
+            #{legacySubjectId},
+            #{subjectTableName},
+            #{subjectRoleName},
+            #{subjectKind},
+            #{subjectLoginName},
+            #{sessionToken},
+            #{issuedAt},
+            #{expiresAt},
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="selectTokenEntityByToken" resultType="com.entity.TokenEntity">
+        SELECT
+            id,
+            legacy_subject_id AS userid,
+            subject_login_name AS username,
+            subject_table_name AS tablename,
+            subject_role_name AS role,
+            session_token AS token,
+            expires_at AS expiratedtime,
+            created_at AS addtime
+        FROM app_auth_session
+        WHERE session_token = #{token}
+          AND expires_at &gt; NOW()
+        LIMIT 1
+    </select>
+
+    <update id="updateSubjectLoginName">
+        UPDATE app_auth_session
+        SET subject_login_name = #{subjectLoginName},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE legacy_subject_id = #{legacySubjectId}
+          AND subject_table_name = #{subjectTableName}
+    </update>
+</mapper>

@@ -13,8 +13,21 @@ function normalizePosterList(input) {
     .filter(Boolean)
 }
 
+function getAppPosterInput(detail) {
+  if (!detail) {
+    return ''
+  }
+  if (detail.posterUrls !== undefined && detail.posterUrls !== null) {
+    return detail.posterUrls
+  }
+  if (detail.posterUrl !== undefined && detail.posterUrl !== null && detail.posterUrl !== '') {
+    return detail.posterUrl
+  }
+  return detail.haibao
+}
+
 function getPosterList(detail) {
-  return normalizePosterList(detail && detail.haibao)
+  return normalizePosterList(getAppPosterInput(detail))
 }
 
 function resolvePosterUrl(poster, baseUrl) {
@@ -32,13 +45,96 @@ function getPrimaryPoster(detail, baseUrl) {
   return resolvePosterUrl(posterList[0], baseUrl)
 }
 
+function pickValue(source, keys, fallback) {
+  if (!source) {
+    return fallback
+  }
+  for (let index = 0; index < keys.length; index++) {
+    const value = source[keys[index]]
+    if (value !== undefined && value !== null && value !== '') {
+      return value
+    }
+  }
+  return fallback
+}
+
+function normalizePosterString(source) {
+  const posters = normalizePosterList(pickValue(source, ['posterUrls', 'posterUrl', 'haibao'], ''))
+  return posters.join(',')
+}
+
+function normalizeAppMovieRecord(source) {
+  const movie = Object.assign({}, source || {})
+  const posterString = normalizePosterString(movie)
+  return Object.assign(movie, {
+    id: pickValue(movie, ['id'], movie.id),
+    legacyDianyingxinxiId: pickValue(movie, ['legacyDianyingxinxiId'], movie.legacyDianyingxinxiId),
+    dianyingmingcheng: pickValue(movie, ['title', 'dianyingmingcheng'], '未命名电影'),
+    dianyingleixing: pickValue(movie, ['typeName', 'dianyingleixing'], '未分类'),
+    haibao: posterString,
+    quyu: pickValue(movie, ['regionName', 'quyu'], ''),
+    shangyingshijian: pickValue(movie, ['releaseDate', 'shangyingshijian'], ''),
+    daoyan: pickValue(movie, ['directorName', 'daoyan'], ''),
+    zhuyan: pickValue(movie, ['castNames', 'zhuyan'], ''),
+    juqingjianjie: pickValue(movie, ['synopsis', 'juqingjianjie'], ''),
+    dianyingxiangqing: pickValue(movie, ['detailHtml', 'dianyingxiangqing', 'synopsis', 'juqingjianjie'], ''),
+    thumbsupnum: Number(pickValue(movie, ['likeCount', 'thumbsupnum'], 0) || 0),
+    crazilynum: Number(pickValue(movie, ['dislikeCount', 'crazilynum'], 0) || 0),
+    clicknum: Number(pickValue(movie, ['clickCount', 'clicknum'], 0) || 0),
+    discussnum: Number(pickValue(movie, ['commentCount', 'discussnum'], 0) || 0),
+    storeupnum: Number(pickValue(movie, ['favoriteCount', 'storeupnum'], 0) || 0),
+    totalscore: Number(pickValue(movie, ['totalScore', 'totalscore'], 0) || 0),
+  })
+}
+
+function normalizeAppMovieList(list) {
+  return (Array.isArray(list) ? list : []).map(item => normalizeAppMovieRecord(item))
+}
+
+function extractAppMovieList(payload) {
+  const data = payload && payload.data ? payload.data : payload
+  if (Array.isArray(data)) {
+    return data
+  }
+  if (!data || typeof data !== 'object') {
+    return []
+  }
+  if (Array.isArray(data.list)) {
+    return data.list
+  }
+  if (Array.isArray(data.records)) {
+    return data.records
+  }
+  if (Array.isArray(data.rows)) {
+    return data.rows
+  }
+  if (Array.isArray(data.movies)) {
+    return data.movies
+  }
+  if (Array.isArray(data.similarMovies)) {
+    return data.similarMovies
+  }
+  if (Array.isArray(data.types)) {
+    return data.types
+  }
+  return []
+}
+
+function extractAppMovieDetail(payload) {
+  const data = payload && payload.data ? payload.data : payload
+  if (!data || typeof data !== 'object') {
+    return {}
+  }
+  return data.movie || data.detail || data
+}
+
 function formatScoreText(score) {
   if (score === undefined || score === null || score === '') {
-    return 'N/A'
+    return '暂无'
   }
   const value = Number(score)
   if (Number.isNaN(value)) {
-    return 'N/A'
+    return '暂无'
   }
   return value.toFixed(1)
 }
@@ -53,8 +149,8 @@ function getMovieYear(dateText) {
 function formatHeroMeta(detail) {
   return {
     year: getMovieYear(detail && detail.shangyingshijian),
-    runtime: '2h 16m',
-    maturityRating: 'PG-13',
+    runtime: '2小时16分钟',
+    maturityRating: '建议13岁以上观看',
     overview: (detail && detail.juqingjianjie) || '暂无剧情简介',
     scoreText: formatScoreText(detail && detail.totalscore),
     releaseDateText: (detail && detail.shangyingshijian) || '上映日期待定',
@@ -104,6 +200,10 @@ const exportedHelpers = {
   getPosterList,
   resolvePosterUrl,
   getPrimaryPoster,
+  normalizeAppMovieRecord,
+  normalizeAppMovieList,
+  extractAppMovieList,
+  extractAppMovieDetail,
   formatHeroMeta,
   buildSimilarMovies,
 }
@@ -113,6 +213,10 @@ export {
   getPosterList,
   resolvePosterUrl,
   getPrimaryPoster,
+  normalizeAppMovieRecord,
+  normalizeAppMovieList,
+  extractAppMovieList,
+  extractAppMovieDetail,
   formatHeroMeta,
   buildSimilarMovies,
 }
