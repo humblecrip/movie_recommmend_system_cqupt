@@ -30,6 +30,7 @@ import { PiniaVuePlugin, createPinia } from 'pinia'
 import { encryptDes,decryptDes,encryptAes,decryptAes } from '@/common/des.js'
 import VueLuckyCanvas from '@lucky-canvas/vue'
 const { dispatchFrontAvatarChanged } = require('./utils/front-logout')
+const { shouldRedirectAuthFailure } = require('./utils/front-access')
 Vue.use(VueLuckyCanvas)
 Vue.config.productionTip = false;
 
@@ -79,17 +80,18 @@ Vue.http.options.root = config.name;
 Vue.http.headers.common['Token'] = localStorage.getItem('frontToken');
 Vue.http.interceptors.push(function(request, next) {
 	next((response) => {
-		if (response.data.code == 401 || response.data.code == 403) {
+		const responseCode = response && response.data && response.data.code
+		if ((responseCode == 401 || responseCode == 403) && shouldRedirectAuthFailure(request, router.currentRoute)) {
 			// this.$message.error('请先登录')
 			setTimeout(()=>{
 				Vue.http.headers.common['Token'] = ''
 				dispatchFrontAvatarChanged({}, '')
 				localStorage.clear()
-				router.replace(buildFrontLoginRedirectLocation()).catch(err => {});
+				router.replace(buildFrontLoginRedirectLocation()).catch(() => {});
 			},1000)
-		} else {
-			return response;
 		}
+
+		return response;
 	});
 });
 
