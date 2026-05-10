@@ -61,7 +61,7 @@ function isAccountApiPath(path) {
     path.indexOf('appmovie/actions/') === 0 ||
     path.indexOf('appmovie/favorites/') === 0 ||
     path === 'appmovie/comments/add' ||
-    path === 'appmovie/comments/delete' ||
+    path.indexOf('appmovie/comments/delete') === 0 ||
     path === 'appmovie/comments/vote' ||
     path.indexOf('storeup/') === 0 ||
     path === 'file/upload'

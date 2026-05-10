@@ -143,6 +143,16 @@ runTest('评论删除接口鉴权失败应跳登录', () => {
   )
 })
 
+runTest('动态评论删除接口鉴权失败应跳登录', () => {
+  assert.strictEqual(
+    shouldRedirectAuthFailure(
+      { url: 'appmovie/comments/delete/123' },
+      { path: '/index/dianyingxinxiDetail', query: { id: 1 } }
+    ),
+    true
+  )
+})
+
 runTest('用户会话接口鉴权失败应跳登录', () => {
   assert.strictEqual(
     shouldRedirectAuthFailure(
