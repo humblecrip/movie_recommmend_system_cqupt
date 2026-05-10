@@ -38,10 +38,9 @@
 
 - 单独的增量 SQL 模板：
   `db/phase1_validation_schema_gap_fill.sql`
-- 受限执行器：
-  `.trellis/tasks/04-25-runtime-app-table-cutover/Phase1SchemaGapFillExecutor.java`
+- 历史一次性 Java 执行器已随本地代理工作流目录清理，不再作为仓库资产保留
 
-执行器会：
+执行补丁时仍需保持以下约束：
 
 1. 强制只允许目标库 `ssmf7s0a_phase1`
 2. 自动解析源表名：
@@ -55,17 +54,21 @@
 
 ## 执行方式
 
-编译：
+当前仓库只保留 `db/phase1_validation_schema_gap_fill.sql` 模板，不再保留
+历史一次性 Java 执行器源码。
 
-```powershell
-javac --release 8 -encoding UTF-8 -cp D:\123123-main\.m2\repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar .trellis\tasks\04-25-runtime-app-table-cutover\Phase1SchemaGapFillExecutor.java
-```
+因此这里的执行要求明确为：
 
-执行：
+1. 不能直接把该 SQL 文件裸执行到数据库
+2. 执行前必须先由受限 helper 完成以下预处理：
+   - 绑定目标库为 `ssmf7s0a_phase1`
+   - 将 `__USERS_SOURCE__` / `__CONFIG_SOURCE__` /
+     `__SENSITIVEWORDS_SOURCE__` 替换为真实存在的源表名
+   - 真实存在的源表名解析规则仍为“优先旧表，否则 `*_bak`”
+3. helper 执行完成后，仍需补做真实 `_bak` smoke 和漂移巡检
 
-```powershell
-java -cp "D:\123123-main\.trellis\tasks\04-25-runtime-app-table-cutover;D:\123123-main\.m2\repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar" Phase1SchemaGapFillExecutor 127.0.0.1 3308 root root ssmf7s0a_phase1
-```
+也就是说，这份文档保留的是补丁约束与执行前提，不再把已删除的
+`.trellis` 路径或失效命令当作可直接复用的仓库资产。
 
 ## 设计原则
 
