@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<!-- 上传文件组件 -->
-		<el-upload v-if="type==1" ref="upload" :action="getActionUrl" list-type="picture-card" :multiple="multiple" :limit="limit"
-			:headers="myHeaders" :file-list="fileList" :on-exceed="handleExceed" :on-preview="handleUploadPreview"
+		<el-upload v-if="type==1" ref="upload" :action="getActionUrl" list-type="picture-card" :multiple="multiple" :limit="replaceable ? undefined : limit"
+			:headers="myHeaders" :file-list="renderFileList" :on-exceed="handleExceed" :on-preview="handleUploadPreview"
 			:on-remove="handleRemove" :on-success="handleUploadSuccess" :on-error="handleUploadErr"
 			:before-upload="handleBeforeUpload">
 			<i class="el-icon-plus"></i>
@@ -60,6 +60,10 @@
 			type: {
 				type: Number,
 				default: 1
+			},
+			replaceable: {
+				type: Boolean,
+				default: false
 			}
 		},
 		mounted() {
@@ -79,6 +83,12 @@
 			getActionUrl: function() {
 				// return base.url + this.action + "?token=" + storage.get("token");
 				return `/${this.$base.name}/` + this.action;
+			},
+			renderFileList: function() {
+				if (this.replaceable) {
+					return [];
+				}
+				return this.fileList;
 			}
 		},
 		methods: {
@@ -106,6 +116,9 @@
 			// 上传文件成功后执行
 			handleUploadSuccess(res, file, fileList) {
 				if (res && res.code === 0) {
+					if (this.replaceable) {
+						fileList = [fileList[fileList.length - 1]];
+					}
 					fileList[fileList.length - 1]["url"] = "upload/" + file.response.file;
 					this.setFileList(fileList);
 					this.$emit("change", this.fileUrlList.join(","));

@@ -96,7 +96,7 @@
 
           <div class="chat-messages" ref="messagesContainer" @scroll="handleMessagesScroll">
             <div class="message-group ai-message">
-              <div class="avatar ai-avatar"><span class="material-symbols-outlined">auto_awesome</span></div>
+              <div class="avatar ai-avatar"><img :src="aiAvatar" alt="AI"></div>
               <div class="message-body">
                 <div class="message-sender">The Curator</div>
                 <div class="message-bubble"><p>{{ greetingMessage }}</p></div>
@@ -116,7 +116,7 @@
               </div>
 
               <div v-else-if="msg.role === 'assistant'" :key="'ai-' + index" class="message-group ai-message">
-                <div class="avatar ai-avatar"><span class="material-symbols-outlined">auto_awesome</span></div>
+                <div class="avatar ai-avatar"><img :src="aiAvatar" alt="AI"></div>
                 <div class="message-body">
                   <div class="message-sender">The Curator</div>
                   <div class="message-bubble">
@@ -170,7 +170,7 @@
             </template>
 
             <div v-if="isLoading" class="message-group ai-message">
-              <div class="avatar ai-avatar"><span class="material-symbols-outlined">auto_awesome</span></div>
+              <div class="avatar ai-avatar"><img :src="aiAvatar" alt="AI"></div>
               <div class="message-body">
                 <div class="message-sender">The Curator</div>
                 <div class="message-bubble loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>
@@ -199,6 +199,7 @@
 
 <script>
 import CinemaShell from '../../components/CinemaShell'
+import aiAgentAvatar from '../../assets/ai_agent.png'
 
 const { parseSessionForm, resolveFrontAvatar } = require('../../utils/front-avatar')
 const {
@@ -232,6 +233,7 @@ export default {
         { type: 'not_interested', label: '不感兴趣', shortLabel: '跳' },
       ],
       userAvatar: '',
+      aiAvatar: aiAgentAvatar,
       fallbackPoster: require('@/assets/chapter.jpg'),
       liulangdiqiu2Poster: '',
       baseUrl: '',
@@ -733,7 +735,7 @@ export default {
 .user-message { flex-direction: row-reverse; }
 .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
-.ai-avatar { background: linear-gradient(135deg, var(--accent), var(--accent-deep)); color: #2a2108; }
+.ai-avatar { background: var(--surface-high); }
 .user-avatar { background: var(--surface-high); color: var(--text-main); }
 .message-body { max-width: min(720px, 75%); }
 .user-message .message-body { display: flex; flex-direction: column; align-items: flex-end; }

@@ -483,18 +483,33 @@ export default {
     resolveInternalHeroTarget(target) {
       const normalizedTarget = String(target || '').trim()
       if (!normalizedTarget || /^https?:\/\//i.test(normalizedTarget)) {
-        return ''
+        return null
       }
-      if (normalizedTarget.startsWith('#')) {
-        return normalizedTarget.replace(/^#+/, '/')
+      let routePath = normalizedTarget
+      if (routePath.startsWith('#/')) {
+        routePath = routePath.slice(1)
+      } else if (routePath.startsWith('#')) {
+        routePath = '/' + routePath.slice(1)
+      } else if (!routePath.startsWith('/')) {
+        if (/^(index|front)(\/|$)/i.test(routePath)) {
+          routePath = `/${routePath}`
+        } else {
+          return null
+        }
       }
-      if (normalizedTarget.startsWith('/')) {
-        return normalizedTarget
+      const qIndex = routePath.indexOf('?')
+      if (qIndex === -1) {
+        return { path: routePath }
       }
-      if (/^(index|front)(\/|$)/i.test(normalizedTarget)) {
-        return `/${normalizedTarget}`
-      }
-      return ''
+      const path = routePath.slice(0, qIndex)
+      const query = {}
+      routePath.slice(qIndex + 1).split('&').forEach(pair => {
+        const [key, val] = pair.split('=')
+        if (key) {
+          query[decodeURIComponent(key)] = decodeURIComponent(val || '')
+        }
+      })
+      return { path, query }
     },
     openHeroTarget(item) {
       const actionUrl = String((item && item.actionUrl) || '').trim()

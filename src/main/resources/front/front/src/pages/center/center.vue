@@ -57,7 +57,8 @@
                     tip=""
                     action="file/upload"
                     :limit="1"
-                    :multiple="true"
+                    :multiple="false"
+                    :replaceable="true"
                     :fileUrls="sessionForm.touxiang ? sessionForm.touxiang : ''"
                     @change="yonghutouxiangHandleAvatarSuccess"
                   ></file-upload>
